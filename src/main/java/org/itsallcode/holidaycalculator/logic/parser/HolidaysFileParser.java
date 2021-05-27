@@ -11,72 +11,60 @@ import org.itsallcode.holidaycalculator.logic.Holiday;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HolidaysFileParser
-{
-    public static class Error
-    {
-        public final int lineNumber;
-        public final String content;
+public class HolidaysFileParser {
+	public static class Error {
+		public final int lineNumber;
+		public final String content;
 
-        public Error(int lineNumber, String content)
-        {
-            this.lineNumber = lineNumber;
-            this.content = content;
-        }
-    }
+		public Error(int lineNumber, String content) {
+			this.lineNumber = lineNumber;
+			this.content = content;
+		}
+	}
 
-    private static final Logger LOG = LoggerFactory.getLogger(HolidaysFileParser.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HolidaysFileParser.class);
 
-    final HolidayParser holidayParser = new HolidayParser();
-    private final List<Error> errors = new ArrayList<>();
-    private final String identifier;
+	final HolidayParser holidayParser = new HolidayParser();
+	private final List<Error> errors = new ArrayList<>();
+	private final String identifier;
 
-    /**
-     * @param inputSourceIdentifier
-     *            Just a string in order to identify the stream in potential
-     *            error messages. Could be name or path of the file represented
-     *            by the stream.
-     */
-    public HolidaysFileParser(String inputSourceIdentifier)
-    {
-        this.identifier = inputSourceIdentifier;
-    }
+	/**
+	 * @param inputSourceIdentifier Just a string in order to identify the stream in
+	 *                              potential error messages. Could be name or path
+	 *                              of the file represented by the stream.
+	 */
+	public HolidaysFileParser(String inputSourceIdentifier) {
+		this.identifier = inputSourceIdentifier;
+	}
 
-    public List<Holiday> parse(InputStream stream) throws IOException
-    {
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        final List<Holiday> result = new ArrayList<>();
+	public List<Holiday> parse(InputStream stream) throws IOException {
+		final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		final List<Holiday> result = new ArrayList<>();
 
-        int n = 0;
-        String line;
-        while ((line = reader.readLine()) != null)
-        {
-            n++;
-            line = line.trim();
-            if (line.isEmpty() || line.startsWith("#"))
-            {
-                continue;
-            }
+		int n = 0;
+		String line;
+		while ((line = reader.readLine()) != null) {
+			n++;
+			line = line.trim();
+			if (line.isEmpty() || line.startsWith("#")) {
+				continue;
+			}
 
-            final Holiday holiday = holidayParser.parse(line);
-            if (holiday != null)
-            {
-                result.add(holiday);
-            }
-            else
-            {
-                LOG.error("File {}:{}: Couldn't parse '{}'.", identifier, n, line);
-                // LOG.error("File " + identifier + ":" + n + ": Couldn't parse
-                // '" + line + "'.");
-                errors.add(new Error(n, line));
-            }
-        }
-        return result;
-    }
+			final Holiday holiday = holidayParser.parse(line);
+			if (holiday != null) {
+				result.add(holiday);
+			} else {
+				LOG.error("File {}:{}: Couldn't parse '{}'.", identifier, n, line);
+				// LOG.error("File " + identifier + ":" + n + ": Couldn't parse
+				// '" + line + "'.");
+				errors.add(new Error(n, line));
+			}
+		}
+		return result;
+	}
 
-    public List<Error> getErrors()
-    {
-        return errors;
-    }
+	public List<Error> getErrors() {
+		return errors;
+	}
 
 }
