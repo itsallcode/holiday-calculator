@@ -39,7 +39,7 @@ test {
 ext {
     junitVersion = '5.7.1'
 	log4jVersion = '2.14.1'
-    mockitoVersion = '3.9.0'
+    mockitoVersion = '3.10.0'
 	lockbackVersion = '1.2.3'
 }
 
