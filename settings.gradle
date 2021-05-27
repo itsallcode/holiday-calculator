@@ -1,0 +1,10 @@
+rootProject.name = 'holiday-calculator'
+
+// optional sub projects
+// include 'logic'
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
