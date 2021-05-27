@@ -52,8 +52,10 @@ public class HolidayCalculationTest {
 
 	/**
 	 * sources:
+	 * <ul>
 	 * <li>[1] http://www.maa.clell.de/StarDate/feiertage.html
 	 * <li>[2] https://de.wikipedia.org/wiki/Osterdatum
+	 * </ul>
 	 */
 	@ParameterizedTest(name = "Parsing ''{0}'' returns {1}")
 	@CsvSource(value = {

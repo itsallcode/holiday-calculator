@@ -12,12 +12,14 @@ import java.util.Set;
  * Hosts a personal set of holidays typically defined in a configuration file.
  * Each holiday is meant to repeat every year and may have
  *
- * <li>a fixed date identical for every year
+ * <ul>
+ * <li>a fixed date identical for every year</li>
  * <li>a floating date defined by a specific date in each year and an offset
  * restricted to a particular day of the week, e.g. fourth Sunday before
- * Christmas
+ * Christmas</li>
  * <li>a date defined relatively to Easter Sunday with a positive or negative
- * offset of days
+ * offset of days</li>
+ * </ul>
  */
 public class HolidayService {
 	final List<Holiday> definitions = new ArrayList<>();
