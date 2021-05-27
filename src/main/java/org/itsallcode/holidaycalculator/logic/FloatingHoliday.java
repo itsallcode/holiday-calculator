@@ -25,7 +25,7 @@ public class FloatingHoliday extends Holiday {
 
 	/**
 	 * Holiday called &lt;name&gt; on the &lt;offset&gt; &lt;dayOfWeek&gt;
-	 * after/before &lt;month&gt; &lt;day>.
+	 * after/before &lt;month&gt; &lt;day&gt;.
 	 *
 	 * @param category  category
 	 * @param name      name

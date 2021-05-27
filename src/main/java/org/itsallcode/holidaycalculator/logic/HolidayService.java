@@ -32,6 +32,7 @@ public class HolidayService {
 	}
 
 	/**
+	 * @param date date
 	 * @return List of holidays occurring on the given date. If there is no holiday
 	 *         on given date, then list is empty.
 	 */
