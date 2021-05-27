@@ -13,7 +13,7 @@ public abstract class Holiday {
 	/**
 	 * @param category Arbitrary category that may be evaluated by the application
 	 *                 processing the holiday.
-	 * @param name
+	 * @param name     Name of holiday.
 	 */
 	public Holiday(String category, String name) {
 		this.category = category;
@@ -30,6 +30,9 @@ public abstract class Holiday {
 
 	/**
 	 * Ensure date can be valid, at least in a leap year
+	 *
+	 * @param month Month
+	 * @param day   Day
 	 */
 	protected void ensureValidDate(int month, int day) {
 		LocalDate.of(PIVOT_YEAR, month, day);

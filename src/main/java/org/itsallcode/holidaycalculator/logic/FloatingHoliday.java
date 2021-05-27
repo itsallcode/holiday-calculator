@@ -26,9 +26,15 @@ public class FloatingHoliday extends Holiday {
 	/**
 	 * Holiday called &lt;name&gt; on the &lt;offset&gt; &lt;dayOfWeek&gt;
 	 * after/before &lt;month&gt; &lt;day>.
-	 * 
-	 * @param day Number of pivot day in given month or using constant
-	 *            LAST_LAY_OF_MONTH.
+	 *
+	 * @param category  category
+	 * @param name      name
+	 * @param offset    offset
+	 * @param dayOfWeek day of week
+	 * @param direction direction
+	 * @param month     Month
+	 * @param day       Number of pivot day in given month or using constant
+	 *                  LAST_LAY_OF_MONTH.
 	 */
 	public FloatingHoliday(String category, String name, int offset,
 			DayOfWeek dayOfWeek, Direction direction, int month, int day) {
