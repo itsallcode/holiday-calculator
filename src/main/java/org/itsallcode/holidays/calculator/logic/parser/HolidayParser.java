@@ -1,14 +1,31 @@
-package org.itsallcode.holidaycalculator.logic.parser;
+/**
+ * holiday-calculator
+ * Copyright (C) 2021 itsallcode <github@kuhnke.net>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.itsallcode.holidays.calculator.logic.parser;
 
 import java.time.DayOfWeek;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.itsallcode.holidaycalculator.logic.EasterBasedHoliday;
-import org.itsallcode.holidaycalculator.logic.FixedDateHoliday;
-import org.itsallcode.holidaycalculator.logic.FloatingHoliday;
-import org.itsallcode.holidaycalculator.logic.FloatingHoliday.Direction;
-import org.itsallcode.holidaycalculator.logic.Holiday;
+import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
+import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.Holiday;
+import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 
 public class HolidayParser {
 
