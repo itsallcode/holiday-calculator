@@ -1,6 +1,9 @@
 # holiday-calculator
+Calculate holidays from flexible formulas in a configuration file.
 
-Holiday-calculator provides a configurable list of holidays.
+[![Build](https://github.com/itsallcode/holiday-calculator/workflows/Build/badge.svg)](https://github.com/itsallcode/holiday-calculator/actions?query=workflow%3ABuild)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode.holidaycalculator%3Aholiday-calculator&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.itsallcode.holidaycalculator%3Aholiday-calculator)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode.holidaycalculator%3Aholiday-calculator&metric=coverage)](https://sonarcloud.io/dashboard?id=org.itsallcode.holidaycalculator%3Aholiday-calculator)
 
 Each holiday is meant to repeat every year and is defined by a formula in
 order to compute a concrete holiday instance for a given year.
