@@ -10,9 +10,9 @@ order to compute a concrete holiday instance for a given year.
 Holiday-calculator supports the following formula flavors:
 
 - a fixed date identical for every year
-- a floating date defined by a specific date in each year and an offset
-  restricted to a particular day of the week, e.g. fourth Sunday before
-  Christmas
+- a floating date defined by a pivot date, specified as month and day and an
+  offset restricted to a particular day of the week, e.g. fourth Sunday before
+  Christmas, i.e. December 24th
 - a date defined relatively to Easter Sunday with a positive or negative
   offset of days
 
@@ -56,19 +56,21 @@ mark character "`#`".
 
 #### Holiday definitions
 
-All holiday definitions start with a category.  The category is an arbitrary
+All holiday definitions start with a *category*.  The category is an arbitrary
 string of non-whitespace characters. The application evaluating your holidays
 might support different categories of holidays, e.g. birthdays, aniversaries,
 etc. and may display them in different colors. As a default we propose to use
 category "holiday".
 
 The category is followed by a *tag* identifying the flavor of the holiday
-definition, followed by arguments depending on the flavor. The last argument
-is always a string containing the name of the holiday. All other strings
-except the name of the holiday are case-insensitive.
+definition and additional arguments depending on the flavor. The last argument
+is always a string containing the name of the holiday.
 
-In all definitions including the number of a month, January is 1,
-December is 12. Day of month is an integer from 1 to 31.
+General rules
+- All strings except the name of the holiday are case-insensitive.
+- In all definitions including the number of a month, January is 1,
+  December is 12.
+- Day of month is an integer from 1 to 31.
 
 In the following cases Holiday-calculator will log an error message and ignore
 the holiday definition:
@@ -82,8 +84,8 @@ the holiday definition:
 
 #### Fixed date holiday definition
 
-A fixed date holiday definition has the tag "fixed", followed by the number of
-the month and day of month.
+A fixed date holiday definition has the tag "fixed", followed by the numbers
+of month and day of month.
 
 Syntax: `holiday fixed <month> <day> <name>`
 
@@ -92,8 +94,8 @@ Sample: `holiday fixed 1 1 New Year`
 #### Floating holiday definition
 
 A floating holiday definition has the tag "float", followed by the offset, the
-day of week, the direction "before" or "after", the number of the month and
-day of month.  Month and day of month specify a *pivot date*.
+day of week, the direction "before" or "after", the numbers of month and day
+of month.  Month and day of month specify a *pivot date*.
 
 If the day of week of the pivot date is identical to the specified one then
 the offset starts to count on the pivot date, otherwise on the next instance
