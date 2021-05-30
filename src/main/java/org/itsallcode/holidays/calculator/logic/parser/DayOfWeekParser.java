@@ -18,7 +18,7 @@
 package org.itsallcode.holidays.calculator.logic.parser;
 
 import java.time.DayOfWeek;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 public class DayOfWeekParser {
 	public static class AmbigueDayOfWeekAbbreviationException extends RuntimeException {
@@ -29,10 +29,10 @@ public class DayOfWeekParser {
 		}
 	}
 
-	Hashtable<String, DayOfWeek> cache = new Hashtable<>();
+	HashMap<String, DayOfWeek> cache = new HashMap<>();
 
 	public DayOfWeek getDayOfWeek(final String prefix) {
-		if (cache.contains(prefix)) {
+		if (cache.containsKey(prefix)) {
 			return cache.get(prefix);
 		}
 

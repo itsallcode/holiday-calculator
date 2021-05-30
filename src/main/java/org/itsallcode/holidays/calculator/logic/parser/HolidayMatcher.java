@@ -27,7 +27,7 @@ public abstract class HolidayMatcher {
 
 	private final Pattern pattern;
 
-	public HolidayMatcher(Pattern pattern) {
+	protected HolidayMatcher(Pattern pattern) {
 		this.pattern = pattern;
 	}
 

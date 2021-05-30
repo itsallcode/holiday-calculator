@@ -23,16 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.DayOfWeek;
 
-import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
-import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.parser.DayOfWeekParser;
 import org.itsallcode.holidays.calculator.logic.parser.HolidayParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class HolidayParserTest {
+class HolidayParserTest {
 
 	private HolidayParser holidayParser;
 

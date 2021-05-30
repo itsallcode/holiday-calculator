@@ -21,6 +21,10 @@ import java.time.LocalDate;
 
 public class GaussEasterCalculator {
 
+	// disable to create unwanted instances
+	private GaussEasterCalculator() {
+	}
+
 	/**
 	 * source:
 	 * https://de.wikibooks.org/wiki/Algorithmensammlung:_Kalender:_Feiertage/

@@ -56,8 +56,6 @@ public class EasterBasedHoliday extends Holiday {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		if (!super.equals(obj))
-			return false;
 		final EasterBasedHoliday other = (EasterBasedHoliday) obj;
 		if (offsetInDays != other.offsetInDays)
 			return false;

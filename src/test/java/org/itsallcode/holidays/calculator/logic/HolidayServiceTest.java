@@ -27,16 +27,11 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
-import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
-import org.itsallcode.holidays.calculator.logic.Holiday;
-import org.itsallcode.holidays.calculator.logic.HolidayService;
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.parser.HolidaysFileParser;
 import org.junit.jupiter.api.Test;
 
-public class HolidayServiceTest {
+class HolidayServiceTest {
 
 	@Test
 	void illegalLine() throws IOException {

@@ -32,7 +32,7 @@ public abstract class Holiday {
 	 *                 processing the holiday.
 	 * @param name     Name of holiday.
 	 */
-	public Holiday(String category, String name) {
+	protected Holiday(String category, String name) {
 		this.category = category;
 		this.name = name;
 	}
@@ -51,8 +51,8 @@ public abstract class Holiday {
 	 * @param month Month
 	 * @param day   Day
 	 */
-	protected void ensureValidDate(int month, int day) {
-		LocalDate.of(PIVOT_YEAR, month, day);
+	protected LocalDate ensureValidDate(int month, int day) {
+		return LocalDate.of(PIVOT_YEAR, month, day);
 	}
 
 	@Override

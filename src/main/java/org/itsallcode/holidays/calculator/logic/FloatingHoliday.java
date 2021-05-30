@@ -27,7 +27,7 @@ public class FloatingHoliday extends Holiday {
 	public enum Direction {
 		BEFORE, AFTER;
 
-		static public Direction parse(String s) {
+		public static Direction parse(String s) {
 			return valueOf(s.toUpperCase());
 		}
 	}
@@ -77,7 +77,7 @@ public class FloatingHoliday extends Holiday {
 	public LocalDate of(int year) {
 		final LocalDate pivotDay = pivotDay(year).with(TemporalAdjusters.previousOrSame(dayOfWeek));
 		final int delta = (direction == Direction.AFTER ? offset - 1 : 1 - offset);
-		return pivotDay.plusDays(7 * delta);
+		return pivotDay.plusDays(7L * delta);
 	}
 
 	private LocalDate pivotDay(int year) {
@@ -149,8 +149,6 @@ public class FloatingHoliday extends Holiday {
 		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
-			return false;
-		if (!super.equals(obj))
 			return false;
 		final FloatingHoliday other = (FloatingHoliday) obj;
 		if (day != other.day)

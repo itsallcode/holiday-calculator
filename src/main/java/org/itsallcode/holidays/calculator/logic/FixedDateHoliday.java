@@ -58,8 +58,6 @@ public class FixedDateHoliday extends Holiday {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		if (!super.equals(obj))
-			return false;
 		final FixedDateHoliday other = (FixedDateHoliday) obj;
 		if (day != other.day)
 			return false;

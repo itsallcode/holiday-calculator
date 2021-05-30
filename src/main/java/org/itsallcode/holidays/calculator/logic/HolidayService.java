@@ -20,8 +20,8 @@ package org.itsallcode.holidays.calculator.logic;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +42,7 @@ public class HolidayService {
 	final List<Holiday> definitions = new ArrayList<>();
 	// caches
 	Set<Integer> years = new HashSet<>();
-	Hashtable<LocalDate, List<Holiday>> holidayInstances = new Hashtable<>();
+	HashMap<LocalDate, List<Holiday>> holidayInstances = new HashMap<>();
 
 	public HolidayService(final List<Holiday> list) {
 		definitions.addAll(list);
@@ -70,11 +70,7 @@ public class HolidayService {
 
 		for (final Holiday holiday : definitions) {
 			final LocalDate date = holiday.of(year);
-			List<Holiday> entry = holidayInstances.get(date);
-			if (entry == null) {
-				entry = new ArrayList<>();
-				holidayInstances.put(date, entry);
-			}
+			final List<Holiday> entry = holidayInstances.computeIfAbsent(date, d -> new ArrayList<>());
 			entry.add(holiday);
 		}
 		years.add(year);
