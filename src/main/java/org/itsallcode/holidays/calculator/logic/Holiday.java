@@ -50,6 +50,7 @@ public abstract class Holiday {
 	 *
 	 * @param month Month
 	 * @param day   Day
+	 * @return local date if valid
 	 */
 	protected LocalDate ensureValidDate(int month, int day) {
 		return LocalDate.of(PIVOT_YEAR, month, day);
