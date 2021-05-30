@@ -16,6 +16,10 @@ Holiday-calculator supports the following formula flavors:
 - a date defined relatively to Easter Sunday with a positive or negative
   offset of days
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
 ## Configuration
 
 User can set up his or her individual personal list of favorite holidays using
@@ -122,3 +126,59 @@ Samples:
 - `holiday easter   0 Easter Sunday`
 - `holiday easter  -2 Good Friday`
 - `holiday easter +49 Pentecost Sunday`
+
+## Usage
+
+* Add Maven Central maven repository:
+
+    ```groovy
+    repositories {
+        mavenCentral()
+    }
+    ```
+
+* Add dependency
+
+    ```groovy
+    dependencies {
+        compile 'org.itsallcode:holiday-calculator:0.0.1'
+    }
+    ```
+
+## Development
+
+### Generate / update license header
+
+```bash
+$ ./gradlew licenseFormat
+```
+### Building
+
+Install to local maven repository:
+
+```bash
+./gradlew clean publishToMavenLocal
+```
+
+### Publish to Maven Central
+
+1. Add the following to your `~/.gradle/gradle.properties`:
+
+    ```properties
+    ossrhUsername=<your maven central username>
+    ossrhPassword=<your maven central passwort>
+
+    signing.keyId=<gpg key id (last 8 chars)>
+    signing.password=<gpg key password>
+    signing.secretKeyRingFile=<path to secret keyring file>
+    ```
+
+2. Increment version number in `build.gradle` and `README.md`, update [CHANGELOG.md](CHANGELOG.md), commit and push.
+3. Run the following command:
+
+    ```bash
+    $ ./gradlew clean build publish closeAndReleaseRepository --info
+    ```
+
+4. Create a new [release](https://github.com/itsallcode/holiday-calculator/releases) on GitHub.
+5. After some time the release will be available at [Maven Central](https://repo1.maven.org/maven2/org/itsallcode/holiday-calculator/).
