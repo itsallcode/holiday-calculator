@@ -8,7 +8,6 @@ plugins {
     id 'io.codearte.nexus-staging' version '0.30.0'
 }
 
-// holidaycalculator
 group 'org.itsallcode'
 version = '0.0.1'
 
@@ -87,10 +86,9 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             pom {
-				// TBD
-                name = 'FritzBox Java API'
-                description = 'Java API for managing FritzBox HomeAutomation '
-                url = 'https://github.com/kaklakariada/fritzbox-java-api'
+                name = 'Holiday Calculator'
+                description = 'Java library for calculating public holidays'
+                url = 'https://github.com/itsallcode/holiday-calculator'
 
                 licenses {
                     license {

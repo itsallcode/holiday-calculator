@@ -125,7 +125,7 @@ public class HolidayServiceTest {
 				new EasterBasedHoliday("holiday", "Pfingstsonntag", +49),
 				new EasterBasedHoliday("holiday", "Pfingstmontag", +50),
 				new EasterBasedHoliday("holiday", "Fronleichnam", +60),
-				new FixedDateHoliday("holiday", "Mariae Himmelfahrt", 8, 15),
+				new FixedDateHoliday("holiday", "Mariä Himmelfahrt", 8, 15),
 				new FixedDateHoliday("holiday", "Allerheiligen", 11, 1),
 				new FloatingHoliday("holiday", "Totensonntag", 1, DayOfWeek.SUNDAY, Direction.AFTER, 11, 20) };
 	}

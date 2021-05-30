@@ -52,6 +52,6 @@ holiday easter +39 Christi Himmelfahrt
 holiday easter +49 Pfingstsonntag
 holiday easter +50 Pfingstmontag
 holiday easter +60 Fronleichnam
-holiday fixed 8 15 Mariae Himmelfahrt
+holiday fixed 8 15 Mariä Himmelfahrt
 holiday fixed 11 1 Allerheiligen
 holiday float 1 SUN after 11 20 Totensonntag
