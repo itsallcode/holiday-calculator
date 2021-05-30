@@ -130,21 +130,26 @@ Samples:
 
 ## Usage
 
-* Add Maven Central maven repository:
+### Gradle
 
-    ```groovy
-    repositories {
-        mavenCentral()
-    }
-    ```
+```groovy
+repositories {
+    mavenCentral()
+}
+dependencies {
+    compile 'org.itsallcode:holiday-calculator:0.0.1'
+}
+```
 
-* Add dependency
+### Maven
 
-    ```groovy
-    dependencies {
-        compile 'org.itsallcode:holiday-calculator:0.0.1'
-    }
-    ```
+```xml
+<dependency>
+    <groupId>org.itsallcode</groupId>
+    <artifactId>holiday-calculator</artifactId>
+    <version>0.0.1</version>
+</dependency>
+```
 
 ## Development
 
