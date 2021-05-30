@@ -73,8 +73,6 @@ public class HolidaysFileParser {
 				result.add(holiday);
 			} else {
 				LOG.error("File {}:{}: Couldn't parse '{}'.", identifier, n, line);
-				// LOG.error("File " + identifier + ":" + n + ": Couldn't parse
-				// '" + line + "'.");
 				errors.add(new Error(n, line));
 			}
 		}
