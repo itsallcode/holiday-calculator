@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HolidaysFileParser {
+
 	public static class Error {
 		public final int lineNumber;
 		public final String content;
@@ -41,6 +42,7 @@ public class HolidaysFileParser {
 	}
 
 	private static final Logger LOG = LoggerFactory.getLogger(HolidaysFileParser.class);
+	private static final String COMMENT_CHAR = "#";
 
 	final HolidayParser holidayParser = new HolidayParser();
 	private final List<Error> errors = new ArrayList<>();
@@ -63,8 +65,8 @@ public class HolidaysFileParser {
 		String line;
 		while ((line = reader.readLine()) != null) {
 			n++;
-			line = line.trim();
-			if (line.isEmpty() || line.startsWith("#")) {
+			line = cutOffComment(line);
+			if (line.isEmpty()) {
 				continue;
 			}
 
@@ -77,6 +79,10 @@ public class HolidaysFileParser {
 			}
 		}
 		return result;
+	}
+
+	private String cutOffComment(String string) {
+		return string.replaceFirst(COMMENT_CHAR + ".*$", "").trim();
 	}
 
 	public List<Error> getErrors() {

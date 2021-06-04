@@ -19,10 +19,10 @@ package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
 
-public class GaussEasterCalculator {
+public class Easter {
 
 	// disable to create unwanted instances
-	private GaussEasterCalculator() {
+	private Easter() {
 	}
 
 	/**
@@ -38,13 +38,13 @@ public class GaussEasterCalculator {
 	 * @param year Year to calculate Easter Sunday for.
 	 * @return Easter Sunday in the specified year.
 	 */
-	public static LocalDate calculate(int year) {
+	public static LocalDate gauss(int year) {
 		final int x = year;
-		int k; // secular number
+		int k; // secular number / century
 		int m; // secular moon correction
 		int s; // secular sun correction
-		int a; // moon parameter
-		int d; // seed for first full moon in spring
+		int a; // moon parameter / golden number
+		int d; // seed for first full moon in spring / (23 - Epact) mod 30
 		int r; // calendar correction
 		int eb; // Easter boundary
 		int sz; // first Sunday in March
