@@ -19,14 +19,15 @@ package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
 
-public class EasterBasedHoliday extends PivotDateBasedHoliday {
+public class OrthodoxEasterBasedHoliday extends PivotDateBasedHoliday {
 
-	public EasterBasedHoliday(String category, String name, int offsetInDays) {
-		super("Easter", category, name, offsetInDays);
+	public OrthodoxEasterBasedHoliday(String category, String name, int offsetInDays) {
+		super("Orthodox Easter", category, name, offsetInDays);
 	}
 
 	@Override
 	public LocalDate of(int year) {
-		return Easter.gauss(year).plusDays(offsetInDays);
+		return Easter.orthodox(year).plusDays(offsetInDays);
 	}
+
 }
