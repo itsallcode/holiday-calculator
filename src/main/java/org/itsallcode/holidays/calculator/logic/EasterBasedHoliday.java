@@ -29,7 +29,7 @@ public class EasterBasedHoliday extends Holiday {
 
 	@Override
 	public LocalDate of(int year) {
-		return GaussEasterCalculator.calculate(year).plusDays(offsetInDays);
+		return Easter.gauss(year).plusDays(offsetInDays);
 	}
 
 	@Override

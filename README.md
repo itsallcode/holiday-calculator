@@ -42,22 +42,21 @@ The configuration file is organized in lines. Each line can contain one of 5
 types of content:
 
 1. Empty
-2. Comment
-3. Fixed date holiday definition
-4. Floating holiday definition
-5. Easter-based holiday definition
+2. Fixed date holiday definition
+3. Floating holiday definition
+4. Easter-based holiday definition
 
-All other lines are rated as illegal and ignored by Holiday-calculator,
+All other lines are rated as illegal and ignored by holiday-calculator,
 logging an error message.
 
 Whitespace is allowed in most places without changing the nature of the
 line. Hence, a line containing nothing but tabs and spaces is still rated to
 be an empty line.
 
-#### Comment lines
+#### Comments
 
-A comment line is identified to start (after optional whitespace) with a hash
-mark character "`#`".
+Each line can contain an optional comment starting with hash mark `#`. 
+Holiday-calculator will ignore the rest of the line after and including the hash mark character.
 
 #### Holiday definitions
 
@@ -77,7 +76,7 @@ General rules
   December is 12.
 - Day of month is an integer from 1 to 31.
 
-In the following cases Holiday-calculator will log an error message and ignore
+In the following cases holiday-calculator will log an error message and ignore
 the holiday definition:
 - if the tag does not match any of the three supported tags
   "fixed", "float", "easter"

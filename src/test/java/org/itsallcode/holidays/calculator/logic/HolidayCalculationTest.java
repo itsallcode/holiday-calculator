@@ -256,7 +256,7 @@ class HolidayCalculationTest {
 			"2078, 2078-04-03",
 	}, nullValues = "NULL")
 	void easterDates(int year, LocalDate expectedResult) {
-		assertThat(GaussEasterCalculator.calculate(year)).isEqualTo(expectedResult);
+		assertThat(Easter.gauss(year)).isEqualTo(expectedResult);
 	}
 
 }

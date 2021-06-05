@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [#11](https://github.com/itsallcode/holiday-calculator/issues/11) Support EOL comments in configuration file.
+
 ## [0.0.1] - 2021-05-30
 
 - Initial release

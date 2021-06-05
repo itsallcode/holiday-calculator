@@ -19,6 +19,7 @@ package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,14 +39,14 @@ import java.util.Set;
  * offset of days</li>
  * </ul>
  */
-public class HolidayService {
+public class Holidays {
 	final List<Holiday> definitions = new ArrayList<>();
 	// caches
 	Set<Integer> years = new HashSet<>();
 	HashMap<LocalDate, List<Holiday>> holidayInstances = new HashMap<>();
 
-	public HolidayService(final List<Holiday> list) {
-		definitions.addAll(list);
+	public Holidays(final Collection<Holiday> definitions) {
+		this.definitions.addAll(definitions);
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class HolidayService {
 	 * @return List of holidays occurring on the given date. If there is no holiday
 	 *         on given date, then list is empty.
 	 */
-	public List<Holiday> getHolidays(LocalDate date) {
+	public List<Holiday> instances(LocalDate date) {
 		cacheHolidays(date.getYear());
 
 		final List<Holiday> instances = holidayInstances.get(date);
