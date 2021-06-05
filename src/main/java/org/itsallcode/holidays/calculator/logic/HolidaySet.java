@@ -39,13 +39,15 @@ import java.util.Set;
  * offset of days</li>
  * </ul>
  */
-public class Holidays {
+public class HolidaySet {
+
 	final List<Holiday> definitions = new ArrayList<>();
+
 	// caches
 	Set<Integer> years = new HashSet<>();
 	HashMap<LocalDate, List<Holiday>> holidayInstances = new HashMap<>();
 
-	public Holidays(final Collection<Holiday> definitions) {
+	public HolidaySet(final Collection<Holiday> definitions) {
 		this.definitions.addAll(definitions);
 	}
 

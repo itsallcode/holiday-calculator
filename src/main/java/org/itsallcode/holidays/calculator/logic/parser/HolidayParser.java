@@ -53,7 +53,7 @@ public class HolidayParser {
 	private static final Token DAY_OF_WEEK = new Token(DAY_OF_WEEK_GROUP, "[a-z]+");
 	private static final Token HOLIDAY_NAME = new Token(NAME_GROUP, ".*");
 
-	private static final Token HOLIDAY = new Token(CATEGORY_GROUP, "\\S+");
+	private static final Token CATEGORY = new Token(CATEGORY_GROUP, "\\S+");
 	private static final Token FIXED = new Token(TYPE_GROUP, "fixed");
 	private static final Token FLOAT = new Token(TYPE_GROUP, "float");
 	private static final Token EASTER = new Token(TYPE_GROUP, "easter");
@@ -61,12 +61,12 @@ public class HolidayParser {
 
 	// patterns
 	private static final String SPACE_REGEXP = "\\s+";
-	private static final Pattern FIXED_HOLIDAY = buildRegexp(HOLIDAY, FIXED, MONTH, DAY, HOLIDAY_NAME);
-	private static final Pattern FLOATING_HOLIDAY = buildRegexp(HOLIDAY, FLOAT, POSITIVE_OFFSET, DAY_OF_WEEK,
+	private static final Pattern FIXED_HOLIDAY = buildRegexp(CATEGORY, FIXED, MONTH, DAY, HOLIDAY_NAME);
+	private static final Pattern FLOATING_HOLIDAY = buildRegexp(CATEGORY, FLOAT, POSITIVE_OFFSET, DAY_OF_WEEK,
 			DIRECTION, MONTH,
 			DAY_OR_DEFAULT, HOLIDAY_NAME);
-	private static final Pattern EASTER_BASED_HOLIDAY = buildRegexp(HOLIDAY, EASTER, OFFSET, HOLIDAY_NAME);
-	private static final Pattern ORTHODOX_EASTER_BASED_HOLIDAY = buildRegexp(HOLIDAY, ORTHODOX_EASTER, OFFSET,
+	private static final Pattern EASTER_BASED_HOLIDAY = buildRegexp(CATEGORY, EASTER, OFFSET, HOLIDAY_NAME);
+	private static final Pattern ORTHODOX_EASTER_BASED_HOLIDAY = buildRegexp(CATEGORY, ORTHODOX_EASTER, OFFSET,
 			HOLIDAY_NAME);
 
 	static Pattern buildRegexp(final Token... tokens) {

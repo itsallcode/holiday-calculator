@@ -93,7 +93,7 @@ class HolidaysTest {
 
 	private void assertHolidays(final int year, final int month, final Hashtable<Integer, String> expected)
 			throws IOException {
-		final Holidays service = readBavarianHolidays();
+		final HolidaySet service = readBavarianHolidays();
 		final int n = LocalDate.of(year, month, 1).with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
 		for (int i = 1; i <= n; i++) {
 			final String expectedName = expected.get(i);
@@ -109,10 +109,10 @@ class HolidaysTest {
 		}
 	}
 
-	private Holidays readBavarianHolidays() throws IOException {
+	private HolidaySet readBavarianHolidays() throws IOException {
 		final HolidaysFileParser parser = new HolidaysFileParser("bavaria.txt");
 		final List<Holiday> list = parser.parse(HolidaysTest.class.getResourceAsStream("bavaria.txt"));
-		return new Holidays(list);
+		return new HolidaySet(list);
 	}
 
 	private Holiday[] expectedBavarianHolidays() {
