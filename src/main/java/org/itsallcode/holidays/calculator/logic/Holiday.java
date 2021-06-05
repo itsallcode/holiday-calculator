@@ -19,8 +19,6 @@ package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
 
-import javax.annotation.processing.Generated;
-
 public abstract class Holiday {
 	private static final int PIVOT_YEAR = 2000;
 
@@ -59,7 +57,6 @@ public abstract class Holiday {
 	}
 
 	@Override
-	@Generated("Eclipse IDE")
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -69,7 +66,6 @@ public abstract class Holiday {
 	}
 
 	@Override
-	@Generated("Eclipse IDE")
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

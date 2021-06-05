@@ -44,7 +44,6 @@ public class FixedDateHoliday extends Holiday {
 	}
 
 	@Override
-	@Generated("Eclipse IDE")
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -53,8 +52,10 @@ public class FixedDateHoliday extends Holiday {
 		return result;
 	}
 
+	// https://git.eclipse.org/r/plugins/gitiles/jdt/eclipse.jdt.ui/+/refs/heads/master/org.eclipse.jdt.core.manipulation/core%20extension/org/eclipse/jdt/internal/corext/codemanipulation/GenerateHashCodeEqualsOperation.java
+
 	@Override
-	@Generated("Eclipse IDE")
+	@Generated("org.eclipse.jdt.internal.corext.codemanipulation.GenerateHashCodeEqualsOperation")
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
