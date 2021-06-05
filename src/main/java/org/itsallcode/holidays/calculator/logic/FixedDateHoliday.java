@@ -52,17 +52,22 @@ public class FixedDateHoliday extends Holiday {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final FixedDateHoliday other = (FixedDateHoliday) obj;
-		if (day != other.day)
+		if (day != other.day) {
 			return false;
-		if (month != other.month)
+		}
+		if (month != other.month) {
 			return false;
+		}
 		return true;
 	}
 

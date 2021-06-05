@@ -144,23 +144,31 @@ public class FloatingHoliday extends Holiday {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final FloatingHoliday other = (FloatingHoliday) obj;
-		if (day != other.day)
+		if (day != other.day) {
 			return false;
-		if (dayOfWeek != other.dayOfWeek)
+		}
+		if (dayOfWeek != other.dayOfWeek) {
 			return false;
-		if (direction != other.direction)
+		}
+		if (direction != other.direction) {
 			return false;
-		if (month != other.month)
+		}
+		if (month != other.month) {
 			return false;
-		if (offset != other.offset)
+		}
+		if (offset != other.offset) {
 			return false;
+		}
 		return true;
 	}
 }
