@@ -28,7 +28,7 @@ public abstract class HolidayMatcher {
 	abstract Holiday createHoliday(Matcher matcher);
 
 	private static final Pattern MONTH_NAME_PATTERN = Pattern.compile(
-			HolidayParser.MONTH_NAME, Pattern.CASE_INSENSITIVE);
+			HolidayParser.NAME_REGEXP, Pattern.CASE_INSENSITIVE);
 
 	private final AbbreviationParser<Month> monthNameParser = new AbbreviationParser<>(Month.class);
 	private final Pattern pattern;

@@ -22,7 +22,7 @@ public abstract class PivotDateBasedHoliday extends Holiday {
 	protected final String pivotDateName;
 	protected final int offsetInDays;
 
-	public PivotDateBasedHoliday(String pivotDateName, String category, String name, int offsetInDays) {
+	protected PivotDateBasedHoliday(String pivotDateName, String category, String name, int offsetInDays) {
 		super(category, name);
 		this.offsetInDays = offsetInDays;
 		this.pivotDateName = pivotDateName;

@@ -19,6 +19,8 @@ package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
 
+import javax.annotation.processing.Generated;
+
 public class FixedDateHoliday extends Holiday {
 	private final int month;
 	private final int day;
@@ -50,7 +52,10 @@ public class FixedDateHoliday extends Holiday {
 		return result;
 	}
 
+	// https://git.eclipse.org/r/plugins/gitiles/jdt/eclipse.jdt.ui/+/refs/heads/master/org.eclipse.jdt.core.manipulation/core%20extension/org/eclipse/jdt/internal/corext/codemanipulation/GenerateHashCodeEqualsOperation.java
+
 	@Override
+	@Generated("org.eclipse.jdt.internal.corext.codemanipulation.GenerateHashCodeEqualsOperation")
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -65,10 +70,7 @@ public class FixedDateHoliday extends Holiday {
 		if (day != other.day) {
 			return false;
 		}
-		if (month != other.month) {
-			return false;
-		}
-		return true;
+		return (month == other.month);
 	}
 
 }

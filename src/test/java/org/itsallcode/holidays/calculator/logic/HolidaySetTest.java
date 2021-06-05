@@ -31,7 +31,7 @@ import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.parser.HolidaysFileParser;
 import org.junit.jupiter.api.Test;
 
-class HolidaysTest {
+class HolidaySetTest {
 
 	@Test
 	void illegalLine() throws IOException {
@@ -45,8 +45,8 @@ class HolidaysTest {
 	void comment() throws IOException {
 		final HolidaysFileParser parser = new HolidaysFileParser("comment line");
 		final List<Holiday> actual = parser.parse(new ByteArrayInputStream(" # comment\n".getBytes()));
-		assertThat(parser.getErrors().size()).isEqualTo(0);
-		assertThat(actual.isEmpty());
+		assertThat(parser.getErrors().size()).isZero();
+		assertThat(actual).isEmpty();
 	}
 
 	@Test
@@ -54,7 +54,7 @@ class HolidaysTest {
 		final HolidaysFileParser parser = new HolidaysFileParser("holiday with eol comment");
 		final List<Holiday> actual = parser
 				.parse(new ByteArrayInputStream(" birthday fixed 7 31 My Birthday # comment \n".getBytes()));
-		assertThat(parser.getErrors().size()).isEqualTo(0);
+		assertThat(parser.getErrors().size()).isZero();
 		assertThat(actual).containsExactly(new FixedDateHoliday("birthday", "My Birthday", 7, 31));
 	}
 
@@ -111,7 +111,7 @@ class HolidaysTest {
 
 	private HolidaySet readBavarianHolidays() throws IOException {
 		final HolidaysFileParser parser = new HolidaysFileParser("bavaria.txt");
-		final List<Holiday> list = parser.parse(HolidaysTest.class.getResourceAsStream("bavaria.txt"));
+		final List<Holiday> list = parser.parse(HolidaySetTest.class.getResourceAsStream("bavaria.txt"));
 		return new HolidaySet(list);
 	}
 

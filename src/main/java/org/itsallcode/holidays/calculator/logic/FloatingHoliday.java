@@ -166,9 +166,6 @@ public class FloatingHoliday extends Holiday {
 		if (month != other.month) {
 			return false;
 		}
-		if (offset != other.offset) {
-			return false;
-		}
-		return true;
+		return (offset == other.offset);
 	}
 }

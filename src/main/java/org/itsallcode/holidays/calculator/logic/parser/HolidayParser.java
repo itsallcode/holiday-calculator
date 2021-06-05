@@ -41,11 +41,10 @@ public class HolidayParser {
 	private static final String DAY_OF_WEEK_GROUP = "dayOfWeek";
 	private static final String NAME_GROUP = "name";
 
-	public static final String MONTH_NAME = "[a-z]+";
+	public static final String NAME_REGEXP = "[a-z]+";
 
 	// tokens for regular expressions
-	private static final Token MONTH = new Token(MONTH_GROUP,
-			MONTH_NAME + "|0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12");
+	private static final Token MONTH = new Token(MONTH_GROUP, NAME_REGEXP + "|0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12");
 	private static final Token DAY = new Token(DAY_GROUP,
 			"0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31");
 	public static final String LAST_DAY = "last-day";
@@ -53,7 +52,7 @@ public class HolidayParser {
 	private static final Token OFFSET = new Token(OFFSET_GROUP, "[+-]?\\d\\d?");
 	private static final Token POSITIVE_OFFSET = new Token(OFFSET_GROUP, "\\d\\d?");
 	private static final Token DIRECTION = new Token(DIRECTION_GROUP, "before|after");
-	private static final Token DAY_OF_WEEK = new Token(DAY_OF_WEEK_GROUP, "[a-z]+");
+	private static final Token DAY_OF_WEEK = new Token(DAY_OF_WEEK_GROUP, NAME_REGEXP);
 	private static final Token HOLIDAY_NAME = new Token(NAME_GROUP, ".*");
 
 	private static final Token CATEGORY = new Token(CATEGORY_GROUP, "\\S+");
