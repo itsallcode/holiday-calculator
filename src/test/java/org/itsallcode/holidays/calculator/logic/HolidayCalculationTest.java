@@ -24,14 +24,14 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
-import org.itsallcode.holidays.calculator.logic.parser.DayOfWeekParser;
+import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class HolidayCalculationTest {
 
-	DayOfWeekParser dayOfWeekParser = new DayOfWeekParser();
+	AbbreviationParser<DayOfWeek> dayOfWeekParser = new AbbreviationParser<>(DayOfWeek.class);
 
 	@Test
 	void invalidDate() {
@@ -61,7 +61,7 @@ class HolidayCalculationTest {
 		}
 		final FloatingHoliday holiday = new FloatingHoliday(
 				"holiday", name, offset,
-				dayOfWeekParser.getDayOfWeek(dayOfWeek),
+				dayOfWeekParser.getEnumFor(dayOfWeek),
 				Direction.parse(direction),
 				month, day);
 		assertThat(holiday.of(year)).isEqualTo(expected);

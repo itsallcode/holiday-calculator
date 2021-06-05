@@ -17,14 +17,20 @@
  */
 package org.itsallcode.holidays.calculator.logic.parser;
 
+import java.time.Month;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.itsallcode.holidays.calculator.logic.Holiday;
 
 public abstract class HolidayMatcher {
+
 	abstract Holiday createHoliday(Matcher matcher);
 
+	private static final Pattern MONTH_NAME_PATTERN = Pattern.compile(
+			HolidayParser.MONTH_NAME, Pattern.CASE_INSENSITIVE);
+
+	private final AbbreviationParser<Month> monthNameParser = new AbbreviationParser<>(Month.class);
 	private final Pattern pattern;
 
 	protected HolidayMatcher(Pattern pattern) {
@@ -37,6 +43,18 @@ public abstract class HolidayMatcher {
 			return null;
 		}
 		return createHoliday(matcher);
+	}
+
+	/**
+	 * @param arg (abbreviated) name of month or number as String
+	 * @return number of month as integer
+	 */
+	protected int monthNumber(String arg) {
+		if (MONTH_NAME_PATTERN.matcher(arg).matches()) {
+			return monthNameParser.getEnumFor(arg).getValue();
+		} else {
+			return Integer.parseInt(arg);
+		}
 	}
 
 }
