@@ -29,7 +29,7 @@ public class DayOfWeekParser {
 		}
 	}
 
-	HashMap<String, DayOfWeek> cache = new HashMap<>();
+	private final HashMap<String, DayOfWeek> cache = new HashMap<>();
 
 	public DayOfWeek getDayOfWeek(final String prefix) {
 		if (cache.containsKey(prefix)) {
