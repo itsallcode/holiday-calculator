@@ -69,4 +69,20 @@ public class Easter {
 
 		return LocalDate.of(year, easterMonth, easterDay);
 	}
+
+	/**
+	 * source https://www.emacswiki.org/emacs/ukrainian-holidays.el
+	 *
+	 * @param year Year to calculate Easter Sunday for.
+	 * @return Orthodox Easter Sunday in the specified year.
+	 */
+	public static LocalDate orthodox(int year) {
+		final int x = ((year % 19) * 19 + 15) % 30;
+		final int day = x + 10 - (((5 * year) / 4 + x) % 7);
+		if (day < 31) {
+			return LocalDate.of(year, 4, day);
+		} else {
+			return LocalDate.of(year, 5, day - 30);
+		}
+	}
 }

@@ -45,6 +45,7 @@ types of content:
 2. Fixed date holiday definition
 3. Floating holiday definition
 4. Easter-based holiday definition
+5. Orthodox-Easter-based holiday definition
 
 All other lines are rated as illegal and ignored by holiday-calculator,
 logging an error message.
@@ -126,6 +127,19 @@ Samples:
 - `holiday easter   0 Easter Sunday`
 - `holiday easter  -2 Good Friday`
 - `holiday easter +49 Pentecost Sunday`
+
+#### Orthodox-Easter-based holiday definition
+
+An Orthodox-Easter-based holiday definition has the tag "orthodox-easter", followed by the
+offset. The offset is the number of days from Easter Sunday. If offset is
+negative then the holiday is before Orthodox-Easter Sunday, otherwise after.
+
+Syntax: `holiday orthodox-easter <offset> <name>`
+
+Samples:
+- `holiday orthodox-easter   0 Orthodox Easter Sunday`
+- `holiday orthodox-easter  -2 Orthodox Good Friday`
+- `holiday orthodox-easter +49 Orthodox Pentecost Monday`
 
 ## Usage
 

@@ -146,6 +146,33 @@ class HolidayParserTest {
 	}
 
 	@Test
+	void fixedDate() {
+		assertThat(holidayParser.parse("holiday fixed 1 1 Neujahr"))
+				.isEqualTo(new FixedDateHoliday("holiday", "Neujahr", 1, 1));
+	}
+
+	@Test
+	void floatingDate() {
+		assertThat(holidayParser.parse("holiday float 4 SUN before 12 24 1. Advent"))
+				.isEqualTo(
+						new FloatingHoliday("holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24));
+	}
+
+	@Test
+	void easter() {
+		assertThat(holidayParser.parse("holiday easter +39 Christi Himmelfahrt"))
+				.isEqualTo(
+						new EasterBasedHoliday("holiday", "Christi Himmelfahrt", +39));
+	}
+
+	@Test
+	void orthodoxEaster() {
+		assertThat(holidayParser.parse("holiday orthodox-easter -2 Orthodox Good Friday"))
+				.isEqualTo(
+						new OrthodoxEasterBasedHoliday("holiday", "Orthodox Good Friday", -2));
+	}
+
+	@Test
 	void successfulParsing() {
 		assertThat(holidayParser.parse("holiday fixed 1 1 Neujahr"))
 				.isEqualTo(new FixedDateHoliday("holiday", "Neujahr", 1, 1));

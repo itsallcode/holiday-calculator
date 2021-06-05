@@ -24,8 +24,9 @@ import java.util.regex.Pattern;
 import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
-import org.itsallcode.holidays.calculator.logic.Holiday;
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
+import org.itsallcode.holidays.calculator.logic.Holiday;
+import org.itsallcode.holidays.calculator.logic.OrthodoxEasterBasedHoliday;
 
 public class HolidayParser {
 
@@ -56,6 +57,7 @@ public class HolidayParser {
 	private static final Token FIXED = new Token(TYPE_GROUP, "fixed");
 	private static final Token FLOAT = new Token(TYPE_GROUP, "float");
 	private static final Token EASTER = new Token(TYPE_GROUP, "easter");
+	private static final Token ORTHODOX_EASTER = new Token(TYPE_GROUP, "orthodox-easter");
 
 	// patterns
 	private static final String SPACE_REGEXP = "\\s+";
@@ -64,6 +66,8 @@ public class HolidayParser {
 			DIRECTION, MONTH,
 			DAY_OR_DEFAULT, HOLIDAY_NAME);
 	private static final Pattern EASTER_BASED_HOLIDAY = buildRegexp(HOLIDAY, EASTER, OFFSET, HOLIDAY_NAME);
+	private static final Pattern ORTHODOX_EASTER_BASED_HOLIDAY = buildRegexp(HOLIDAY, ORTHODOX_EASTER, OFFSET,
+			HOLIDAY_NAME);
 
 	static Pattern buildRegexp(final Token... tokens) {
 		final StringBuilder sb = new StringBuilder();
@@ -80,7 +84,11 @@ public class HolidayParser {
 	public Holiday parse(String line) {
 		final String trimmed = line.trim();
 		final HolidayMatcher[] matchers = new HolidayMatcher[] {
-				new FixedDateMatcher(), new FloatingDateMatcher(), new EasterBasedMatcher() };
+				new FixedDateMatcher(),
+				new FloatingDateMatcher(),
+				new EasterBasedMatcher(),
+				new OrthodoxEasterBasedMatcher()
+		};
 
 		for (final HolidayMatcher m : matchers) {
 			final Holiday holiday = m.createHoliday(trimmed);
@@ -140,6 +148,20 @@ public class HolidayParser {
 		@Override
 		Holiday createHoliday(Matcher matcher) {
 			return new EasterBasedHoliday(
+					matcher.group(CATEGORY_GROUP),
+					matcher.group(NAME_GROUP),
+					Integer.parseInt(matcher.group(OFFSET_GROUP)));
+		}
+	}
+
+	private static class OrthodoxEasterBasedMatcher extends HolidayMatcher {
+		public OrthodoxEasterBasedMatcher() {
+			super(ORTHODOX_EASTER_BASED_HOLIDAY);
+		}
+
+		@Override
+		Holiday createHoliday(Matcher matcher) {
+			return new OrthodoxEasterBasedHoliday(
 					matcher.group(CATEGORY_GROUP),
 					matcher.group(NAME_GROUP),
 					Integer.parseInt(matcher.group(OFFSET_GROUP)));
