@@ -17,12 +17,14 @@
  */
 package org.itsallcode.holidays.calculator.logic;
 
+import javax.annotation.processing.Generated;
+
 public abstract class PivotDateBasedHoliday extends Holiday {
 
 	protected final String pivotDateName;
 	protected final int offsetInDays;
 
-	public PivotDateBasedHoliday(String pivotDateName, String category, String name, int offsetInDays) {
+	protected PivotDateBasedHoliday(String pivotDateName, String category, String name, int offsetInDays) {
 		super(category, name);
 		this.offsetInDays = offsetInDays;
 		this.pivotDateName = pivotDateName;
@@ -39,6 +41,7 @@ public abstract class PivotDateBasedHoliday extends Holiday {
 	}
 
 	@Override
+	@Generated("Eclipse IDE")
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -48,6 +51,7 @@ public abstract class PivotDateBasedHoliday extends Holiday {
 	}
 
 	@Override
+	@Generated("Eclipse IDE")
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

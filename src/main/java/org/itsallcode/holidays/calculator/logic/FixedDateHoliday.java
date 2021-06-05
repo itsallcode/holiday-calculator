@@ -19,6 +19,8 @@ package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
 
+import javax.annotation.processing.Generated;
+
 public class FixedDateHoliday extends Holiday {
 	private final int month;
 	private final int day;
@@ -42,6 +44,7 @@ public class FixedDateHoliday extends Holiday {
 	}
 
 	@Override
+	@Generated("Eclipse IDE")
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -51,6 +54,7 @@ public class FixedDateHoliday extends Holiday {
 	}
 
 	@Override
+	@Generated("Eclipse IDE")
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -65,10 +69,7 @@ public class FixedDateHoliday extends Holiday {
 		if (day != other.day) {
 			return false;
 		}
-		if (month != other.month) {
-			return false;
-		}
-		return true;
+		return (month == other.month);
 	}
 
 }

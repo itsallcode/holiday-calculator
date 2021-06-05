@@ -34,6 +34,22 @@ class HolidayCalculationTest {
 	AbbreviationParser<DayOfWeek> dayOfWeekParser = new AbbreviationParser<>(DayOfWeek.class);
 
 	@Test
+	void toStringTest() {
+		assertThat(new FixedDateHoliday("birthday", "My Birthday", 7, 31).toString())
+				.isEqualTo("FixedDateHoliday(birthday My Birthday: 07-31)");
+		assertThat(new FloatingHoliday(
+				"holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24).toString())
+						.isEqualTo("FloatingHoliday(holiday 1. Advent: 4th Sunday before 12-24)");
+		assertThat(new FloatingHoliday(
+				"holiday", "Father's Day", 3, DayOfWeek.SUNDAY, Direction.AFTER, 6, 1).toString())
+						.isEqualTo("FloatingHoliday(holiday Father's Day: 3rd Sunday after 06-01)");
+		assertThat(new EasterBasedHoliday("holiday", "Good Friday", -2).toString())
+				.isEqualTo("EasterBasedHoliday(holiday Good Friday: 2 days before Easter)");
+		assertThat(new EasterBasedHoliday("holiday", "Easter Monday", +1).toString())
+				.isEqualTo("EasterBasedHoliday(holiday Easter Monday: 1 day after Easter)");
+	}
+
+	@Test
 	void invalidDate() {
 		assertThrows(java.time.DateTimeException.class,
 				() -> new FloatingHoliday("holiday", "Famous Februar, 30th",

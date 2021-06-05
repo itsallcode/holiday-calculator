@@ -21,6 +21,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 
+import javax.annotation.processing.Generated;
+
 import org.itsallcode.holidays.calculator.logic.parser.HolidayParser;
 
 public class FloatingHoliday extends Holiday {
@@ -131,6 +133,7 @@ public class FloatingHoliday extends Holiday {
 	}
 
 	@Override
+	@Generated("Eclipse IDE")
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -143,6 +146,7 @@ public class FloatingHoliday extends Holiday {
 	}
 
 	@Override
+	@Generated("Eclipse IDE")
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -166,9 +170,6 @@ public class FloatingHoliday extends Holiday {
 		if (month != other.month) {
 			return false;
 		}
-		if (offset != other.offset) {
-			return false;
-		}
-		return true;
+		return (offset == other.offset);
 	}
 }
