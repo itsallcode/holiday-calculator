@@ -49,20 +49,26 @@ public abstract class PivotDateBasedHoliday extends Holiday {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final PivotDateBasedHoliday other = (PivotDateBasedHoliday) obj;
-		if (offsetInDays != other.offsetInDays)
+		if (offsetInDays != other.offsetInDays) {
 			return false;
+		}
 		if (pivotDateName == null) {
-			if (other.pivotDateName != null)
+			if (other.pivotDateName != null) {
 				return false;
-		} else if (!pivotDateName.equals(other.pivotDateName))
+			}
+		} else if (!pivotDateName.equals(other.pivotDateName)) {
 			return false;
+		}
 		return true;
 	}
 }

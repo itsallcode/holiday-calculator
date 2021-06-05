@@ -40,10 +40,10 @@ import java.util.Set;
  * </ul>
  */
 public class Holidays {
-	final List<Holiday> definitions = new ArrayList<>();
+	private final List<Holiday> definitions = new ArrayList<>();
 	// caches
-	Set<Integer> years = new HashSet<>();
-	HashMap<LocalDate, List<Holiday>> holidayInstances = new HashMap<>();
+	private final Set<Integer> years = new HashSet<>();
+	private final HashMap<LocalDate, List<Holiday>> holidayInstances = new HashMap<>();
 
 	public Holidays(final Collection<Holiday> definitions) {
 		this.definitions.addAll(definitions);
