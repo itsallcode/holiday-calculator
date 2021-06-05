@@ -17,21 +17,34 @@
  */
 package org.itsallcode.holidays.calculator.logic.parser;
 
-import java.time.DayOfWeek;
 import java.util.HashMap;
 
-public class DayOfWeekParser {
-	public static class AmbigueDayOfWeekAbbreviationException extends RuntimeException {
+public class AbbreviationParser<T extends Enum<T>> {
+
+	public static class AmbigueAbbreviationException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
-		public AmbigueDayOfWeekAbbreviationException(String message) {
+		public AmbigueAbbreviationException(String message) {
 			super(message);
 		}
 	}
 
-	private final HashMap<String, DayOfWeek> cache = new HashMap<>();
+	public static class InvalidAbbreviationException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
 
-	public DayOfWeek getDayOfWeek(final String prefix) {
+		public InvalidAbbreviationException(String message) {
+			super(message);
+		}
+	}
+
+	private final Class<T> clazz;
+	private final HashMap<String, T> cache = new HashMap<>();
+
+	public AbbreviationParser(Class<T> clazz) {
+		this.clazz = clazz;
+	}
+
+	public T getEnumFor(final String prefix) {
 		if (cache.containsKey(prefix)) {
 			return cache.get(prefix);
 		}
@@ -41,20 +54,22 @@ public class DayOfWeekParser {
 			upper = prefix.toUpperCase();
 		}
 
-		DayOfWeek result = null;
-		for (final DayOfWeek day : DayOfWeek.values()) {
-			if (day.toString().toUpperCase().startsWith(upper)) {
+		T result = null;
+		for (final T value : clazz.getEnumConstants()) {
+			if (value.toString().toUpperCase().startsWith(upper)) {
 				if (result != null) {
-					throw new AmbigueDayOfWeekAbbreviationException(prefix);
+					throw new AmbigueAbbreviationException(prefix);
 				}
-				result = day;
+				result = value;
 			}
 		}
 
-		if (result != null) {
-			cache.put(prefix, result);
+		if (result == null) {
+			throw new InvalidAbbreviationException("Could not find any " + clazz.getSimpleName()
+					+ " for abbreviation \"" + prefix + "\"");
 		}
 
+		cache.put(prefix, result);
 		return result;
 	}
 

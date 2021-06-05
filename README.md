@@ -63,7 +63,7 @@ Holiday-calculator will ignore the rest of the line after and including the hash
 
 All holiday definitions start with a *category*.  The category is an arbitrary
 string of non-whitespace characters. The application evaluating your holidays
-might support different categories of holidays, e.g. birthdays, aniversaries,
+might support different categories of holidays, e.g. birthdays, anniversaries,
 etc. and may display them in different colors. As a default we propose to use
 category "holiday".
 
@@ -73,9 +73,11 @@ is always a string containing the name of the holiday.
 
 General rules
 - All strings except the name of the holiday are case-insensitive.
-- In all definitions including the number of a month, January is 1,
-  December is 12.
+- In all definitions including a month the month may be specified using its
+  English name, a unique abbreviation of the name or the number of a month
+  with 1 for January and 12 for December.
 - Day of month is an integer from 1 to 31.
+- Day of week is one of the English names or a unique abbreviation of it.
 
 In the following cases holiday-calculator will log an error message and ignore
 the holiday definition:
@@ -83,9 +85,13 @@ the holiday definition:
   "fixed", "float", "easter"
 - if the holiday definition contains illegal numbers, such as month 0 or 13,
   day 32, or day 30 for February
-- if the day of week does not match the abbreviation of any of the english
+- if the day of week does not match the abbreviation of any of the English
   names Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 - if the day of week is abbreviated ambiguously, e.g. "T" or "S"
+- if the name of a month does not match the abbreviation of any of the English
+  names January, February, March, April, May, June, July, August, September, 
+  October, November. 
+- if the name of a month is abbreviated ambiguously, e.g. "Ma" or "Ju"
 
 #### Fixed date holiday definition
 

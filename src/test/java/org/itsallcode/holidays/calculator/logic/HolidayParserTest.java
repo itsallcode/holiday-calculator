@@ -24,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.DayOfWeek;
 
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
-import org.itsallcode.holidays.calculator.logic.parser.DayOfWeekParser;
+import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser.AmbigueAbbreviationException;
+import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser.InvalidAbbreviationException;
 import org.itsallcode.holidays.calculator.logic.parser.HolidayParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,10 +79,16 @@ class HolidayParserTest {
 
 	@Test
 	void ambigueDayOfWeekAbbreviation() {
-		assertThrows(DayOfWeekParser.AmbigueDayOfWeekAbbreviationException.class,
+		assertThrows(AmbigueAbbreviationException.class,
 				() -> holidayParser.parse("holiday float 1 S before 1 1 Ambigue January S-day"));
-		assertThrows(DayOfWeekParser.AmbigueDayOfWeekAbbreviationException.class,
+		assertThrows(AmbigueAbbreviationException.class,
 				() -> holidayParser.parse("holiday float 1 T before 1 1 Ambigue January T-day"));
+	}
+
+	@Test
+	void invalidDayOfWeekAbbreviation() {
+		assertThrows(InvalidAbbreviationException.class,
+				() -> holidayParser.parse("holiday float 1 Sonntag before 1 1 Invalid week day"));
 	}
 
 	@Test
@@ -146,6 +153,31 @@ class HolidayParserTest {
 	}
 
 	@Test
+	void monthNames() {
+		assertThat(holidayParser.parse("holiday fixed Jan 1 Neujahr"))
+				.isEqualTo(new FixedDateHoliday("holiday", "Neujahr", 1, 1));
+		assertThat(holidayParser.parse("holiday fixed D 24 XMas Eve"))
+				.isEqualTo(new FixedDateHoliday("holiday", "XMas Eve", 12, 24));
+		assertThat(holidayParser.parse("holiday float 4 SUN before Decem 24 1. Advent"))
+				.isEqualTo(new FloatingHoliday(
+						"holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24));
+	}
+
+	@Test
+	void ambigueMonthName() {
+		assertThrows(AmbigueAbbreviationException.class,
+				() -> holidayParser.parse("holiday fixed M 1 Ambigue M-Month 1"));
+		assertThrows(AmbigueAbbreviationException.class,
+				() -> holidayParser.parse("holiday fixed j 30 Ambigue J-Month 30"));
+	}
+
+	@Test
+	void invalidMonthAbbreviation() {
+		assertThrows(InvalidAbbreviationException.class,
+				() -> holidayParser.parse("holiday fixed Me 1 Ambigue Me-Month 1"));
+	}
+
+	@Test
 	void fixedDate() {
 		assertThat(holidayParser.parse("holiday fixed 1 1 Neujahr"))
 				.isEqualTo(new FixedDateHoliday("holiday", "Neujahr", 1, 1));
@@ -154,8 +186,8 @@ class HolidayParserTest {
 	@Test
 	void floatingDate() {
 		assertThat(holidayParser.parse("holiday float 4 SUN before 12 24 1. Advent"))
-				.isEqualTo(
-						new FloatingHoliday("holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24));
+				.isEqualTo(new FloatingHoliday(
+						"holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24));
 	}
 
 	@Test
