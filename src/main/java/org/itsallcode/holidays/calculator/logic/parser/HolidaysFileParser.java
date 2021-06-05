@@ -44,7 +44,7 @@ public class HolidaysFileParser {
 	private static final Logger LOG = LoggerFactory.getLogger(HolidaysFileParser.class);
 	private static final String COMMENT_CHAR = "#";
 
-	final HolidayParser holidayParser = new HolidayParser();
+	private final HolidayParser holidayParser = new HolidayParser();
 	private final List<Error> errors = new ArrayList<>();
 	private final String identifier;
 

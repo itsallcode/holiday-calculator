@@ -26,7 +26,7 @@ public class Easter {
 	}
 
 	/**
-	 * source:
+	 * Source:
 	 * https://de.wikibooks.org/wiki/Algorithmensammlung:_Kalender:_Feiertage/
 	 *
 	 * <p>
@@ -71,7 +71,7 @@ public class Easter {
 	}
 
 	/**
-	 * source https://www.emacswiki.org/emacs/ukrainian-holidays.el
+	 * Source: https://www.emacswiki.org/emacs/ukrainian-holidays.el
 	 *
 	 * @param year Year to calculate Easter Sunday for.
 	 * @return Orthodox Easter Sunday in the specified year.
