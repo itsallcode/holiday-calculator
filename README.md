@@ -21,12 +21,107 @@ Holiday-calculator supports the following formula flavors:
 
 See [CHANGELOG.md](CHANGELOG.md).
 
-## Configuration
+## Usage
+
+### Gradle
+
+```groovy
+repositories {
+    mavenCentral()
+}
+dependencies {
+    compile 'org.itsallcode:holiday-calculator:0.1.0'
+}
+```
+
+### Maven
+
+```xml
+<dependency>
+    <groupId>org.itsallcode</groupId>
+    <artifactId>holiday-calculator</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+### Calculating holidays
+
+In order to calculate holidays you must create a holiday definition. 
+Holiday-calculator supports 4 different flavors of holiday definitions.
+For each flavor there is a dedicated class in package `org.itsallcode.holidays.calculator.logic`. 
+
+1. class `FixedDateHoliday`: Fixed date holiday definition
+2. class `FloatingHoliday`: Floating holiday definition
+3. class `EasterBasedHoliday`: Easter-based holiday definition
+4. class `OrthodoxEasterBasedHoliday`: Orthodox-Easter-based holiday definition
+
+Section [Configuration file](README.md#flavors) describes the details and parameters for each flavor.
+
+#### Instantiating subclasses of Holiday
+
+The following code sample instantiates one holiday for each of these flavors:
+
+```
+import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
+import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.OrthodoxEasterBasedHoliday;
+
+class MyClass {
+	public MyClass() {
+		FixedDateHoliday h1 = new FixedDateHoliday("holiday", "Christmas Eve", 12, 24);
+		FloatingHoliday h2 = new FloatingHoliday(
+			"holiday", "Father's Day", 3, DayOfWeek.SUNDAY, Direction.AFTER, 6, 1);
+		EasterBasedHoliday h3 = new EasterBasedHoliday("holiday", "Good Friday", -2);
+		OrthodoxEasterBasedHoliday h4 = new OrthodoxEasterBasedHoliday(
+			"holiday", "Orthodox Good Friday", -2);
+	}
+}
+```
+
+#### Parsing a configuration File
+
+Besides creating instances of the subclasses of Holiday you can also use a configuration file to define your personal selection of holidays. Class `HolidaysFileParser` then parses the file and returns a list of holidays: 
+
+```
+import org.itsallcode.holidays.calculator.logic.parser.HolidaysFileParser
+
+class MyClass {
+	public MyClass() {
+		List<Holiday> holidays = new HolidaysFileParser.parse("/path/to/holidays.cfg")
+	}
+}
+```
+
+For the four example holidays instantiated above, the content of the file could look like
+
+```
+# my holidays
+
+holiday fixed 12 24 Christmas Eve
+holiday float     3 SUN after  6  1 Father's Day
+holiday easter   -2 Good Friday
+holiday orthodox-easter -2 Orthodox Good Friday
+```
+
+Section [Configuration file](README.md#flavors) describes the syntax in detail.
+
+#### Evaluating a specific holiday for a specific year
+
+In order to evaluate a holiday for the current or any other year and hence get an instance of this holiday, you can just call method `Holiday.of()`, supplying the year as argument:
+
+```
+	EasterBasedHoliday goodFriday = new EasterBasedHoliday("holiday", "Good Friday", -2);
+	LocalDate goodFriday2021 = goodFriday.of(2021); // 2021 April 4th
+```
+
+
+### Configuration
 
 User can set up his or her individual personal list of favorite holidays using
 the supported formula flavors.
 
-### Configuration file
+#### Configuration file
 
 (This section needs to be moved to the WR plugin description)
 
@@ -36,7 +131,7 @@ located in data directory next to file `projects.json`.
 See WR configuration about how to configure the location of the data
 directory.
 
-### Content of configuration file
+#### <a name="flavors"></a>Content of configuration file
 
 The configuration file is organized in lines. Each line can contain one of 5
 types of content:
@@ -54,12 +149,13 @@ Whitespace is allowed in most places without changing the nature of the
 line. Hence, a line containing nothing but tabs and spaces is still rated to
 be an empty line.
 
-#### Comments
+##### Comments
 
-Each line can contain an optional comment starting with hash mark `#`. 
-Holiday-calculator will ignore the rest of the line after and including the hash mark character.
+Each line can contain an optional comment starting with hash mark `#`.
+Holiday-calculator will ignore the rest of the line after and including the
+hash mark character.
 
-#### Holiday definitions
+##### Holiday definitions
 
 All holiday definitions start with a *category*.  The category is an arbitrary
 string of non-whitespace characters. The application evaluating your holidays
@@ -89,11 +185,11 @@ the holiday definition:
   names Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 - if the day of week is abbreviated ambiguously, e.g. "T" or "S"
 - if the name of a month does not match the abbreviation of any of the English
-  names January, February, March, April, May, June, July, August, September, 
-  October, November. 
+  names January, February, March, April, May, June, July, August, September,
+  October, November.
 - if the name of a month is abbreviated ambiguously, e.g. "Ma" or "Ju"
 
-#### Fixed date holiday definition
+##### Fixed date holiday definition
 
 A fixed date holiday definition has the tag "fixed", followed by the numbers
 of month and day of month.
@@ -102,7 +198,7 @@ Syntax: `holiday fixed <month> <day> <name>`
 
 Sample: `holiday fixed 1 1 New Year`
 
-#### Floating holiday definition
+##### Floating holiday definition
 
 A floating holiday definition has the tag "float", followed by the offset, the
 day of week, the direction "before" or "after", the numbers of month and day
@@ -121,7 +217,7 @@ Samples:
 - `holiday float 2 MON before 12 last-day Second Monday before New Year's eve, December the 31st`
 - `holiday float 4 SUNDAY before 12 24 First Advent`
 
-#### Easter-based holiday definition
+##### Easter-based holiday definition
 
 An Easter-based holiday definition has the tag "easter", followed by the
 offset. The offset is the number of days from Easter Sunday. If offset is
@@ -134,7 +230,7 @@ Samples:
 - `holiday easter  -2 Good Friday`
 - `holiday easter +49 Pentecost Sunday`
 
-#### Orthodox-Easter-based holiday definition
+##### Orthodox-Easter-based holiday definition
 
 An Orthodox-Easter-based holiday definition has the tag "orthodox-easter", followed by the
 offset. The offset is the number of days from Easter Sunday. If offset is
@@ -146,29 +242,6 @@ Samples:
 - `holiday orthodox-easter   0 Orthodox Easter Sunday`
 - `holiday orthodox-easter  -2 Orthodox Good Friday`
 - `holiday orthodox-easter +49 Orthodox Pentecost Monday`
-
-## Usage
-
-### Gradle
-
-```groovy
-repositories {
-    mavenCentral()
-}
-dependencies {
-    compile 'org.itsallcode:holiday-calculator:0.1.0'
-}
-```
-
-### Maven
-
-```xml
-<dependency>
-    <groupId>org.itsallcode</groupId>
-    <artifactId>holiday-calculator</artifactId>
-    <version>0.1.0</version>
-</dependency>
-```
 
 ## Development
 

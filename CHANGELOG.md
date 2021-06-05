@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1 - Unreleased]
 
-- [#5](https://github.com/itsallcode/holiday-calculator/issues/11) Support month names.
+- [#5](https://github.com/itsallcode/holiday-calculator/issues/5) Support month names.
+- [#7](https://github.com/itsallcode/holiday-calculator/issues/7) Added documentation for API users.
 
 ## [0.1.0] - 2021-06-05
 
