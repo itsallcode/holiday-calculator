@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#5](https://github.com/itsallcode/holiday-calculator/issues/5) Support month names.
 - [#7](https://github.com/itsallcode/holiday-calculator/issues/7) Added documentation for API users.
+- [#21](https://github.com/itsallcode/holiday-calculator/issues/21) Use java.time.MonthDay instead of integers.
 - [#10](https://github.com/itsallcode/holiday-calculator/issues/10) Support Conditional holidays.
-- Changed API to use java.time.MonthDay instead of integers.
 
 ## [0.1.0] - 2021-06-05
 
