@@ -20,6 +20,7 @@ package org.itsallcode.holidays.calculator.logic.parser;
 import static java.util.stream.Collectors.toList;
 
 import java.time.DayOfWeek;
+import java.time.MonthDay;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Day;
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.Holiday;
 import org.itsallcode.holidays.calculator.logic.OrthodoxEasterBasedHoliday;
@@ -134,8 +136,7 @@ public class HolidayParser {
 			return new FixedDateHoliday(
 					matcher.group(CATEGORY_GROUP),
 					matcher.group(NAME_GROUP),
-					monthNumber(matcher.group(MONTH_GROUP)),
-					Integer.parseInt(matcher.group(DAY_GROUP)));
+					monthDay(matcher.group(MONTH_GROUP), matcher.group(DAY_GROUP)));
 		}
 	}
 
@@ -191,14 +192,19 @@ public class HolidayParser {
 				return null;
 			}
 
-			return new FloatingHoliday(
-					matcher.group(CATEGORY_GROUP),
-					matcher.group(NAME_GROUP),
-					Integer.parseInt(matcher.group(OFFSET_GROUP)),
-					dayOfWeek,
-					Direction.parse(matcher.group(DIRECTION_GROUP)),
-					monthNumber(matcher.group(MONTH_GROUP)),
-					Integer.parseInt(matcher.group(DAY_GROUP)));
+			final String category = matcher.group(CATEGORY_GROUP);
+			final String name = matcher.group(NAME_GROUP);
+			final int offset = Integer.parseInt(matcher.group(OFFSET_GROUP));
+			final Direction direction = Direction.parse(matcher.group(DIRECTION_GROUP));
+			final int month = monthNumber(matcher.group(MONTH_GROUP));
+			final String day = matcher.group(DAY_GROUP);
+
+			if (LAST_DAY.equals(day)) {
+				return new FloatingHoliday(category, name, offset, dayOfWeek, direction, month, Day.LAST);
+			} else {
+				return new FloatingHoliday(category, name, offset, dayOfWeek, direction,
+						MonthDay.of(month, Integer.parseInt(day)));
+			}
 		}
 	}
 

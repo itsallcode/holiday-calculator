@@ -71,16 +71,16 @@ import static org.itsallcode.holidays.calculator.logic.conditions.Condition.not;
 
 class MyClass {
 	public MyClass() {
-		FixedDateHoliday h1 = new FixedDateHoliday("holiday", "Christmas Eve", 12, 24);
+		FixedDateHoliday h1 = new FixedDateHoliday("holiday", "Christmas Eve", MonthDay.of(12, 24));
 		FloatingHoliday h2 = new FloatingHoliday(
-			"holiday", "Father's Day", 3, DayOfWeek.SUNDAY, Direction.AFTER, 6, 1);
+			"holiday", "Father's Day", 3, DayOfWeek.SUNDAY, Direction.AFTER, MonthDay.of(6, 1));
 		EasterBasedHoliday h3 = new EasterBasedHoliday("holiday", "Good Friday", -2);
 		OrthodoxEasterBasedHoliday h4 = new OrthodoxEasterBasedHoliday(
 			"holiday", "Orthodox Good Friday", -2);
 			
 		Condition dec25FriSat = new DayOfWeekCondition(
 				MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-		Holiday h5 = new FixedDateHoliday("holiday", "Boxing day is extra day off", 12, 26)
+		Holiday h5 = new FixedDateHoliday("holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
 				.withCondition(not(dec25FriSat)));
 	}
 }

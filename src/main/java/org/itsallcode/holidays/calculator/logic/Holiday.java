@@ -18,11 +18,11 @@
 package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
+import java.time.Year;
 
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 
 public abstract class Holiday {
-	private static final int PIVOT_YEAR = 2000;
 
 	public abstract LocalDate of(int year);
 
@@ -57,15 +57,8 @@ public abstract class Holiday {
 		return condition;
 	}
 
-	/**
-	 * Ensure date can be valid, at least in a leap year
-	 *
-	 * @param month Month
-	 * @param day   Day
-	 * @return local date if valid
-	 */
-	protected LocalDate ensureValidDate(int month, int day) {
-		return LocalDate.of(PIVOT_YEAR, month, day);
+	public LocalDate of(Year year) {
+		return of(year.getValue());
 	}
 
 	@Override

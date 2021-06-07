@@ -28,6 +28,7 @@ import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 
+import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Day;
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
@@ -44,14 +45,14 @@ class HolidayCalculationTest {
 
 	@Test
 	void toStringTest() {
-		assertThat(new FixedDateHoliday("birthday", "My Birthday", 7, 31))
-				.hasToString("FixedDateHoliday(birthday My Birthday: 07-31)");
+		assertThat(new FixedDateHoliday("birthday", "My Birthday", MonthDay.of(7, 31)))
+				.hasToString("FixedDateHoliday(birthday My Birthday: JUL 31)");
 		assertThat(new FloatingHoliday(
-				"holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24))
-						.hasToString("FloatingHoliday(holiday 1. Advent: 4th Sunday before 12-24)");
+				"holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, MonthDay.of(12, 24)))
+						.hasToString("FloatingHoliday(holiday 1. Advent: 4th Sunday before DEC 24)");
 		assertThat(new FloatingHoliday(
-				"holiday", "Father's Day", 3, DayOfWeek.SUNDAY, Direction.AFTER, 6, 1))
-						.hasToString("FloatingHoliday(holiday Father's Day: 3rd Sunday after 06-01)");
+				"holiday", "Father's Day", 3, DayOfWeek.SUNDAY, Direction.AFTER, MonthDay.of(6, 1)))
+						.hasToString("FloatingHoliday(holiday Father's Day: 3rd Sunday after JUN 1)");
 		assertThat(new EasterBasedHoliday("holiday", "Good Friday", -2))
 				.hasToString("EasterBasedHoliday(holiday Good Friday: 2 days before Easter)");
 		assertThat(new EasterBasedHoliday("holiday", "Easter Monday", +1))
@@ -62,9 +63,9 @@ class HolidayCalculationTest {
 	void invalidDate() {
 		assertThrows(java.time.DateTimeException.class,
 				() -> new FloatingHoliday("holiday", "Famous Februar, 30th",
-						1, DayOfWeek.MONDAY, Direction.BEFORE, 2, 30));
+						1, DayOfWeek.MONDAY, Direction.BEFORE, MonthDay.of(2, 30)));
 		assertThrows(java.time.DateTimeException.class,
-				() -> new FixedDateHoliday("holiday", "Famous Februar, 30th", 2, 30));
+				() -> new FixedDateHoliday("holiday", "Famous Februar, 30th", MonthDay.of(2, 30)));
 	}
 
 	/**
@@ -108,11 +109,11 @@ class HolidayCalculationTest {
 	private static HolidaySet bankHolidaysDecember() {
 		final Condition dec25SatSun = new DayOfWeekCondition(
 				MonthDay.of(12, 25), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-		final Holiday bankHoliday1 = new FixedDateHoliday("holiday", "Bank Holiday 1", 12, 27)
+		final Holiday bankHoliday1 = new FixedDateHoliday("holiday", "Bank Holiday 1", MonthDay.of(12, 27))
 				.withCondition(dec25SatSun);
 		final Condition dec26SatSun = new DayOfWeekCondition(
 				MonthDay.of(12, 26), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-		final Holiday bankHoliday2 = new FixedDateHoliday("holiday", "Bank Holiday 2", 12, 28)
+		final Holiday bankHoliday2 = new FixedDateHoliday("holiday", "Bank Holiday 2", MonthDay.of(12, 28))
 				.withCondition(dec26SatSun);
 
 		return new HolidaySet(
@@ -145,7 +146,7 @@ class HolidayCalculationTest {
 	private static HolidaySet negatedDaysOfWeekHoliday() {
 		final Condition dec25FriSat = new DayOfWeekCondition(
 				MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-		final Holiday holiday = new FixedDateHoliday("holiday", "Boxing day is extra day off", 12, 26)
+		final Holiday holiday = new FixedDateHoliday("holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
 				.withCondition(not(dec25FriSat));
 
 		return new HolidaySet(Arrays.asList(holiday));
@@ -162,17 +163,24 @@ class HolidayCalculationTest {
 			LocalDate expected) {
 		final String name = String.format("%d %s %s %s-%02d-%s",
 				offset, dayOfWeek, direction, year, month, dayString);
-		int day;
+
+		final FloatingHoliday holiday;
 		if (dayString.equals("last-day")) {
-			day = FloatingHoliday.LAST_DAY_OF_THE_MONTH;
+
+			holiday = new FloatingHoliday(
+					"holiday", name, offset,
+					dayOfWeekParser.getEnumFor(dayOfWeek),
+					Direction.parse(direction),
+					month,
+					Day.LAST);
 		} else {
-			day = Integer.parseInt(dayString);
+			holiday = new FloatingHoliday(
+					"holiday", name, offset,
+					dayOfWeekParser.getEnumFor(dayOfWeek),
+					Direction.parse(direction),
+					MonthDay.of(month, Integer.parseInt(dayString)));
 		}
-		final FloatingHoliday holiday = new FloatingHoliday(
-				"holiday", name, offset,
-				dayOfWeekParser.getEnumFor(dayOfWeek),
-				Direction.parse(direction),
-				month, day);
+
 		assertThat(holiday.of(year)).isEqualTo(expected);
 	}
 }

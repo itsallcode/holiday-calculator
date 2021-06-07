@@ -5,11 +5,11 @@ import static java.util.stream.Collectors.joining;
 import java.time.DayOfWeek;
 import java.time.MonthDay;
 import java.time.Year;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
+
+import org.itsallcode.holidays.calculator.logic.Formatter;
 
 /**
  * Example
@@ -19,8 +19,6 @@ import java.util.Set;
  * </pre>
  */
 public class DayOfWeekCondition extends Condition {
-
-	private static final DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEE", Locale.US);
 
 	private final MonthDay pivot;
 	private final Set<DayOfWeek> daysOfWeek = new HashSet<>();
@@ -46,14 +44,11 @@ public class DayOfWeekCondition extends Condition {
 
 	@Override
 	public String toString() {
-		// 'a' Locale-specific short name of the day of the week, e.g. "Sun", "Mon"
 		final String days = Arrays.asList(daysOfWeek.toArray(new DayOfWeek[0]))
 				.stream()
-				.map(dayOfWeekFormatter::format)
+				.map(Formatter::format)
 				.collect(joining(","));
-		return String.format(" only if %s is%s %s",
-				DateTimeFormatter.ofPattern("MMM d", Locale.US).format(pivot).toUpperCase(),
-				(negate ? " not" : ""), days);
+		return String.format(" only if %s is%s %s", Formatter.format(pivot), (negate ? " not" : ""), days);
 	}
 
 	@Override

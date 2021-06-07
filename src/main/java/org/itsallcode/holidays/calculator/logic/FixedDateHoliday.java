@@ -18,17 +18,16 @@
 package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.time.Year;
 
 public class FixedDateHoliday extends Holiday {
-	private final int month;
-	private final int day;
 
-	public FixedDateHoliday(String category, String name, int month, int day) {
+	private final MonthDay monthDay;
+
+	public FixedDateHoliday(String category, String name, MonthDay monthDay) {
 		super(category, name);
-		this.month = month;
-		this.day = day;
-		ensureValidDate(month, day);
+		this.monthDay = monthDay;
 	}
 
 	@Override
@@ -36,21 +35,20 @@ public class FixedDateHoliday extends Holiday {
 		if (!condition.applies(Year.of(year))) {
 			return null;
 		}
-		return LocalDate.of(year, month, day);
+		return monthDay.atYear(year);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s(%s %s: %02d-%02d%s)", this.getClass().getSimpleName(),
-				getCategory(), getName(), month, day, condition.toString());
+		return String.format("%s(%s %s: %s%s)", this.getClass().getSimpleName(),
+				getCategory(), getName(), Formatter.format(monthDay), condition.toString());
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + day;
-		result = prime * result + month;
+		result = prime * result + ((monthDay == null) ? 0 : monthDay.hashCode());
 		return result;
 	}
 
@@ -66,10 +64,12 @@ public class FixedDateHoliday extends Holiday {
 			return false;
 		}
 		final FixedDateHoliday other = (FixedDateHoliday) obj;
-		if (day != other.day) {
-			return false;
+		if (monthDay == null) {
+			if (other.monthDay != null) {
+				return false;
+			}
 		}
-		return (month == other.month);
+		return (monthDay.equals(other.monthDay));
 	}
 
 }
