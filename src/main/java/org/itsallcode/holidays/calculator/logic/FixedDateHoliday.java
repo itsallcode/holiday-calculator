@@ -18,8 +18,7 @@
 package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
-
-import javax.annotation.processing.Generated;
+import java.time.Year;
 
 public class FixedDateHoliday extends Holiday {
 	private final int month;
@@ -34,13 +33,16 @@ public class FixedDateHoliday extends Holiday {
 
 	@Override
 	public LocalDate of(int year) {
+		if (!condition.applies(Year.of(year))) {
+			return null;
+		}
 		return LocalDate.of(year, month, day);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s(%s %s: %02d-%02d)", this.getClass().getSimpleName(),
-				getCategory(), getName(), month, day);
+		return String.format("%s(%s %s: %02d-%02d%s)", this.getClass().getSimpleName(),
+				getCategory(), getName(), month, day, condition.toString());
 	}
 
 	@Override
@@ -52,10 +54,7 @@ public class FixedDateHoliday extends Holiday {
 		return result;
 	}
 
-	// https://git.eclipse.org/r/plugins/gitiles/jdt/eclipse.jdt.ui/+/refs/heads/master/org.eclipse.jdt.core.manipulation/core%20extension/org/eclipse/jdt/internal/corext/codemanipulation/GenerateHashCodeEqualsOperation.java
-
 	@Override
-	@Generated("org.eclipse.jdt.internal.corext.codemanipulation.GenerateHashCodeEqualsOperation")
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

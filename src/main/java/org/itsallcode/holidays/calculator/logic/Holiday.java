@@ -19,6 +19,8 @@ package org.itsallcode.holidays.calculator.logic;
 
 import java.time.LocalDate;
 
+import org.itsallcode.holidays.calculator.logic.conditions.Condition;
+
 public abstract class Holiday {
 	private static final int PIVOT_YEAR = 2000;
 
@@ -26,6 +28,7 @@ public abstract class Holiday {
 
 	private final String category;
 	private final String name;
+	protected Condition condition = Condition.APPLIES_ALWAYS;
 
 	/**
 	 * @param category Arbitrary category that may be evaluated by the application
@@ -37,12 +40,21 @@ public abstract class Holiday {
 		this.name = name;
 	}
 
+	public Holiday withCondition(Condition condition) {
+		this.condition = condition;
+		return this;
+	}
+
 	public String getCategory() {
 		return category;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public Condition getCondition() {
+		return condition;
 	}
 
 	/**
@@ -61,6 +73,7 @@ public abstract class Holiday {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
+		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -84,14 +97,19 @@ public abstract class Holiday {
 		} else if (!category.equals(other.category)) {
 			return false;
 		}
+		if (condition == null) {
+			if (other.condition != null) {
+				return false;
+			}
+		} else if (!condition.equals(other.condition)) {
+			return false;
+		}
 		if (name == null) {
 			if (other.name != null) {
 				return false;
 			}
-		} else if (!name.equals(other.name)) {
-			return false;
 		}
-		return true;
+		return (name.equals(other.name));
 	}
 
 }

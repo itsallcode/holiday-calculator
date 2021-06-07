@@ -66,6 +66,8 @@ import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
 import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.OrthodoxEasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
+import static org.itsallcode.holidays.calculator.logic.conditions.Condition.not;
 
 class MyClass {
 	public MyClass() {
@@ -75,9 +77,16 @@ class MyClass {
 		EasterBasedHoliday h3 = new EasterBasedHoliday("holiday", "Good Friday", -2);
 		OrthodoxEasterBasedHoliday h4 = new OrthodoxEasterBasedHoliday(
 			"holiday", "Orthodox Good Friday", -2);
+			
+		Condition dec25FriSat = new DayOfWeekCondition(
+				MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
+		Holiday h5 = new FixedDateHoliday("holiday", "Boxing day is extra day off", 12, 26)
+				.withCondition(not(dec25FriSat)));
 	}
 }
 ```
+
+The last holiday `h5` is a conditional holiday with a negated condition, see [below](README.md#conditional-holidays).
 
 #### Parsing a configuration File
 
@@ -98,9 +107,10 @@ For the four example holidays instantiated above, the content of the file could 
 ```
 # my holidays
 
-holiday fixed 12 24 Christmas Eve
-holiday float     3 SUN after  6  1 Father's Day
-holiday easter   -2 Good Friday
+holiday fixed  12 24 Christmas Eve
+holiday if    DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday
+holiday float      3 SUN after 6 1 Father's Day
+holiday easter    -2 Good Friday
 holiday orthodox-easter -2 Orthodox Good Friday
 ```
 
@@ -191,12 +201,14 @@ the holiday definition:
 
 ##### Fixed date holiday definition
 
-A fixed date holiday definition has the tag "fixed", followed by the numbers
-of month and day of month.
+A fixed date holiday definition has the tag "fixed", followed by the month and day of month.
+Month may be a number from 1 to 12 or the (abbreviated) English name like "December".
 
 Syntax: `holiday fixed <month> <day> <name>`
 
-Sample: `holiday fixed 1 1 New Year`
+Samples: 
+- `holiday fixed   1  1 New Year`
+- `holiday fixed Dec 12 Christmas Eve`
 
 ##### Floating holiday definition
 
@@ -242,6 +254,34 @@ Samples:
 - `holiday orthodox-easter   0 Orthodox Easter Sunday`
 - `holiday orthodox-easter  -2 Orthodox Good Friday`
 - `holiday orthodox-easter +49 Orthodox Pentecost Monday`
+
+
+##### <a name="conditional-holidays"></a>Conditional holidays
+
+Some countries have a few holidays that do not occur every year but only if a specific condition is met. 
+Examples are the bank holidays in the UK.
+Holiday-calculator calls such holidays *conditional holidays*.
+
+A floating holiday definition has the tag "if", followed by 
+- pivot month: (abbreviated) name or number 1-12
+- pivot day: 1-31
+- "is"  
+- "not" (optional) 
+- list of (abbreviated) pivot days of week, e.g. "Wed,Fri", not containing any whitespace.
+- "then"
+- "fixed"
+- month: (abbreviated) name or number 1-12
+- number of day of month
+- name
+
+The fixed holiday is only effective, if the pivot-date of the conditions falls on one of the specified days of week.
+If the definition contains the optional "not", then the pivot day must *not fall* on one of the specified days of week.
+
+Syntax: `holiday if <month> <day> is [not] <days of week> then fixed <month> <day> <name>`
+
+Samples: 
+- `holiday if DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday`
+- `holiday if DEC 25 is not Fri,Sat then fixed DEC 26 Boxing day is extra day off`
 
 ## Development
 

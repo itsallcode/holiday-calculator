@@ -18,6 +18,7 @@
 package org.itsallcode.holidays.calculator.logic.parser;
 
 import java.time.Month;
+import java.time.MonthDay;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,4 +58,7 @@ public abstract class HolidayMatcher {
 		}
 	}
 
+	protected MonthDay monthDay(String month, String day) {
+		return MonthDay.of(monthNumber(month), Integer.parseInt(day));
+	}
 }
