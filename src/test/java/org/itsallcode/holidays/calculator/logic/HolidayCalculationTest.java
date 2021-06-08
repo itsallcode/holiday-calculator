@@ -1,5 +1,5 @@
 /**
- * holidaycalculator
+ * holiday-calculator
  * Copyright (C) 2021 itsallcode <github@kuhnke.net>
  *
  * This program is free software: you can redistribute it and/or modify
