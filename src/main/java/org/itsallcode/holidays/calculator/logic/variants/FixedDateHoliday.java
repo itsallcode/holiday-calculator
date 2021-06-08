@@ -15,11 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic;
+package org.itsallcode.holidays.calculator.logic.variants;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.Year;
+
+import org.itsallcode.holidays.calculator.logic.Formatter;
+import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 
 public class FixedDateHoliday extends Holiday {
 
@@ -32,16 +35,36 @@ public class FixedDateHoliday extends Holiday {
 
 	@Override
 	public LocalDate of(int year) {
-		if (!condition.applies(Year.of(year))) {
-			return null;
+		if (condition.applies(Year.of(year))) {
+			return (hasAlternative() ? alternative.of(year) : monthDay.atYear(year));
+		} else {
+			return (hasAlternative() ? monthDay.atYear(year) : null);
 		}
-		return monthDay.atYear(year);
+	}
+
+	@Override
+	public Holiday withCondition(Condition condition) {
+		return super.withCondition(condition.withPivotDate(monthDay));
+	}
+
+	@Override
+	public String toString(Holiday pivot) {
+		if (pivot instanceof FixedDateHoliday
+				&& pivot.getName().equals(getName())
+				&& pivot.getCategory().equals(getCategory())) {
+			return " then " + Formatter.format(monthDay);
+		}
+		return " then " + toString();
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s(%s %s: %s%s)", this.getClass().getSimpleName(),
-				getCategory(), getName(), Formatter.format(monthDay), condition.toString());
+		return String.format("%s(%s %s: %s%s%s)", this.getClass().getSimpleName(),
+				getCategory(),
+				getName(),
+				Formatter.format(monthDay),
+				condition.toString(hasAlternative() ? " or " : " only "),
+				hasAlternative() ? alternative.toString(this) : "");
 	}
 
 	@Override

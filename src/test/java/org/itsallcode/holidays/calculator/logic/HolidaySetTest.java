@@ -28,8 +28,12 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.parser.HolidaysFileParser;
+import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
 import org.junit.jupiter.api.Test;
 
 class HolidaySetTest {

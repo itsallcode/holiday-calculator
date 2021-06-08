@@ -15,18 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic;
+package org.itsallcode.holidays.calculator.logic.variants;
 
 import java.time.LocalDate;
 
-public class EasterBasedHoliday extends PivotDateBasedHoliday {
+import org.itsallcode.holidays.calculator.logic.Easter;
 
-	public EasterBasedHoliday(String category, String name, int offsetInDays) {
-		super("Easter", category, name, offsetInDays);
+public class OrthodoxEasterBasedHoliday extends PivotDateBasedHoliday {
+
+	public OrthodoxEasterBasedHoliday(String category, String name, int offsetInDays) {
+		super("Orthodox Easter", category, name, offsetInDays);
 	}
 
 	@Override
 	public LocalDate of(int year) {
-		return Easter.gauss(year).plusDays(offsetInDays);
+		return Easter.orthodox(year).plusDays(offsetInDays);
 	}
+
 }

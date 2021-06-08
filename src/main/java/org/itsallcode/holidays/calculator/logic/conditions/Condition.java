@@ -1,5 +1,6 @@
 package org.itsallcode.holidays.calculator.logic.conditions;
 
+import java.time.MonthDay;
 import java.time.Year;
 
 public abstract class Condition {
@@ -12,6 +13,8 @@ public abstract class Condition {
 
 	public abstract boolean applies(Year year);
 
+	public abstract String toString(String prefix);
+
 	protected abstract Condition copy();
 
 	protected boolean negate;
@@ -22,6 +25,10 @@ public abstract class Condition {
 
 	public Condition negate() {
 		negate = !negate;
+		return this;
+	}
+
+	public Condition withPivotDate(MonthDay pivot) {
 		return this;
 	}
 

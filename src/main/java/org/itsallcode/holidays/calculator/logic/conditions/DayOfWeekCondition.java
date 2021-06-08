@@ -20,8 +20,20 @@ import org.itsallcode.holidays.calculator.logic.Formatter;
  */
 public class DayOfWeekCondition extends Condition {
 
-	private final MonthDay pivot;
+	public static class UnspecifiedPivotDateException extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+
+		public UnspecifiedPivotDateException(String message) {
+			super(message);
+		}
+	}
+
+	private MonthDay pivot;
 	private final Set<DayOfWeek> daysOfWeek = new HashSet<>();
+
+	public DayOfWeekCondition(DayOfWeek... daysOfWeek) {
+		this(null, daysOfWeek);
+	}
 
 	public DayOfWeekCondition(MonthDay pivot, DayOfWeek... daysOfWeek) {
 		super(false);
@@ -31,8 +43,19 @@ public class DayOfWeekCondition extends Condition {
 
 	@Override
 	public boolean applies(Year year) {
+		if (pivot == null) {
+			throw new UnspecifiedPivotDateException("Cannot apply DayOfWeekCondition with unspecified pivot date.");
+		}
 		final boolean result = daysOfWeek.contains(year.atMonthDay(pivot).getDayOfWeek());
 		return (negate ? !result : result);
+	}
+
+	@Override
+	public Condition withPivotDate(MonthDay pivot) {
+		if (this.pivot == null) {
+			this.pivot = pivot;
+		}
+		return this;
 	}
 
 	@Override
@@ -44,11 +67,21 @@ public class DayOfWeekCondition extends Condition {
 
 	@Override
 	public String toString() {
+		return toString("");
+	}
+
+	@Override
+	public String toString(String prefix) {
 		final String days = Arrays.asList(daysOfWeek.toArray(new DayOfWeek[0]))
 				.stream()
+				.sorted(DayOfWeek::compareTo)
 				.map(Formatter::format)
 				.collect(joining(","));
-		return String.format(" only if %s is%s %s", Formatter.format(pivot), (negate ? " not" : ""), days);
+		return String.format("%sif %s is%s %s",
+				prefix,
+				Formatter.format(pivot),
+				(negate ? " not" : ""),
+				days);
 	}
 
 	@Override

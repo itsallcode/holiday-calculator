@@ -17,23 +17,20 @@
  */
 package org.itsallcode.holidays.calculator.logic.parser;
 
-import static java.util.stream.Collectors.toList;
-
 import java.time.DayOfWeek;
 import java.time.MonthDay;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
-import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Day;
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
-import org.itsallcode.holidays.calculator.logic.Holiday;
-import org.itsallcode.holidays.calculator.logic.OrthodoxEasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
+import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import org.itsallcode.holidays.calculator.logic.variants.OrthodoxEasterBasedHoliday;
 
 public class HolidayParser {
 
@@ -47,8 +44,8 @@ public class HolidayParser {
 	private static final String DAY_OF_WEEK_GROUP = "dayOfWeek";
 	private static final String NAME_GROUP = "name";
 
-	private static final String PIVOT_MONTH_GROUP = "pivotMonth";
-	private static final String PIVOT_DAY_GROUP = "pivotDay";
+	private static final String MONTH_GROUP_2 = "pivotMonth";
+	private static final String DAY_GROUP_2 = "pivotDay";
 	private static final String PIVOT_DAYS_OF_WEEK_GROUP = "pivotDaysOfWeek";
 
 	public static final String NAME_REGEXP = "[a-z]+";
@@ -68,8 +65,8 @@ public class HolidayParser {
 	private static final Token DAY_OF_WEEK = new Token(DAY_OF_WEEK_GROUP, NAME_REGEXP);
 	private static final Token HOLIDAY_NAME = new Token(NAME_GROUP, ".*");
 
-	private static final Token PIVOT_MONTH = new Token(PIVOT_MONTH_GROUP, MONTH_REGEX);
-	private static final Token PIVOT_DAY = new Token(PIVOT_DAY_GROUP, DAY_REGEX);
+	private static final Token MONTH_2 = new Token(MONTH_GROUP_2, MONTH_REGEX);
+	private static final Token DAY_2 = new Token(DAY_GROUP_2, DAY_REGEX);
 	private static final Token PIVOT_DAYS_OF_WEEK = new Token(PIVOT_DAYS_OF_WEEK_GROUP, NAMES_REGEXP);
 
 	// patterns
@@ -77,17 +74,23 @@ public class HolidayParser {
 	private static final Pattern FIXED_HOLIDAY = buildRegexp(CATEGORY, "fixed", MONTH, DAY, HOLIDAY_NAME);
 
 	private static final Pattern CONDITIONAL_FIXED_HOLIDAY = buildRegexp(
-			CATEGORY, "if", PIVOT_MONTH, PIVOT_DAY, "is", PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH, DAY,
+			CATEGORY, "if", MONTH_2, DAY_2, "is", PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH, DAY,
 			HOLIDAY_NAME);
 	private static final Pattern NEGATED_CONDITIONAL_FIXED_HOLIDAY = buildRegexp(
-			CATEGORY, "if", PIVOT_MONTH, PIVOT_DAY, "is", "not", PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH, DAY,
+			CATEGORY, "if", MONTH_2, DAY_2, "is", "not", PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH, DAY,
 			HOLIDAY_NAME);
+
+	private static final Pattern ALTERNATIVE_DATE_HOLIDAY = buildRegexp(
+			CATEGORY, "either", MONTH, DAY, "or", "if",
+			PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH_2, DAY_2, HOLIDAY_NAME);
 
 	private static final Pattern FLOATING_HOLIDAY = buildRegexp( //
 			CATEGORY, "float", POSITIVE_OFFSET, DAY_OF_WEEK, DIRECTION, MONTH, DAY_OR_DEFAULT, HOLIDAY_NAME);
 	private static final Pattern EASTER_BASED_HOLIDAY = buildRegexp(CATEGORY, "easter", OFFSET, HOLIDAY_NAME);
 	private static final Pattern ORTHODOX_EASTER_BASED_HOLIDAY = buildRegexp(CATEGORY, "orthodox-easter", OFFSET,
 			HOLIDAY_NAME);
+
+	// "holiday either 4 27 or if SUN then fixed 4 26 Koningsdag");
 
 	static Pattern buildRegexp(final Object... elements) {
 		final StringBuilder sb = new StringBuilder();
@@ -111,6 +114,7 @@ public class HolidayParser {
 				new FixedDateWithNegatedConditionMatcher(),
 				new FixedDateWithConditionMatcher(),
 				new FixedDateMatcher(),
+				new AlternativeDateMatcher(),
 				new FloatingDateMatcher(),
 				new EasterBasedMatcher(),
 				new OrthodoxEasterBasedMatcher()
@@ -141,7 +145,6 @@ public class HolidayParser {
 	}
 
 	private static class FixedDateWithConditionMatcher extends HolidayMatcher {
-		private final AbbreviationParser<DayOfWeek> dayOfWeekParser = new AbbreviationParser<>(DayOfWeek.class);
 
 		public FixedDateWithConditionMatcher() {
 			super(CONDITIONAL_FIXED_HOLIDAY);
@@ -149,45 +152,50 @@ public class HolidayParser {
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
-			final String[] tokens = matcher.group(PIVOT_DAYS_OF_WEEK_GROUP).split(",");
-			final DayOfWeek[] daysOfWeek = Arrays.asList(tokens)
-					.stream().map(dayOfWeekParser::getEnumFor)
-					.collect(toList())
-					.toArray(new DayOfWeek[0]);
-
 			final Condition condition = new DayOfWeekCondition(
-					monthDay(matcher.group(PIVOT_MONTH_GROUP), matcher.group(PIVOT_DAY_GROUP)),
-					daysOfWeek);
+					monthDay(matcher.group(MONTH_GROUP_2), matcher.group(DAY_GROUP_2)),
+					daysOfWeek(matcher.group(PIVOT_DAYS_OF_WEEK_GROUP)));
 			return new FixedDateMatcher().createHoliday(matcher).withCondition(condition);
 		}
 	}
 
 	private static class FixedDateWithNegatedConditionMatcher extends HolidayMatcher {
-
-		private final FixedDateWithConditionMatcher f = new FixedDateWithConditionMatcher();
-
 		public FixedDateWithNegatedConditionMatcher() {
 			super(NEGATED_CONDITIONAL_FIXED_HOLIDAY);
 		}
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
-			final Holiday result = f.createHoliday(matcher);
-			result.getCondition().negate();
-			return result;
+			final Holiday holiday = new FixedDateWithConditionMatcher().createHoliday(matcher);
+			holiday.getCondition().negate();
+			return holiday;
+		}
+	}
+
+	private static class AlternativeDateMatcher extends HolidayMatcher {
+		protected AlternativeDateMatcher() {
+			super(ALTERNATIVE_DATE_HOLIDAY);
+		}
+
+		@Override
+		Holiday createHoliday(Matcher matcher) {
+			final Condition condition = new DayOfWeekCondition(
+					daysOfWeek(matcher.group(PIVOT_DAYS_OF_WEEK_GROUP)));
+			final MonthDay alternative = monthDay(matcher.group(MONTH_GROUP_2), matcher.group(DAY_GROUP_2));
+			return new FixedDateWithConditionMatcher()
+					.createHoliday(matcher)
+					.withAlternative(condition, alternative);
 		}
 	}
 
 	private static class FloatingDateMatcher extends HolidayMatcher {
-		private final AbbreviationParser<DayOfWeek> dayOfWeekParser = new AbbreviationParser<>(DayOfWeek.class);
-
 		public FloatingDateMatcher() {
 			super(FLOATING_HOLIDAY);
 		}
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
-			final DayOfWeek dayOfWeek = dayOfWeekParser.getEnumFor(matcher.group(DAY_OF_WEEK_GROUP));
+			final DayOfWeek dayOfWeek = dayOfWeek(matcher.group(DAY_OF_WEEK_GROUP));
 			if (dayOfWeek == null) {
 				return null;
 			}

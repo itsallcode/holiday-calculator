@@ -62,10 +62,10 @@ Section [Configuration file](README.md#flavors) describes the details and parame
 The following code sample instantiates one holiday for each of these flavors:
 
 ```
-import org.itsallcode.holidays.calculator.logic.FixedDateHoliday;
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday;
-import org.itsallcode.holidays.calculator.logic.EasterBasedHoliday;
-import org.itsallcode.holidays.calculator.logic.OrthodoxEasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.OrthodoxEasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
 import static org.itsallcode.holidays.calculator.logic.conditions.Condition.not;
 
@@ -83,15 +83,20 @@ class MyClass {
             "holiday", "Orthodox Good Friday", -2);
 
         Condition dec25FriSat = new DayOfWeekCondition(
-                MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
+            MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
         Holiday h5 = new FixedDateHoliday(
             "holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
             .withCondition(not(dec25FriSat)));
+        
+        Condition isSunday = new DayOfWeekCondition(DayOfWeek.SUNDAY);
+        Holiday h6 = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
+				.withAlternative(isSunday, MonthDay.of(4, 26));
     }
 }
 ```
 
-The last holiday `h5` is a conditional holiday with a negated condition, see [below](README.md#conditional-holidays).
+Holiday `h5` is a conditional holiday with a negated condition, see [below](README.md#conditional-holidays).
+Holiday `h6` is a holiday with an alternative date, see [below](README.md#alternative-holidays).
 
 #### Parsing a configuration File
 
@@ -126,8 +131,8 @@ Section [Configuration file](README.md#flavors) describes the syntax in detail.
 In order to evaluate a holiday for the current or any other year and hence get an instance of this holiday, you can just call method `Holiday.of()`, supplying the year as argument:
 
 ```
-Holiday goodFriday = new EasterBasedHoliday("holiday", "Good Friday", -2);
-LocalDate goodFriday2021 = goodFriday.of(2021); // 2021 April 4th
+Holiday gf = new EasterBasedHoliday("holiday", "Good Friday", -2);
+LocalDate gf_2021 = goodFriday.of(2021); // 2021 April 4th
 ```
 
 
@@ -267,26 +272,50 @@ Some countries have a few holidays that do not occur every year but only if a sp
 Examples are the bank holidays in the UK.
 Holiday-calculator calls such holidays *conditional holidays*.
 
-A floating holiday definition has the tag "if", followed by
+A conditional holiday definition has the tag "if", followed by
 - pivot month: (abbreviated) name or number 1-12
 - pivot day: 1-31
 - "is"
 - "not" (optional)
-- list of (abbreviated) pivot days of week, e.g. "Wed,Fri", not containing any whitespace.
+- comma-separated list of (abbreviated) pivot days of week, e.g. "Wed,Fri", not containing any whitespace.
 - "then"
 - "fixed"
 - month: (abbreviated) name or number 1-12
-- number of day of month
+- day of month: number
 - name
 
-The fixed holiday is only effective, if the pivot-date of the conditions falls on one of the specified days of week.
+The conditional holiday is only effective, if the pivot-date of the conditions falls on one of the specified days of week.
 If the definition contains the optional "not", then the pivot day must *not fall* on one of the specified days of week.
 
-Syntax: `holiday if <month> <day> is [not] <days of week> then fixed <month> <day> <name>`
+Syntax: `holiday if <pivot month> <pivot day> is [not] <days of week> then fixed <month> <day> <name>`
 
 Samples:
 - `holiday if DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday`
 - `holiday if DEC 25 is not Fri,Sat then fixed DEC 26 Boxing day is extra day off`
+
+##### <a name="alternative-holidays"></a>Holidays with alternative
+
+Some countries have holidays that are moved to another date in case a specific condition is met.
+An example is the "Koningsdag" in the Netherlands which occurs on April, 27th but is moved to April, 26 in case April, 27th is a Sunday.
+
+A holiday with an alternative has the tag "either", followed by
+- month: (abbreviated) name or number 1-12
+- day: 1-31
+- "or"
+- "if"
+- "not" (optional)
+- comma-separated list of (abbreviated) pivot days of week, e.g. "Wed,Fri", not containing any whitespace.
+- "then"
+- "fixed"
+- alternative month: (abbreviated) name or number 1-12
+- alternative day of month: number
+- name
+
+Syntax: `holiday either <month> <day> of if [not] <days of week> then fixed <alternative month> <alternative day> <name>`
+
+Samples:
+- `holiday either 4 27 or if SUN then fixed 4 26 Koningsdag`
+
 
 ## Development
 

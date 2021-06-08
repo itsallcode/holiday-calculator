@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.itsallcode.holidays.calculator.logic.Holiday;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

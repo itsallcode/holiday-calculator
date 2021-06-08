@@ -15,9 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic;
+package org.itsallcode.holidays.calculator.logic.variants;
 
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.time.Year;
 
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
@@ -29,6 +30,7 @@ public abstract class Holiday {
 	private final String category;
 	private final String name;
 	protected Condition condition = Condition.APPLIES_ALWAYS;
+	protected Holiday alternative = null;
 
 	/**
 	 * @param category Arbitrary category that may be evaluated by the application
@@ -45,6 +47,24 @@ public abstract class Holiday {
 		return this;
 	}
 
+	public Holiday withAlternative(Holiday alternative) {
+		this.alternative = alternative;
+		return this;
+	}
+
+	/**
+	 * Set fixed date as alternative with identical category and name.
+	 *
+	 * @param condition if this condition applies for a given year then alternative
+	 *                  holiday becomes effective
+	 * @param monthDay  alternative month and day
+	 * @return this holiday enhanced with condition and alternative holiday
+	 */
+	public Holiday withAlternative(Condition condition, MonthDay monthDay) {
+		return withCondition(condition)
+				.withAlternative(new FixedDateHoliday(category, name, monthDay));
+	}
+
 	public String getCategory() {
 		return category;
 	}
@@ -57,14 +77,28 @@ public abstract class Holiday {
 		return condition;
 	}
 
+	public boolean hasAlternative() {
+		return alternative != null;
+	}
+
 	public LocalDate of(Year year) {
 		return of(year.getValue());
+	}
+
+	/**
+	 * @param pivot pivot holiday, for which the current holiday is an alternative
+	 * @return string representation of current holiday as alternative to pivot
+	 *         holiday
+	 */
+	protected String toString(Holiday pivot) {
+		return "";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((alternative == null) ? 0 : alternative.hashCode());
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
 		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -83,6 +117,13 @@ public abstract class Holiday {
 			return false;
 		}
 		final Holiday other = (Holiday) obj;
+		if (alternative == null) {
+			if (other.alternative != null) {
+				return false;
+			}
+		} else if (!alternative.equals(other.alternative)) {
+			return false;
+		}
 		if (category == null) {
 			if (other.category != null) {
 				return false;

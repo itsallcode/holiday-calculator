@@ -28,20 +28,50 @@ import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Day;
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser;
+import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class HolidayCalculationTest {
 
-	AbbreviationParser<DayOfWeek> dayOfWeekParser = new AbbreviationParser<>(DayOfWeek.class);
-	static HolidaySet BANK_HOLIDAYS_DECEMBER = bankHolidaysDecember();
-	static HolidaySet NEGATED_HOLIDAY = negatedDaysOfWeekHoliday();
+	static final AbbreviationParser<DayOfWeek> DAY_OF_WEEK_PARSER = new AbbreviationParser<>(DayOfWeek.class);
+
+	static final Holiday BANK_HOLIDAY_DEC_27;
+	static final Holiday BANK_HOLIDAY_DEC_28;
+	static final Holiday KONINGSDAG;
+
+	static final HolidaySet BANK_HOLIDAYS_DECEMBER;
+	static final HolidaySet NEGATED_DAYS_OF_WEEK_HOLIDAY;
+
+	static {
+		final Condition dec25SatSun = new DayOfWeekCondition(MonthDay.of(12, 25), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+		BANK_HOLIDAY_DEC_27 = new FixedDateHoliday("holiday", "Bank Holiday 1", MonthDay.of(12, 27))
+				.withCondition(dec25SatSun);
+
+		final Condition dec26SatSun = new DayOfWeekCondition(MonthDay.of(12, 26), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+		BANK_HOLIDAY_DEC_28 = new FixedDateHoliday("holiday", "Bank Holiday 2", MonthDay.of(12, 28))
+				.withCondition(dec26SatSun);
+
+		final Condition isSunday = new DayOfWeekCondition(DayOfWeek.SUNDAY);
+		KONINGSDAG = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
+				.withAlternative(isSunday, MonthDay.of(4, 26));
+
+		BANK_HOLIDAYS_DECEMBER = new HolidaySet(Arrays.asList(BANK_HOLIDAY_DEC_27, BANK_HOLIDAY_DEC_28));
+
+		final Condition dec25FriSat = new DayOfWeekCondition(MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
+		final Holiday holiday = new FixedDateHoliday("holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
+				.withCondition(not(dec25FriSat));
+		NEGATED_DAYS_OF_WEEK_HOLIDAY = new HolidaySet(Arrays.asList(holiday));
+	}
 
 	@Test
 	void toStringTest() {
@@ -57,6 +87,16 @@ class HolidayCalculationTest {
 				.hasToString("EasterBasedHoliday(holiday Good Friday: 2 days before Easter)");
 		assertThat(new EasterBasedHoliday("holiday", "Easter Monday", +1))
 				.hasToString("EasterBasedHoliday(holiday Easter Monday: 1 day after Easter)");
+		assertThat(BANK_HOLIDAY_DEC_27)
+				.hasToString("FixedDateHoliday(holiday Bank Holiday 1: DEC 27 only if DEC 25 is Sat,Sun)");
+
+		final Holiday negatedDaysOfWeekHoliday = NEGATED_DAYS_OF_WEEK_HOLIDAY.getDefinitions().get(0);
+		assertThat(negatedDaysOfWeekHoliday).hasToString(
+				"FixedDateHoliday(holiday Boxing day is extra day off: DEC 26 only if DEC 25 is not Fri,Sat)");
+
+		// holiday either 4 27 or if SUN then fixed 4 26 Koningsdag
+		assertThat(KONINGSDAG).hasToString(
+				"FixedDateHoliday(holiday Koningsdag: APR 27 or if APR 27 is Sun then APR 26)");
 	}
 
 	@Test
@@ -106,18 +146,10 @@ class HolidayCalculationTest {
 		}
 	}
 
-	private static HolidaySet bankHolidaysDecember() {
-		final Condition dec25SatSun = new DayOfWeekCondition(
-				MonthDay.of(12, 25), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-		final Holiday bankHoliday1 = new FixedDateHoliday("holiday", "Bank Holiday 1", MonthDay.of(12, 27))
-				.withCondition(dec25SatSun);
-		final Condition dec26SatSun = new DayOfWeekCondition(
-				MonthDay.of(12, 26), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-		final Holiday bankHoliday2 = new FixedDateHoliday("holiday", "Bank Holiday 2", MonthDay.of(12, 28))
-				.withCondition(dec26SatSun);
-
-		return new HolidaySet(
-				Arrays.asList(bankHoliday1, bankHoliday2));
+	@Test
+	void alternativeDateHoliday() {
+		assertThat(KONINGSDAG.of(2014)).isEqualTo(LocalDate.of(2014, 4, 26));
+		assertThat(KONINGSDAG.of(2021)).isEqualTo(LocalDate.of(2021, 4, 27));
 	}
 
 	@ParameterizedTest(name = "{0} negated conditional holiday Dec-26: {1}")
@@ -134,22 +166,13 @@ class HolidayCalculationTest {
 	void negatedHolidays(int year, String holiday) {
 		final YearMonth yearMonth = YearMonth.of(year, 12);
 
-		final List<Holiday> instances = NEGATED_HOLIDAY.instances(yearMonth.atDay(26));
+		final List<Holiday> instances = NEGATED_DAYS_OF_WEEK_HOLIDAY.instances(yearMonth.atDay(26));
 		if (holiday.equals("-")) {
 			assertThat(instances).isEmpty();
 		} else {
 			assertThat(instances).isNotEmpty();
 			assertThat(instances.get(0).getName()).isEqualTo("Boxing day is extra day off");
 		}
-	}
-
-	private static HolidaySet negatedDaysOfWeekHoliday() {
-		final Condition dec25FriSat = new DayOfWeekCondition(
-				MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-		final Holiday holiday = new FixedDateHoliday("holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
-				.withCondition(not(dec25FriSat));
-
-		return new HolidaySet(Arrays.asList(holiday));
 	}
 
 	@ParameterizedTest(name = "{0} {1} {2} {3}-{4}-{5} returns {6}")
@@ -169,14 +192,14 @@ class HolidayCalculationTest {
 
 			holiday = new FloatingHoliday(
 					"holiday", name, offset,
-					dayOfWeekParser.getEnumFor(dayOfWeek),
+					DAY_OF_WEEK_PARSER.getEnumFor(dayOfWeek),
 					Direction.parse(direction),
 					month,
 					Day.LAST);
 		} else {
 			holiday = new FloatingHoliday(
 					"holiday", name, offset,
-					dayOfWeekParser.getEnumFor(dayOfWeek),
+					DAY_OF_WEEK_PARSER.getEnumFor(dayOfWeek),
 					Direction.parse(direction),
 					MonthDay.of(month, Integer.parseInt(dayString)));
 		}

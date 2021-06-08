@@ -24,8 +24,8 @@ public class ConstantCondition extends Condition {
 	}
 
 	@Override
-	public String toString() {
-		return (value ? "" : " never");
+	public String toString(String prefix) {
+		return (value ? "" : "never");
 	}
 
 	@Override

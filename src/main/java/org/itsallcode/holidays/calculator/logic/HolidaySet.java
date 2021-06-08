@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+
 /**
  * Hosts a personal set of holidays typically defined in a configuration file.
  * Each holiday is meant to repeat every year and may have

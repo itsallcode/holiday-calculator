@@ -5,7 +5,7 @@ import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Day;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
 
 public class Formatter {
 

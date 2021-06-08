@@ -24,13 +24,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.DayOfWeek;
 import java.time.MonthDay;
 
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Day;
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser.AmbigueAbbreviationException;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser.InvalidAbbreviationException;
 import org.itsallcode.holidays.calculator.logic.parser.HolidayParser;
+import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import org.itsallcode.holidays.calculator.logic.variants.OrthodoxEasterBasedHoliday;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -232,6 +237,15 @@ class HolidayParserTest {
 				"holiday if DEC 25 is not Fri,Sat then fixed DEC 26 Boxing day is extra day off"))
 						.isEqualTo(new FixedDateHoliday("holiday", "Boxing day is extra day off",
 								MonthDay.of(12, 26)).withCondition(Condition.not(dec25FriSat)));
+	}
+
+	@Test
+	void alternativeDateHoliday() {
+		final Condition isSunday = new DayOfWeekCondition(DayOfWeek.SUNDAY);
+		final Holiday expected = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
+				.withAlternative(isSunday, MonthDay.of(4, 26));
+		assertThat(holidayParser.parse(
+				"holiday either 4 27 or if SUN then fixed 4 26 Koningsdag")).isEqualTo(expected);
 	}
 
 	@Test

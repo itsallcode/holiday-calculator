@@ -17,12 +17,16 @@
  */
 package org.itsallcode.holidays.calculator.logic.parser;
 
+import static java.util.stream.Collectors.toList;
+
+import java.time.DayOfWeek;
 import java.time.Month;
 import java.time.MonthDay;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.itsallcode.holidays.calculator.logic.Holiday;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
 public abstract class HolidayMatcher {
 
@@ -32,6 +36,7 @@ public abstract class HolidayMatcher {
 			HolidayParser.NAME_REGEXP, Pattern.CASE_INSENSITIVE);
 
 	private final AbbreviationParser<Month> monthNameParser = new AbbreviationParser<>(Month.class);
+	private final AbbreviationParser<DayOfWeek> dayOfWeekParser = new AbbreviationParser<>(DayOfWeek.class);
 	private final Pattern pattern;
 
 	protected HolidayMatcher(Pattern pattern) {
@@ -60,5 +65,16 @@ public abstract class HolidayMatcher {
 
 	protected MonthDay monthDay(String month, String day) {
 		return MonthDay.of(monthNumber(month), Integer.parseInt(day));
+	}
+
+	protected DayOfWeek dayOfWeek(String prefix) {
+		return dayOfWeekParser.getEnumFor(prefix);
+	}
+
+	protected DayOfWeek[] daysOfWeek(String commaSeparatedList) {
+		return Arrays.asList(commaSeparatedList.split(","))
+				.stream().map(this::dayOfWeek)
+				.collect(toList())
+				.toArray(new DayOfWeek[0]);
 	}
 }
