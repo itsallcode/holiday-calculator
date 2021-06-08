@@ -70,19 +70,19 @@ import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
 import static org.itsallcode.holidays.calculator.logic.conditions.Condition.not;
 
 class MyClass {
-	public MyClass() {
-		FixedDateHoliday h1 = new FixedDateHoliday("holiday", "Christmas Eve", MonthDay.of(12, 24));
-		FloatingHoliday h2 = new FloatingHoliday(
-			"holiday", "Father's Day", 3, DayOfWeek.SUNDAY, Direction.AFTER, MonthDay.of(6, 1));
-		EasterBasedHoliday h3 = new EasterBasedHoliday("holiday", "Good Friday", -2);
-		OrthodoxEasterBasedHoliday h4 = new OrthodoxEasterBasedHoliday(
-			"holiday", "Orthodox Good Friday", -2);
-			
-		Condition dec25FriSat = new DayOfWeekCondition(
-				MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-		Holiday h5 = new FixedDateHoliday("holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
-				.withCondition(not(dec25FriSat)));
-	}
+  public MyClass() {
+    FixedDateHoliday h1 = new FixedDateHoliday("holiday", "Christmas Eve", MonthDay.of(12, 24));
+    FloatingHoliday h2 = new FloatingHoliday(
+      "holiday", "Father's Day", 3, DayOfWeek.SUNDAY, Direction.AFTER, MonthDay.of(6, 1));
+    EasterBasedHoliday h3 = new EasterBasedHoliday("holiday", "Good Friday", -2);
+    OrthodoxEasterBasedHoliday h4 = new OrthodoxEasterBasedHoliday(
+      "holiday", "Orthodox Good Friday", -2);
+      
+    Condition dec25FriSat = new DayOfWeekCondition(
+        MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
+    Holiday h5 = new FixedDateHoliday("holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
+        .withCondition(not(dec25FriSat)));
+  }
 }
 ```
 
@@ -96,9 +96,9 @@ Besides creating instances of the subclasses of Holiday you can also use a confi
 import org.itsallcode.holidays.calculator.logic.parser.HolidaysFileParser
 
 class MyClass {
-	public MyClass() {
-		List<Holiday> holidays = new HolidaysFileParser.parse("/path/to/holidays.cfg")
-	}
+  public MyClass() {
+    List<Holiday> holidays = new HolidaysFileParser.parse("/path/to/holidays.cfg")
+  }
 }
 ```
 
@@ -121,8 +121,8 @@ Section [Configuration file](README.md#flavors) describes the syntax in detail.
 In order to evaluate a holiday for the current or any other year and hence get an instance of this holiday, you can just call method `Holiday.of()`, supplying the year as argument:
 
 ```
-	EasterBasedHoliday goodFriday = new EasterBasedHoliday("holiday", "Good Friday", -2);
-	LocalDate goodFriday2021 = goodFriday.of(2021); // 2021 April 4th
+EasterBasedHoliday goodFriday = new EasterBasedHoliday("holiday", "Good Friday", -2);
+LocalDate goodFriday2021 = goodFriday.of(2021); // 2021 April 4th
 ```
 
 
