@@ -33,11 +33,14 @@ public abstract class HolidayMatcher {
 
 	public static HolidayMatcher[] matchers() {
 		return new HolidayMatcher[] {
-				new FixedDateWithConditionMatcher.NegatedDayOfWeek(),
-				new FixedDateWithConditionMatcher(),
+				new NegatedConditionMatcher(new FixedDateMatcher.Conditional(),
+						Patterns.FIXED_HOLIDAY_CONDITIONAL_NEGATED),
+				new FixedDateMatcher.Conditional(),
 				new FixedDateMatcher(),
-				new AlternativeDateMatcher.NegatedDayOfWeek(),
-				new AlternativeDateMatcher(),
+				new NegatedConditionMatcher(new FixedDateMatcher.Alternative(),
+						Patterns.ALTERNATIVE_DATE_HOLIDAY_NEGATED_DAY_OF_WEEK),
+				new FixedDateMatcher.Alternative(),
+				new FloatingDateMatcher.OffsetMatcher(),
 				new FloatingDateMatcher(),
 				new EasterBasedMatcher(),
 				new OrthodoxEasterBasedMatcher()
@@ -53,8 +56,19 @@ public abstract class HolidayMatcher {
 	private final AbbreviationParser<DayOfWeek> dayOfWeekParser = new AbbreviationParser<>(DayOfWeek.class);
 	private final Pattern pattern;
 
+	private final HolidayMatcher originalMatcher;
+
 	protected HolidayMatcher(Pattern pattern) {
+		this(null, pattern);
+	}
+
+	protected HolidayMatcher(HolidayMatcher originalMatcher, Pattern pattern) {
+		this.originalMatcher = originalMatcher;
 		this.pattern = pattern;
+	}
+
+	protected Holiday createOriginalHoliday(Matcher matcher) {
+		return originalMatcher.createHoliday(matcher);
 	}
 
 	public Holiday createHoliday(String line) {

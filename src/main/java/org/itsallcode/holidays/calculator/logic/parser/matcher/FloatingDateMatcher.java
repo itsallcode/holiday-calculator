@@ -26,8 +26,8 @@ import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
-public class FloatingDateMatcher extends HolidayMatcher {
-	public FloatingDateMatcher() {
+class FloatingDateMatcher extends HolidayMatcher {
+	FloatingDateMatcher() {
 		super(Patterns.FLOATING_HOLIDAY);
 	}
 
@@ -50,6 +50,19 @@ public class FloatingDateMatcher extends HolidayMatcher {
 		} else {
 			return new FloatingHoliday(category, name, offset, dayOfWeek, direction,
 					MonthDay.of(month, Integer.parseInt(day)));
+		}
+	}
+
+	static class OffsetMatcher extends HolidayMatcher {
+		OffsetMatcher() {
+			super(new FloatingDateMatcher(), Patterns.FLOATING_HOLIDAY_WITH_OFFSET_IN_DAYS);
+		}
+
+		@Override
+		Holiday createHoliday(Matcher matcher) {
+			final Direction direction = Direction.parse(matcher.group(Patterns.DIRECTION_GROUP_2));
+			final int offset = Integer.parseInt(matcher.group(Patterns.OFFSET_GROUP_2));
+			return createOriginalHoliday(matcher).withOffsetInDays(direction == Direction.BEFORE ? -offset : offset);
 		}
 	}
 }

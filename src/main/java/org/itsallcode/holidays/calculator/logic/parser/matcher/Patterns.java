@@ -25,34 +25,46 @@ import org.itsallcode.holidays.calculator.logic.parser.Token;
 
 public class Patterns {
 
-	// names of groups in regular expressions in order to easily extract matched
-	// parts
+	// names of groups in regular expressions in order to extract matched parts
+	// easily
 	static final String CATEGORY_GROUP = "category";
 	static final String MONTH_GROUP = "month";
 	static final String DAY_GROUP = "day";
 	static final String OFFSET_GROUP = "offset";
+	static final String OFFSET_GROUP_2 = "offset2";
+//	static final String ADDITIONAL_OFFSET_GROUP = "additionalOffset";
 	static final String DIRECTION_GROUP = "direction";
+	static final String DIRECTION_GROUP_2 = "direction2";
 	static final String DAY_OF_WEEK_GROUP = "dayOfWeek";
 	static final String NAME_GROUP = "name";
 
-	static final String MONTH_GROUP_2 = "pivotMonth";
-	static final String DAY_GROUP_2 = "pivotDay";
-	static final String PIVOT_DAYS_OF_WEEK_GROUP = "pivotDaysOfWeek";
+	static final String MONTH_GROUP_2 = "month2";
+	static final String DAY_GROUP_2 = "day2";
+	static final String PIVOT_DAYS_OF_WEEK_GROUP = "daysOfWeek";
 
-	public static final String NAME_REGEXP = "[a-z]+";
-	public static final String NAMES_REGEXP = "[a-z,]+";
+	public static final String SPACE_REGEXP = "\\s+";
+
+	static final String LAST_DAY = "last-day";
+	static final String NAME_REGEXP = "[a-z]+";
+
+	private static final String NAMES_REGEXP = "[a-z,]+";
 	private static final String MONTH_REGEX = NAME_REGEXP + "|0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12";
 	private static final String DAY_REGEX = "0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
+//	private static final String OFFSET_REGEXP = "[+-]?\\d\\d?";
+	private static final String OFFSET_REGEXP = "\\d\\d?";
+	private static final String DIRECTION_REGEXP = "before|after";
 
 	// tokens for regular expressions
 	private static final Token CATEGORY = new Token(CATEGORY_GROUP, "\\S+");
 	private static final Token MONTH = new Token(MONTH_GROUP, MONTH_REGEX);
 	private static final Token DAY = new Token(DAY_GROUP, DAY_REGEX);
-	public static final String LAST_DAY = "last-day";
 	private static final Token DAY_OR_DEFAULT = new Token(DAY_GROUP, DAY.pattern + "|" + LAST_DAY);
 	private static final Token OFFSET = new Token(OFFSET_GROUP, "[+-]?\\d\\d?");
-	private static final Token POSITIVE_OFFSET = new Token(OFFSET_GROUP, "\\d\\d?");
-	private static final Token DIRECTION = new Token(DIRECTION_GROUP, "before|after");
+//	private static final Token ADDITIONAL_OFFSET = new Token(ADDITIONAL_OFFSET_GROUP, OFFSET_REGEXP);
+	private static final Token POSITIVE_OFFSET = new Token(OFFSET_GROUP, OFFSET_REGEXP);
+	private static final Token POSITIVE_OFFSET_2 = new Token(OFFSET_GROUP_2, OFFSET_REGEXP);
+	private static final Token DIRECTION = new Token(DIRECTION_GROUP, DIRECTION_REGEXP);
+	private static final Token DIRECTION_2 = new Token(DIRECTION_GROUP_2, DIRECTION_REGEXP);
 	private static final Token DAY_OF_WEEK = new Token(DAY_OF_WEEK_GROUP, NAME_REGEXP);
 	private static final Token HOLIDAY_NAME = new Token(NAME_GROUP, ".*");
 
@@ -61,14 +73,13 @@ public class Patterns {
 	private static final Token PIVOT_DAYS_OF_WEEK = new Token(PIVOT_DAYS_OF_WEEK_GROUP, NAMES_REGEXP);
 
 	// patterns
-	public static final String SPACE_REGEXP = "\\s+";
 	static final Pattern FIXED_HOLIDAY = buildRegexp(CATEGORY, "fixed", MONTH, DAY,
 			HOLIDAY_NAME);
 
 	static final Pattern CONDITIONAL_FIXED_HOLIDAY = buildRegexp(
 			CATEGORY, "if", MONTH_2, DAY_2, "is", PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH, DAY,
 			HOLIDAY_NAME);
-	static final Pattern NEGATED_CONDITIONAL_FIXED_HOLIDAY = buildRegexp(
+	static final Pattern FIXED_HOLIDAY_CONDITIONAL_NEGATED = buildRegexp(
 			CATEGORY, "if", MONTH_2, DAY_2, "is", "not", PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH, DAY,
 			HOLIDAY_NAME);
 
@@ -76,14 +87,23 @@ public class Patterns {
 			CATEGORY, "either", MONTH, DAY, "or", "if",
 			PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH_2, DAY_2, HOLIDAY_NAME);
 
-	static final Pattern ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAY_OF_WEEK = buildRegexp(
+	static final Pattern ALTERNATIVE_DATE_HOLIDAY_NEGATED_DAY_OF_WEEK = buildRegexp(
 			CATEGORY, "either", MONTH, DAY, "or", "if", "not",
 			PIVOT_DAYS_OF_WEEK, "then", "fixed", MONTH_2, DAY_2, HOLIDAY_NAME);
 
 	static final Pattern FLOATING_HOLIDAY = buildRegexp( //
 			CATEGORY, "float", POSITIVE_OFFSET, DAY_OF_WEEK, DIRECTION, MONTH, DAY_OR_DEFAULT, HOLIDAY_NAME);
+
+//	static final Pattern FLOATING_HOLIDAY_WITH_OFFSET_IN_DAYS_OLD = buildRegexp( //
+//			CATEGORY, "float", POSITIVE_OFFSET, DAY_OF_WEEK, DIRECTION, MONTH, DAY_OR_DEFAULT,
+//			ADDITIONAL_OFFSET, HOLIDAY_NAME);
+
+	static final Pattern FLOATING_HOLIDAY_WITH_OFFSET_IN_DAYS = buildRegexp( //
+			CATEGORY, "float", POSITIVE_OFFSET_2, "days?", DIRECTION_2, POSITIVE_OFFSET, DAY_OF_WEEK, DIRECTION, MONTH,
+			DAY_OR_DEFAULT, HOLIDAY_NAME);
+
 	static final Pattern EASTER_BASED_HOLIDAY = buildRegexp(CATEGORY, "easter", OFFSET, HOLIDAY_NAME);
-	static final Pattern ORTHODOX_EASTER_BASED_HOLIDAY = buildRegexp(CATEGORY, "orthodox-easter", OFFSET,
-			HOLIDAY_NAME);
+	static final Pattern ORTHODOX_EASTER_BASED_HOLIDAY = buildRegexp( //
+			CATEGORY, "orthodox-easter", OFFSET, HOLIDAY_NAME);
 
 }

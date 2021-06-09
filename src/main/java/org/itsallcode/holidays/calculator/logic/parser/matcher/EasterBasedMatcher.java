@@ -22,8 +22,8 @@ import java.util.regex.Matcher;
 import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
-public class EasterBasedMatcher extends HolidayMatcher {
-	public EasterBasedMatcher() {
+class EasterBasedMatcher extends HolidayMatcher {
+	EasterBasedMatcher() {
 		super(Patterns.EASTER_BASED_HOLIDAY);
 	}
 

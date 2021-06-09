@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#5](https://github.com/itsallcode/holiday-calculator/issues/5) Support month names.
 - [#7](https://github.com/itsallcode/holiday-calculator/issues/7) Added documentation for API users.
 - [#21](https://github.com/itsallcode/holiday-calculator/issues/21) Use java.time.MonthDay instead of integers.
-- [#10](https://github.com/itsallcode/holiday-calculator/issues/10) Support conditional holidays and holidays with alternative dates.
-- [#23](https://github.com/itsallcode/holiday-calculator/issues/10) Support negated list of days of week for holidays with alternative dates.
+- [#10](https://github.com/itsallcode/holiday-calculator/issues/10) Support holidays with conditions and alternative dates.
+- [#23](https://github.com/itsallcode/holiday-calculator/issues/23) Support negated list of days of week for holidays with alternative dates.
+- [#9](https://github.com/itsallcode/holiday-calculator/issues/9) Support floating holidays with additional offset in days.
 
 ## [0.1.0] - 2021-06-05
 

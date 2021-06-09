@@ -31,6 +31,7 @@ public abstract class Holiday {
 	private final String name;
 	protected Condition condition = Condition.APPLIES_ALWAYS;
 	protected Holiday alternative = null;
+	protected int offsetInDays = 0;
 
 	/**
 	 * @param category Arbitrary category that may be evaluated by the application
@@ -63,6 +64,11 @@ public abstract class Holiday {
 	public Holiday withAlternative(Condition condition, MonthDay monthDay) {
 		return withCondition(condition)
 				.withAlternative(new FixedDateHoliday(category, name, monthDay));
+	}
+
+	public Holiday withOffsetInDays(int offsetInDays) {
+		this.offsetInDays = offsetInDays;
+		return this;
 	}
 
 	public String getCategory() {
@@ -102,6 +108,7 @@ public abstract class Holiday {
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
 		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + offsetInDays;
 		return result;
 	}
 
@@ -142,8 +149,10 @@ public abstract class Holiday {
 			if (other.name != null) {
 				return false;
 			}
+		} else if (!name.equals(other.name)) {
+			return false;
 		}
-		return (name.equals(other.name));
+		return (offsetInDays == other.offsetInDays);
 	}
 
 }

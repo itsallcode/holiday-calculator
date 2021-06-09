@@ -17,13 +17,16 @@
  */
 package org.itsallcode.holidays.calculator.logic.parser.matcher;
 
+import java.time.MonthDay;
 import java.util.regex.Matcher;
 
+import org.itsallcode.holidays.calculator.logic.conditions.Condition;
+import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
 import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
-public class FixedDateMatcher extends HolidayMatcher {
-	public FixedDateMatcher() {
+class FixedDateMatcher extends HolidayMatcher {
+	FixedDateMatcher() {
 		super(Patterns.FIXED_HOLIDAY);
 	}
 
@@ -33,5 +36,35 @@ public class FixedDateMatcher extends HolidayMatcher {
 				matcher.group(Patterns.CATEGORY_GROUP),
 				matcher.group(Patterns.NAME_GROUP),
 				monthDay(matcher.group(Patterns.MONTH_GROUP), matcher.group(Patterns.DAY_GROUP)));
+	}
+
+	static class Conditional extends HolidayMatcher {
+		Conditional() {
+			super(new FixedDateMatcher(), Patterns.CONDITIONAL_FIXED_HOLIDAY);
+		}
+
+		@Override
+		Holiday createHoliday(Matcher matcher) {
+			final Condition condition = new DayOfWeekCondition(
+					monthDay(matcher.group(Patterns.MONTH_GROUP_2), matcher.group(Patterns.DAY_GROUP_2)),
+					daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)));
+			return createOriginalHoliday(matcher).withCondition(condition);
+		}
+	}
+
+	static class Alternative extends HolidayMatcher {
+		Alternative() {
+			super(new FixedDateMatcher(), Patterns.ALTERNATIVE_DATE_HOLIDAY);
+		}
+
+		@Override
+		Holiday createHoliday(Matcher matcher) {
+			final Condition condition = new DayOfWeekCondition(
+					daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)));
+			final MonthDay alternative = monthDay(matcher.group(Patterns.MONTH_GROUP_2),
+					matcher.group(Patterns.DAY_GROUP_2));
+			return createOriginalHoliday(matcher)
+					.withAlternative(condition, alternative);
+		}
 	}
 }

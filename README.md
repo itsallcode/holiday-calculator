@@ -91,12 +91,17 @@ class MyClass {
         Condition isSunday = new DayOfWeekCondition(DayOfWeek.SUNDAY);
         Holiday h6 = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
 				.withAlternative(isSunday, MonthDay.of(4, 26));
+
+        Holiday h7 = new FloatingHoliday("holiday", "Midsommarafton",
+            1, DayOfWeek.SATURDAY, Direction.BEFORE, MonthDay.of(6, 26))
+            .withOffsetInDays(-1);
     }
 }
 ```
 
 Holiday `h5` is a conditional holiday with a negated condition, see [below](README.md#conditional-holidays).
 Holiday `h6` is a holiday with an alternative date, see [below](README.md#alternative-holidays).
+Holiday `h6` is a floating holiday with an additional offset in days, see [below](README.md#floating-holidays).
 
 #### Parsing a configuration File
 
@@ -161,6 +166,8 @@ types of content:
 3. Floating holiday definition
 4. Easter-based holiday definition
 5. Orthodox-Easter-based holiday definition
+6. Conditional Fixed date holiday definition
+7. Alternative date holiday definition
 
 All other lines are rated as illegal and ignored by holiday-calculator,
 logging an error message.
@@ -220,7 +227,7 @@ Samples:
 - `holiday fixed   1  1 New Year`
 - `holiday fixed Dec 12 Christmas Eve`
 
-##### Floating holiday definition
+##### <a name="floating-holidays"></a>Floating holiday definition
 
 A floating holiday definition has the tag "float", followed by the offset, the
 day of week, the direction "before" or "after", the numbers of month and day
@@ -238,6 +245,15 @@ Samples:
 - `holiday float 1 W after 1 1 First Wednesday on or after New Year`
 - `holiday float 2 MON before 12 last-day Second Monday before New Year's eve, December the 31st`
 - `holiday float 4 SUNDAY before 12 24 First Advent`
+
+##### Floating holiday with additional offset in days
+
+Optionally a floating holiday definition can contain an additional offset in days. This is especially required for Swedish holiday "Midsommarafton", which is 1 day before midsummer day, which in turn is the first Saturday be June, 26th.
+
+Syntax: `holiday float <offset2> day[s] <direction2> <offset> <direction> <day of week> <month> <day> <name>`
+
+Samples:
+- `holiday float 1 day before 1 Sat before JUN 26 Midsommarafton`
 
 ##### Easter-based holiday definition
 
@@ -293,7 +309,7 @@ Samples:
 - `holiday if DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday`
 - `holiday if DEC 25 is not Fri,Sat then fixed DEC 26 Boxing day is extra day off`
 
-##### <a name="alternative-holidays"></a>Holidays with alternative
+##### <a name="alternative-holidays"></a>Alternative date Holidays
 
 Some countries have holidays that are moved to another date in case a specific condition is met.
 An example is the "Koningsdag" in the Netherlands which occurs on April, 27th but is moved to April, 26 in case April, 27th is a Sunday.

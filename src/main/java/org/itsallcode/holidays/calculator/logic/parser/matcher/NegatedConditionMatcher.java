@@ -22,17 +22,14 @@ import java.util.regex.Pattern;
 
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
-public class NegatedConditionMatcher extends HolidayMatcher {
-	private final HolidayMatcher originalMatcher;
-
-	public NegatedConditionMatcher(HolidayMatcher originalMatcher, Pattern pattern) {
-		super(pattern);
-		this.originalMatcher = originalMatcher;
+class NegatedConditionMatcher extends HolidayMatcher {
+	NegatedConditionMatcher(HolidayMatcher originalMatcher, Pattern pattern) {
+		super(originalMatcher, pattern);
 	}
 
 	@Override
 	Holiday createHoliday(Matcher matcher) {
-		final Holiday holiday = originalMatcher.createHoliday(matcher);
+		final Holiday holiday = createOriginalHoliday(matcher);
 		holiday.getCondition().negate();
 		return holiday;
 	}

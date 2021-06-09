@@ -102,7 +102,7 @@ public class FloatingHoliday extends Holiday {
 
 		final LocalDate pivotDay = pivotDay(year).with(TemporalAdjusters.previousOrSame(dayOfWeek));
 		final int delta = (direction == Direction.AFTER ? offset - 1 : 1 - offset);
-		return pivotDay.plusDays(7L * delta);
+		return pivotDay.plusDays(7L * delta + offsetInDays);
 	}
 
 	private LocalDate pivotDay(int year) {
@@ -119,10 +119,11 @@ public class FloatingHoliday extends Holiday {
 
 	@Override
 	public String toString() {
-		return String.format("%s(%s %s: %s %s %s %s)",
+		return String.format("%s(%s %s: %s%s %s %s %s)",
 				this.getClass().getSimpleName(),
 				getCategory(),
 				getName(),
+				Formatter.offsetWithoutZero(offsetInDays),
 				Formatter.ordinal(offset),
 				Formatter.formatLong(dayOfWeek),
 				direction.toString().toLowerCase(),

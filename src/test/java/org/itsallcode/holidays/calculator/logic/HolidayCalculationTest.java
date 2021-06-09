@@ -52,8 +52,10 @@ class HolidayCalculationTest {
 	static final Holiday KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK;
 
 	static final HolidaySet BANK_HOLIDAYS_DECEMBER;
-	static final Holiday ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK;
+	static final Holiday CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK;
 	static final HolidaySet NEGATED_DAYS_OF_WEEK_HOLIDAYS;
+
+	static final Holiday MIDSOMMARAFTON;
 
 	static {
 		final Condition dec25SatSun = new DayOfWeekCondition(MonthDay.of(12, 25), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
@@ -77,11 +79,14 @@ class HolidayCalculationTest {
 		BANK_HOLIDAYS_DECEMBER = new HolidaySet(Arrays.asList(BANK_HOLIDAY_DEC_27, BANK_HOLIDAY_DEC_28));
 
 		final Condition dec25FriSat = new DayOfWeekCondition(MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-		ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK = new FixedDateHoliday("holiday",
+		CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK = new FixedDateHoliday("holiday",
 				"Boxing day is extra day off", MonthDay.of(12, 26))
 						.withCondition(not(dec25FriSat));
 		NEGATED_DAYS_OF_WEEK_HOLIDAYS = new HolidaySet(
-				Arrays.asList(ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK));
+				Arrays.asList(CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK));
+
+		MIDSOMMARAFTON = new FloatingHoliday("holiday", "Midsommarafton",
+				1, DayOfWeek.SATURDAY, Direction.BEFORE, MonthDay.of(6, 26)).withOffsetInDays(-1);
 	}
 
 	@Test
@@ -105,11 +110,13 @@ class HolidayCalculationTest {
 		assertThat(negatedDaysOfWeekHoliday).hasToString(
 				"FixedDateHoliday(holiday Boxing day is extra day off: DEC 26 only if DEC 25 is not Fri,Sat)");
 
-		// holiday either 4 27 or if SUN then fixed 4 26 Koningsdag
 		assertThat(KONINGSDAG).hasToString(
 				"FixedDateHoliday(holiday Koningsdag: APR 27 or if APR 27 is Sun then APR 26)");
 		assertThat(KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK).hasToString(
 				"FixedDateHoliday(holiday Koningsdag: APR 27 or if APR 27 is not Mon,Tue,Wed,Thu,Fri,Sat then APR 26)");
+
+		assertThat(MIDSOMMARAFTON).hasToString(
+				"FloatingHoliday(holiday Midsommarafton: 1 day before 1st Saturday before JUN 26)");
 	}
 
 	@Test
@@ -221,5 +228,22 @@ class HolidayCalculationTest {
 		}
 
 		assertThat(holiday.of(year)).isEqualTo(expected);
+	}
+
+	@Test
+	void floatingHolidayWithNegativeOffset() {
+		assertThrows(java.lang.IllegalArgumentException.class,
+				() -> new FloatingHoliday("holiday", "Negative offset", -1, DayOfWeek.SATURDAY, Direction.AFTER,
+						MonthDay.of(6, 26)));
+	}
+
+	@ParameterizedTest(name = "Midsommarafton {0} June {1}")
+	@CsvSource(value = {
+			"2010, 25", "2011, 24", "2012, 22", "2013, 21", "2014, 20",
+			"2015, 19", "2016, 24", "2017, 23", "2018, 22", "2019, 21",
+			"2020, 19", "2021, 25"
+	})
+	void midsommarAfton_floatingHolidayWithOffsetInDays(int year, int day) {
+		assertThat(MIDSOMMARAFTON.of(year)).isEqualTo(LocalDate.of(year, 6, day));
 	}
 }

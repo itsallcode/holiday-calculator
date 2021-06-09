@@ -61,6 +61,10 @@ public class Formatter {
 				(offset < 0 ? "before" : "after"));
 	}
 
+	public static String offsetWithoutZero(int offset) {
+		return (offset == 0 ? "" : offset(offset) + " ");
+	}
+
 	public static String ordinal(int offset) {
 		final String[] suffix = { "", "st", "nd", "rd" };
 		return String.format("%d%s", offset,
@@ -69,4 +73,5 @@ public class Formatter {
 
 	private Formatter() {
 	}
+
 }

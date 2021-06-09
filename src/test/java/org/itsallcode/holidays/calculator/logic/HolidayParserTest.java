@@ -224,10 +224,10 @@ class HolidayParserTest {
 	}
 
 	@Test
-	void negatedConditionalHoliday() {
+	void conditionalHolidayWithNegatedDaysOfWeek() {
 		assertThat(holidayParser.parse(
 				"holiday if DEC 25 is not Fri,Sat then fixed DEC 26 Boxing day is extra day off"))
-						.isEqualTo(HolidayCalculationTest.ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK);
+						.isEqualTo(HolidayCalculationTest.CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK);
 	}
 
 	@Test
@@ -238,10 +238,18 @@ class HolidayParserTest {
 	}
 
 	@Test
-	void alternativeDateHolidayWithNegatedDayOfWeek() {
+	void alternativeDateHolidayWithNegatedDaysOfWeek() {
 		assertThat(holidayParser.parse(
 				"holiday either 4 27 or if not Mon,Tue,We,Thu,Fri,Sat then fixed 4 26 Koningsdag"))
 						.isEqualTo(HolidayCalculationTest.KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK);
+	}
+
+	@Test
+	void midsommarAfton_floatingHolidayWithOffsetInDays() {
+		// assertThat(holidayParser.parse("holiday float 1 Sat before JUN 26 -1
+		// Midsommarafton"))
+		assertThat(holidayParser.parse("holiday float 1 day before 1 Sat before JUN 26 Midsommarafton"))
+				.isEqualTo(HolidayCalculationTest.MIDSOMMARAFTON);
 	}
 
 	@Test
