@@ -17,22 +17,37 @@
  */
 package org.itsallcode.holidays.calculator.logic.parser;
 
-import org.itsallcode.holidays.calculator.logic.parser.matcher.HolidayMatcher;
-import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import java.util.regex.Pattern;
 
-public class HolidayParser {
+import org.itsallcode.holidays.calculator.logic.parser.matcher.Patterns;
 
-	private final HolidayMatcher[] matchers = HolidayMatcher.matchers();
+public class Token {
 
-	public Holiday parse(String line) {
-		final String trimmed = line.trim();
-		for (final HolidayMatcher m : matchers) {
-			final Holiday holiday = m.createHoliday(trimmed);
-			if (holiday != null) {
-				return holiday;
+	public static Pattern buildRegexp(final Object... elements) {
+		final StringBuilder sb = new StringBuilder();
+		for (final Object element : elements) {
+			if (sb.length() > 0) {
+				sb.append(Patterns.SPACE_REGEXP);
+			}
+			if (element instanceof Token) {
+				sb.append(((Token) element).getRegex());
+			} else {
+				sb.append(element);
 			}
 		}
 
-		return null;
+		return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+	}
+
+	public final String groupName;
+	public final String pattern;
+
+	public Token(String groupName, String pattern) {
+		this.groupName = groupName;
+		this.pattern = pattern;
+	}
+
+	public String getRegex() {
+		return String.format("(?<%s>%s)", groupName, pattern);
 	}
 }

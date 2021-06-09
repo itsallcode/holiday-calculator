@@ -15,24 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic.parser;
+package org.itsallcode.holidays.calculator.logic.parser.matcher;
 
-import org.itsallcode.holidays.calculator.logic.parser.matcher.HolidayMatcher;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
-public class HolidayParser {
+public class NegatedConditionMatcher extends HolidayMatcher {
+	private final HolidayMatcher originalMatcher;
 
-	private final HolidayMatcher[] matchers = HolidayMatcher.matchers();
+	public NegatedConditionMatcher(HolidayMatcher originalMatcher, Pattern pattern) {
+		super(pattern);
+		this.originalMatcher = originalMatcher;
+	}
 
-	public Holiday parse(String line) {
-		final String trimmed = line.trim();
-		for (final HolidayMatcher m : matchers) {
-			final Holiday holiday = m.createHoliday(trimmed);
-			if (holiday != null) {
-				return holiday;
-			}
-		}
-
-		return null;
+	@Override
+	Holiday createHoliday(Matcher matcher) {
+		final Holiday holiday = originalMatcher.createHoliday(matcher);
+		holiday.getCondition().negate();
+		return holiday;
 	}
 }

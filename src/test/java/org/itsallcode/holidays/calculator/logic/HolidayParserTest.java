@@ -24,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.DayOfWeek;
 import java.time.MonthDay;
 
-import org.itsallcode.holidays.calculator.logic.conditions.Condition;
-import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser.AmbigueAbbreviationException;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser.InvalidAbbreviationException;
 import org.itsallcode.holidays.calculator.logic.parser.HolidayParser;
@@ -34,7 +32,6 @@ import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
-import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 import org.itsallcode.holidays.calculator.logic.variants.OrthodoxEasterBasedHoliday;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -221,31 +218,30 @@ class HolidayParserTest {
 
 	@Test
 	void conditionalHoliday() {
-		final Condition dec25SatSun = new DayOfWeekCondition(
-				MonthDay.of(12, 25), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 		assertThat(holidayParser.parse(
-				"holiday if DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday"))
-						.isEqualTo(new FixedDateHoliday("holiday", "Bank Holiday", MonthDay.of(12, 27))
-								.withCondition(dec25SatSun));
+				"holiday if DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday 1"))
+						.isEqualTo(HolidayCalculationTest.BANK_HOLIDAY_DEC_27);
 	}
 
 	@Test
 	void negatedConditionalHoliday() {
-		final Condition dec25FriSat = new DayOfWeekCondition(
-				MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
 		assertThat(holidayParser.parse(
 				"holiday if DEC 25 is not Fri,Sat then fixed DEC 26 Boxing day is extra day off"))
-						.isEqualTo(new FixedDateHoliday("holiday", "Boxing day is extra day off",
-								MonthDay.of(12, 26)).withCondition(Condition.not(dec25FriSat)));
+						.isEqualTo(HolidayCalculationTest.ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK);
 	}
 
 	@Test
 	void alternativeDateHoliday() {
-		final Condition isSunday = new DayOfWeekCondition(DayOfWeek.SUNDAY);
-		final Holiday expected = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
-				.withAlternative(isSunday, MonthDay.of(4, 26));
 		assertThat(holidayParser.parse(
-				"holiday either 4 27 or if SUN then fixed 4 26 Koningsdag")).isEqualTo(expected);
+				"holiday either 4 27 or if SUN then fixed 4 26 Koningsdag"))
+						.isEqualTo(HolidayCalculationTest.KONINGSDAG);
+	}
+
+	@Test
+	void alternativeDateHolidayWithNegatedDayOfWeek() {
+		assertThat(holidayParser.parse(
+				"holiday either 4 27 or if not Mon,Tue,We,Thu,Fri,Sat then fixed 4 26 Koningsdag"))
+						.isEqualTo(HolidayCalculationTest.KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK);
 	}
 
 	@Test

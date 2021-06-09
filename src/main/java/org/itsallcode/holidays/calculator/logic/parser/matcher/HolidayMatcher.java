@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic.parser;
+package org.itsallcode.holidays.calculator.logic.parser.matcher;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,14 +26,28 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
 public abstract class HolidayMatcher {
 
+	public static HolidayMatcher[] matchers() {
+		return new HolidayMatcher[] {
+				new FixedDateWithConditionMatcher.NegatedDayOfWeek(),
+				new FixedDateWithConditionMatcher(),
+				new FixedDateMatcher(),
+				new AlternativeDateMatcher.NegatedDayOfWeek(),
+				new AlternativeDateMatcher(),
+				new FloatingDateMatcher(),
+				new EasterBasedMatcher(),
+				new OrthodoxEasterBasedMatcher()
+		};
+	}
+
 	abstract Holiday createHoliday(Matcher matcher);
 
 	private static final Pattern MONTH_NAME_PATTERN = Pattern.compile(
-			HolidayParser.NAME_REGEXP, Pattern.CASE_INSENSITIVE);
+			Patterns.NAME_REGEXP, Pattern.CASE_INSENSITIVE);
 
 	private final AbbreviationParser<Month> monthNameParser = new AbbreviationParser<>(Month.class);
 	private final AbbreviationParser<DayOfWeek> dayOfWeekParser = new AbbreviationParser<>(DayOfWeek.class);

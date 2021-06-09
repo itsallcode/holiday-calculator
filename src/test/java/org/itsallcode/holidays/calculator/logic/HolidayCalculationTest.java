@@ -47,10 +47,13 @@ class HolidayCalculationTest {
 
 	static final Holiday BANK_HOLIDAY_DEC_27;
 	static final Holiday BANK_HOLIDAY_DEC_28;
+
 	static final Holiday KONINGSDAG;
+	static final Holiday KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK;
 
 	static final HolidaySet BANK_HOLIDAYS_DECEMBER;
-	static final HolidaySet NEGATED_DAYS_OF_WEEK_HOLIDAY;
+	static final Holiday ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK;
+	static final HolidaySet NEGATED_DAYS_OF_WEEK_HOLIDAYS;
 
 	static {
 		final Condition dec25SatSun = new DayOfWeekCondition(MonthDay.of(12, 25), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
@@ -65,12 +68,20 @@ class HolidayCalculationTest {
 		KONINGSDAG = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
 				.withAlternative(isSunday, MonthDay.of(4, 26));
 
+		final Condition isAnyDayButSunday = new DayOfWeekCondition(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+				DayOfWeek.WEDNESDAY,
+				DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
+		KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
+				.withAlternative(not(isAnyDayButSunday), MonthDay.of(4, 26));
+
 		BANK_HOLIDAYS_DECEMBER = new HolidaySet(Arrays.asList(BANK_HOLIDAY_DEC_27, BANK_HOLIDAY_DEC_28));
 
 		final Condition dec25FriSat = new DayOfWeekCondition(MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-		final Holiday holiday = new FixedDateHoliday("holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
-				.withCondition(not(dec25FriSat));
-		NEGATED_DAYS_OF_WEEK_HOLIDAY = new HolidaySet(Arrays.asList(holiday));
+		ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK = new FixedDateHoliday("holiday",
+				"Boxing day is extra day off", MonthDay.of(12, 26))
+						.withCondition(not(dec25FriSat));
+		NEGATED_DAYS_OF_WEEK_HOLIDAYS = new HolidaySet(
+				Arrays.asList(ALTERNATIVE_DATE_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK));
 	}
 
 	@Test
@@ -90,13 +101,15 @@ class HolidayCalculationTest {
 		assertThat(BANK_HOLIDAY_DEC_27)
 				.hasToString("FixedDateHoliday(holiday Bank Holiday 1: DEC 27 only if DEC 25 is Sat,Sun)");
 
-		final Holiday negatedDaysOfWeekHoliday = NEGATED_DAYS_OF_WEEK_HOLIDAY.getDefinitions().get(0);
+		final Holiday negatedDaysOfWeekHoliday = NEGATED_DAYS_OF_WEEK_HOLIDAYS.getDefinitions().get(0);
 		assertThat(negatedDaysOfWeekHoliday).hasToString(
 				"FixedDateHoliday(holiday Boxing day is extra day off: DEC 26 only if DEC 25 is not Fri,Sat)");
 
 		// holiday either 4 27 or if SUN then fixed 4 26 Koningsdag
 		assertThat(KONINGSDAG).hasToString(
 				"FixedDateHoliday(holiday Koningsdag: APR 27 or if APR 27 is Sun then APR 26)");
+		assertThat(KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK).hasToString(
+				"FixedDateHoliday(holiday Koningsdag: APR 27 or if APR 27 is not Mon,Tue,Wed,Thu,Fri,Sat then APR 26)");
 	}
 
 	@Test
@@ -150,6 +163,9 @@ class HolidayCalculationTest {
 	void alternativeDateHoliday() {
 		assertThat(KONINGSDAG.of(2014)).isEqualTo(LocalDate.of(2014, 4, 26));
 		assertThat(KONINGSDAG.of(2021)).isEqualTo(LocalDate.of(2021, 4, 27));
+
+		assertThat(KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK.of(2014)).isEqualTo(LocalDate.of(2014, 4, 26));
+		assertThat(KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK.of(2021)).isEqualTo(LocalDate.of(2021, 4, 27));
 	}
 
 	@ParameterizedTest(name = "{0} negated conditional holiday Dec-26: {1}")
@@ -166,7 +182,7 @@ class HolidayCalculationTest {
 	void negatedHolidays(int year, String holiday) {
 		final YearMonth yearMonth = YearMonth.of(year, 12);
 
-		final List<Holiday> instances = NEGATED_DAYS_OF_WEEK_HOLIDAY.instances(yearMonth.atDay(26));
+		final List<Holiday> instances = NEGATED_DAYS_OF_WEEK_HOLIDAYS.instances(yearMonth.atDay(26));
 		if (holiday.equals("-")) {
 			assertThat(instances).isEmpty();
 		} else {
