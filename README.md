@@ -315,6 +315,7 @@ Syntax: `holiday either <month> <day> of if [not] <days of week> then fixed <alt
 
 Samples:
 - `holiday either 4 27 or if SUN then fixed 4 26 Koningsdag`
+- `holiday either 4 27 or if not Mon,Tue,We,Thu,Fri,Sat then fixed 4 26 Koningsdag`
 
 
 ## Development
