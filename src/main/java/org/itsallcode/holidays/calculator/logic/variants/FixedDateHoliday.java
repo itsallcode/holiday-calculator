@@ -19,7 +19,6 @@ package org.itsallcode.holidays.calculator.logic.variants;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
-import java.time.Year;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
@@ -32,13 +31,14 @@ public class FixedDateHoliday extends Holiday {
 		this.monthDay = monthDay;
 	}
 
+	public FixedDateHoliday(Holiday other, MonthDay monthDay) {
+		super(other.getCategory(), other.getName());
+		this.monthDay = monthDay;
+	}
+
 	@Override
 	public LocalDate of(int year) {
-		if (condition.applies(Year.of(year))) {
-			return (hasAlternative() ? alternative.of(year) : monthDay.atYear(year));
-		} else {
-			return (hasAlternative() ? monthDay.atYear(year) : null);
-		}
+		return monthDay.atYear(year);
 	}
 
 	@Override
@@ -46,19 +46,18 @@ public class FixedDateHoliday extends Holiday {
 		if (pivot instanceof FixedDateHoliday
 				&& pivot.getName().equals(getName())
 				&& pivot.getCategory().equals(getCategory())) {
-			return " then " + Formatter.format(monthDay);
+			return Formatter.format(monthDay);
 		}
-		return " then " + toString();
+		return toString();
 	}
 
 	@Override
-	public String toString() {
-		return String.format("%s(%s %s: %s%s%s)", this.getClass().getSimpleName(),
+	public String toString(String condition) {
+		return String.format("%s(%s %s: %s%s)", this.getClass().getSimpleName(),
 				getCategory(),
 				getName(),
 				Formatter.format(monthDay),
-				condition.toString(hasAlternative() ? " or " : " only "),
-				hasAlternative() ? alternative.toString(this) : "");
+				condition);
 	}
 
 	@Override

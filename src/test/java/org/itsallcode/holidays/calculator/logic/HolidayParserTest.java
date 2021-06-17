@@ -247,8 +247,6 @@ class HolidayParserTest {
 
 	@Test
 	void midsommarAfton_floatingHolidayWithOffsetInDays() {
-		// assertThat(holidayParser.parse("holiday float 1 Sat before JUN 26 -1
-		// Midsommarafton"))
 		assertThat(holidayParser.parse("holiday float 1 day before 1 Sat before JUN 26 Midsommarafton"))
 				.isEqualTo(HolidayCalculationTest.MIDSOMMARAFTON);
 	}

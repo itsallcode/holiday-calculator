@@ -18,7 +18,6 @@
 package org.itsallcode.holidays.calculator.logic;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.itsallcode.holidays.calculator.logic.conditions.Condition.not;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.DayOfWeek;
@@ -28,16 +27,16 @@ import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 
-import org.itsallcode.holidays.calculator.logic.conditions.Condition;
-import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
 import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser;
+import org.itsallcode.holidays.calculator.logic.variants.ConditionalHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import org.itsallcode.holidays.calculator.logic.variants.HolidayWithAlternative;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -46,6 +45,7 @@ class HolidayCalculationTest {
 
 	static final AbbreviationParser<DayOfWeek> DAY_OF_WEEK_PARSER = new AbbreviationParser<>(DayOfWeek.class);
 
+//	static final Holiday BANK_HOLIDAY_DEC_27_OLD;
 	static final Holiday BANK_HOLIDAY_DEC_27;
 	static final Holiday BANK_HOLIDAY_DEC_28;
 
@@ -59,33 +59,38 @@ class HolidayCalculationTest {
 	static final Holiday MIDSOMMARAFTON;
 
 	static {
-		final Condition dec25SatSun = new ConditionBuilder()
-				.withPivotDate(MonthDay.of(12, 25))
+		final ConditionBuilder dec25SatSun = new ConditionBuilder()
 				.withDaysOfWeek(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
-				.build();
-		BANK_HOLIDAY_DEC_27 = new FixedDateHoliday("holiday", "Bank Holiday 1", MonthDay.of(12, 27))
-				.withCondition(dec25SatSun);
+				.withPivotDate(MonthDay.of(12, 25));
+		final Holiday bankHolidayDec27 = new FixedDateHoliday("holiday", "Bank Holiday 1", MonthDay.of(12, 27));
+		BANK_HOLIDAY_DEC_27 = new ConditionalHoliday(dec25SatSun, bankHolidayDec27);
 
-		final Condition dec26SatSun = new DayOfWeekCondition(MonthDay.of(12, 26), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-		BANK_HOLIDAY_DEC_28 = new FixedDateHoliday("holiday", "Bank Holiday 2", MonthDay.of(12, 28))
-				.withCondition(dec26SatSun);
+		final ConditionBuilder dec26SatSun = new ConditionBuilder()
+				.withDaysOfWeek(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+				.withPivotDate(MonthDay.of(12, 26));
+		final Holiday bankHolidayDec28 = new FixedDateHoliday("holiday", "Bank Holiday 2", MonthDay.of(12, 28));
+		BANK_HOLIDAY_DEC_28 = new ConditionalHoliday(dec26SatSun, bankHolidayDec28);
 
+		final Holiday defaultKoningsdag = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27));
 		final ConditionBuilder isSunday = new ConditionBuilder().withDaysOfWeek(DayOfWeek.SUNDAY);
-		KONINGSDAG = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
-				.withAlternative(isSunday, MonthDay.of(4, 26));
+		KONINGSDAG = new HolidayWithAlternative(defaultKoningsdag, isSunday, MonthDay.of(4, 26));
 
 		final ConditionBuilder isAnyDayButSunday = new ConditionBuilder().withDaysOfWeek(
 				DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
 				DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-		KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
-				.withAlternative(isAnyDayButSunday.negated(), MonthDay.of(4, 26));
+
+		KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK = new HolidayWithAlternative(
+				defaultKoningsdag, isAnyDayButSunday.negated(), MonthDay.of(4, 26));
 
 		BANK_HOLIDAYS_DECEMBER = new HolidaySet(Arrays.asList(BANK_HOLIDAY_DEC_27, BANK_HOLIDAY_DEC_28));
 
-		final Condition dec25FriSat = new DayOfWeekCondition(MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-		CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK = new FixedDateHoliday("holiday",
-				"Boxing day is extra day off", MonthDay.of(12, 26))
-						.withCondition(not(dec25FriSat));
+		final ConditionBuilder dec25FriSat = new ConditionBuilder()
+				.withDaysOfWeek(DayOfWeek.FRIDAY, DayOfWeek.SATURDAY)
+				.withPivotDate(MonthDay.of(12, 25));
+		final Holiday boxingDay = new FixedDateHoliday("holiday", "Boxing day is extra day off", MonthDay.of(12, 26));
+		CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK = new ConditionalHoliday(dec25FriSat.negated(),
+				boxingDay);
+
 		NEGATED_DAYS_OF_WEEK_HOLIDAYS = new HolidaySet(
 				Arrays.asList(CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK));
 

@@ -20,6 +20,7 @@ package org.itsallcode.holidays.calculator.logic.parser.matcher;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.itsallcode.holidays.calculator.logic.variants.ConditionalHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
 class NegatedConditionMatcher extends HolidayMatcher {
@@ -30,9 +31,8 @@ class NegatedConditionMatcher extends HolidayMatcher {
 
 	@Override
 	Holiday createHoliday(Matcher matcher) {
-		// TODO: use builder here?
-		final Holiday holiday = createOriginalHoliday(matcher);
-		holiday.negateCondition();
-		return holiday;
+		return new ConditionalHoliday( //
+				createConditionBuilder(matcher).negated(),
+				createOriginalHoliday(matcher));
 	}
 }

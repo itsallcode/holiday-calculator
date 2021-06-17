@@ -19,10 +19,13 @@ package org.itsallcode.holidays.calculator.logic.parser.matcher;
 
 import java.time.MonthDay;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
+import org.itsallcode.holidays.calculator.logic.variants.ConditionalHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import org.itsallcode.holidays.calculator.logic.variants.HolidayWithAlternative;
 
 class FixedDateMatcher extends HolidayMatcher {
 	FixedDateMatcher() {
@@ -44,27 +47,30 @@ class FixedDateMatcher extends HolidayMatcher {
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
-
-			final ConditionBuilder builder = new ConditionBuilder()
-					.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)))
-					.withPivotDate(monthDay(
-							matcher.group(Patterns.MONTH_GROUP_2), matcher.group(Patterns.DAY_GROUP_2)));
-			return createOriginalHoliday(matcher).withCondition(builder.build());
+			return new ConditionalHoliday( //
+					createConditionBuilder(matcher),
+					createOriginalHoliday(matcher));
 		}
 	}
 
 	static class Alternative extends HolidayMatcher {
-		Alternative() {
-			super(new FixedDateMatcher(), Patterns.ALTERNATIVE_DATE_HOLIDAY);
+		private final boolean negated;
+
+		Alternative(Pattern pattern) {
+			super(new FixedDateMatcher(), pattern);
+			this.negated = (pattern == Patterns.ALTERNATIVE_DATE_HOLIDAY_NEGATED_DAY_OF_WEEK);
 		}
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
-			final ConditionBuilder builder = new ConditionBuilder()
-					.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)));
-			final MonthDay alternative = monthDay(matcher.group(Patterns.MONTH_GROUP_2),
+			final MonthDay alternateDate = monthDay( //
+					matcher.group(Patterns.MONTH_GROUP_2),
 					matcher.group(Patterns.DAY_GROUP_2));
-			return createOriginalHoliday(matcher).withAlternative(builder, alternative);
+			final ConditionBuilder conditionBuilder = createConditionBuilder(matcher);
+			return new HolidayWithAlternative( //
+					createOriginalHoliday(matcher),
+					(negated ? conditionBuilder.negated() : conditionBuilder),
+					alternateDate);
 		}
 	}
 }

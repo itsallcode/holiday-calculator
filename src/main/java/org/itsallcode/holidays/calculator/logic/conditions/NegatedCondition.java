@@ -17,6 +17,11 @@ public class NegatedCondition extends Condition {
 	}
 
 	@Override
+	public String toString(String prefix) {
+		return other.toString(prefix, true);
+	}
+
+	@Override
 	public String toString(String prefix, boolean negated) {
 		return other.toString(prefix, !negated);
 	}

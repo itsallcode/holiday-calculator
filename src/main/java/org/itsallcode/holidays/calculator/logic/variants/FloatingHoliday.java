@@ -20,7 +20,6 @@ package org.itsallcode.holidays.calculator.logic.variants;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.MonthDay;
-import java.time.Year;
 import java.time.temporal.TemporalAdjusters;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
@@ -96,10 +95,6 @@ public class FloatingHoliday extends Holiday {
 
 	@Override
 	public LocalDate of(int year) {
-		if (!condition.applies(Year.of(year))) {
-			return null;
-		}
-
 		final LocalDate pivotDay = pivotDay(year).with(TemporalAdjusters.previousOrSame(dayOfWeek));
 		final int delta = (direction == Direction.AFTER ? offset - 1 : 1 - offset);
 		return pivotDay.plusDays(7L * delta + offsetInDays);

@@ -21,18 +21,12 @@ import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.Year;
 
-import org.itsallcode.holidays.calculator.logic.conditions.Condition;
-import org.itsallcode.holidays.calculator.logic.conditions.NegatedCondition;
-import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
-
 public abstract class Holiday {
 
 	public abstract LocalDate of(int year);
 
 	private final String category;
 	private final String name;
-	protected Condition condition = Condition.APPLIES_ALWAYS;
-	protected Holiday alternative = null;
 	protected int offsetInDays = 0;
 
 	/**
@@ -49,34 +43,6 @@ public abstract class Holiday {
 		return null;
 	}
 
-// 	public abstract Holiday withConditionBuilder(ConditionBuilder builder);
-	public Holiday withConditionBuilder(ConditionBuilder builder) {
-		return withCondition(builder.withOptionalPivotDateFrom(this).build());
-	}
-
-	public Holiday withCondition(Condition condition) {
-		this.condition = condition;
-		return this;
-	}
-
-	public Holiday withAlternative(Holiday alternative) {
-		this.alternative = alternative;
-		return this;
-	}
-
-	/**
-	 * Set fixed date as alternative with identical category and name.
-	 *
-	 * @param builder  if condition built by this builder applies for a given year
-	 *                 then alternative holiday becomes effective
-	 * @param monthDay alternative month and day
-	 * @return this holiday enhanced with condition and alternative holiday
-	 */
-	public Holiday withAlternative(ConditionBuilder builder, MonthDay monthDay) {
-		return withCondition(builder.withOptionalPivotDateFrom(this).build())
-				.withAlternative(new FixedDateHoliday(category, name, monthDay));
-	}
-
 	public Holiday withOffsetInDays(int offsetInDays) {
 		this.offsetInDays = offsetInDays;
 		return this;
@@ -90,16 +56,13 @@ public abstract class Holiday {
 		return name;
 	}
 
-	public void negateCondition() {
-		this.condition = new NegatedCondition(this.condition);
-	}
-
-	public boolean hasAlternative() {
-		return alternative != null;
-	}
-
 	public LocalDate of(Year year) {
 		return of(year.getValue());
+	}
+
+	@Override
+	public String toString() {
+		return toString("");
 	}
 
 	/**
@@ -111,13 +74,15 @@ public abstract class Holiday {
 		return "";
 	}
 
+	protected String toString(String condition) {
+		return "";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((alternative == null) ? 0 : alternative.hashCode());
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
-		result = prime * result + ((condition == null) ? 0 : condition.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + offsetInDays;
 		return result;
@@ -135,25 +100,11 @@ public abstract class Holiday {
 			return false;
 		}
 		final Holiday other = (Holiday) obj;
-		if (alternative == null) {
-			if (other.alternative != null) {
-				return false;
-			}
-		} else if (!alternative.equals(other.alternative)) {
-			return false;
-		}
 		if (category == null) {
 			if (other.category != null) {
 				return false;
 			}
 		} else if (!category.equals(other.category)) {
-			return false;
-		}
-		if (condition == null) {
-			if (other.condition != null) {
-				return false;
-			}
-		} else if (!condition.equals(other.condition)) {
 			return false;
 		}
 		if (name == null) {

@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
@@ -33,13 +34,12 @@ public abstract class HolidayMatcher {
 
 	public static HolidayMatcher[] matchers() {
 		return new HolidayMatcher[] {
-				new NegatedConditionMatcher(new FixedDateMatcher.Conditional(),
+				new NegatedConditionMatcher(new FixedDateMatcher(),
 						Patterns.FIXED_HOLIDAY_CONDITIONAL_NEGATED),
 				new FixedDateMatcher.Conditional(),
 				new FixedDateMatcher(),
-				new NegatedConditionMatcher(new FixedDateMatcher.Alternative(),
-						Patterns.ALTERNATIVE_DATE_HOLIDAY_NEGATED_DAY_OF_WEEK),
-				new FixedDateMatcher.Alternative(),
+				new FixedDateMatcher.Alternative(Patterns.ALTERNATIVE_DATE_HOLIDAY_NEGATED_DAY_OF_WEEK),
+				new FixedDateMatcher.Alternative(Patterns.ALTERNATIVE_DATE_HOLIDAY),
 				new FloatingDateMatcher.OffsetMatcher(),
 				new FloatingDateMatcher(),
 				new EasterBasedMatcher(),
@@ -104,5 +104,12 @@ public abstract class HolidayMatcher {
 				.stream().map(this::dayOfWeek)
 				.collect(toList())
 				.toArray(new DayOfWeek[0]);
+	}
+
+	public ConditionBuilder createConditionBuilder(Matcher matcher) {
+		return new ConditionBuilder()
+				.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)))
+				.withPivotDate(monthDay(
+						matcher.group(Patterns.MONTH_GROUP_2), matcher.group(Patterns.DAY_GROUP_2)));
 	}
 }
