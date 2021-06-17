@@ -131,6 +131,11 @@ public class FloatingHoliday extends Holiday {
 	}
 
 	@Override
+	public MonthDay getMonthDay() {
+		return this.monthDay;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -172,4 +177,5 @@ public class FloatingHoliday extends Holiday {
 		}
 		return (offset == other.offset);
 	}
+
 }

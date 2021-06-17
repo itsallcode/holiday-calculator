@@ -32,6 +32,7 @@ import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 import org.itsallcode.holidays.calculator.logic.variants.OrthodoxEasterBasedHoliday;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -232,16 +233,16 @@ class HolidayParserTest {
 
 	@Test
 	void alternativeDateHoliday() {
-		assertThat(holidayParser.parse(
-				"holiday either 4 27 or if SUN then fixed 4 26 Koningsdag"))
-						.isEqualTo(HolidayCalculationTest.KONINGSDAG);
+		final Holiday actual = holidayParser.parse(
+				"holiday either 4 27 or if SUN then fixed 4 26 Koningsdag");
+		assertThat(actual).isEqualTo(HolidayCalculationTest.KONINGSDAG);
 	}
 
 	@Test
 	void alternativeDateHolidayWithNegatedDaysOfWeek() {
-		assertThat(holidayParser.parse(
-				"holiday either 4 27 or if not Mon,Tue,We,Thu,Fri,Sat then fixed 4 26 Koningsdag"))
-						.isEqualTo(HolidayCalculationTest.KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK);
+		final Holiday actual = holidayParser.parse(
+				"holiday either 4 27 or if not Mon,Tue,We,Thu,Fri,Sat then fixed 4 26 Koningsdag");
+		assertThat(actual).isEqualTo(HolidayCalculationTest.KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK);
 	}
 
 	@Test

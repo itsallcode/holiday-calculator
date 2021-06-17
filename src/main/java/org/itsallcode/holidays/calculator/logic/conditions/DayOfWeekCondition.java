@@ -37,14 +37,6 @@ import org.itsallcode.holidays.calculator.logic.Formatter;
  */
 public class DayOfWeekCondition extends Condition {
 
-	public static class UnspecifiedPivotDateException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-
-		public UnspecifiedPivotDateException(String message) {
-			super(message);
-		}
-	}
-
 	private MonthDay pivot;
 	private final Set<DayOfWeek> daysOfWeek = new HashSet<>();
 
@@ -53,18 +45,13 @@ public class DayOfWeekCondition extends Condition {
 	}
 
 	public DayOfWeekCondition(MonthDay pivot, DayOfWeek... daysOfWeek) {
-		super(false);
 		this.pivot = pivot;
 		this.daysOfWeek.addAll(Arrays.asList(daysOfWeek));
 	}
 
 	@Override
 	public boolean applies(Year year) {
-		if (pivot == null) {
-			throw new UnspecifiedPivotDateException("Cannot apply DayOfWeekCondition with unspecified pivot date.");
-		}
-		final boolean result = daysOfWeek.contains(year.atMonthDay(pivot).getDayOfWeek());
-		return (negate ? !result : result);
+		return daysOfWeek.contains(year.atMonthDay(pivot).getDayOfWeek());
 	}
 
 	@Override
@@ -76,19 +63,7 @@ public class DayOfWeekCondition extends Condition {
 	}
 
 	@Override
-	protected Condition copy() {
-		final DayOfWeekCondition result = new DayOfWeekCondition(pivot, daysOfWeek.toArray(new DayOfWeek[0]));
-		result.negate = negate;
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		return toString("");
-	}
-
-	@Override
-	public String toString(String prefix) {
+	public String toString(String prefix, boolean negated) {
 		final String days = Arrays.asList(daysOfWeek.toArray(new DayOfWeek[0]))
 				.stream()
 				.sorted(DayOfWeek::compareTo)
@@ -97,14 +72,14 @@ public class DayOfWeekCondition extends Condition {
 		return String.format("%sif %s is%s %s",
 				prefix,
 				Formatter.format(pivot),
-				(negate ? " not" : ""),
+				(negated ? " not" : ""),
 				days);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		int result = 1;
 		result = prime * result + ((daysOfWeek == null) ? 0 : daysOfWeek.hashCode());
 		result = prime * result + ((pivot == null) ? 0 : pivot.hashCode());
 		return result;
@@ -115,7 +90,7 @@ public class DayOfWeekCondition extends Condition {
 		if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
+		if (obj == null) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {

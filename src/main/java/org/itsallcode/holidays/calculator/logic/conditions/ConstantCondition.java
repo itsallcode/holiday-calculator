@@ -24,7 +24,6 @@ public class ConstantCondition extends Condition {
 	private final boolean value;
 
 	public ConstantCondition(boolean value) {
-		super(false);
 		this.value = value;
 	}
 
@@ -33,16 +32,13 @@ public class ConstantCondition extends Condition {
 		return value;
 	}
 
-	@Override
-	protected ConstantCondition copy() {
-		final ConstantCondition result = new ConstantCondition(value);
-		result.negate = negate;
-		return result;
+	public boolean isValue() {
+		return value;
 	}
 
 	@Override
-	public String toString(String prefix) {
-		return (value ? "" : "never");
+	public String toString(String prefix, boolean negated) {
+		return ((negated ? !value : value) ? "" : "never");
 	}
 
 	@Override
@@ -65,10 +61,7 @@ public class ConstantCondition extends Condition {
 			return false;
 		}
 		final ConstantCondition other = (ConstantCondition) obj;
-		if (value != other.value) {
-			return false;
-		}
-		return true;
+		return (value == other.value);
 	}
 
 }

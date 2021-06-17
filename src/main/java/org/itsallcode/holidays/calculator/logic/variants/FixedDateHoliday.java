@@ -22,7 +22,6 @@ import java.time.MonthDay;
 import java.time.Year;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
-import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 
 public class FixedDateHoliday extends Holiday {
 
@@ -43,11 +42,6 @@ public class FixedDateHoliday extends Holiday {
 	}
 
 	@Override
-	public Holiday withCondition(Condition condition) {
-		return super.withCondition(condition.withPivotDate(monthDay));
-	}
-
-	@Override
 	public String toString(Holiday pivot) {
 		if (pivot instanceof FixedDateHoliday
 				&& pivot.getName().equals(getName())
@@ -65,6 +59,11 @@ public class FixedDateHoliday extends Holiday {
 				Formatter.format(monthDay),
 				condition.toString(hasAlternative() ? " or " : " only "),
 				hasAlternative() ? alternative.toString(this) : "");
+	}
+
+	@Override
+	public MonthDay getMonthDay() {
+		return monthDay;
 	}
 
 	@Override

@@ -25,24 +25,14 @@ public abstract class Condition {
 	public static final Condition APPLIES_ALWAYS = new ConstantCondition(true);
 
 	public static final Condition not(Condition other) {
-		return other.copy().negate();
+		return new NegatedCondition(other);
 	}
 
 	public abstract boolean applies(Year year);
 
-	public abstract String toString(String prefix);
+	public abstract String toString(String prefix, boolean negated);
 
-	protected abstract Condition copy();
-
-	protected boolean negate;
-
-	public Condition(boolean negate) {
-		this.negate = negate;
-	}
-
-	public Condition negate() {
-		negate = !negate;
-		return this;
+	public Condition() {
 	}
 
 	public Condition withPivotDate(MonthDay pivot) {
@@ -50,28 +40,12 @@ public abstract class Condition {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (negate ? 1231 : 1237);
-		return result;
+	public String toString() {
+		return toString("");
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final Condition other = (Condition) obj;
-		if (negate != other.negate) {
-			return false;
-		}
-		return true;
+	public String toString(String prefix) {
+		return toString(prefix, false);
 	}
+
 }

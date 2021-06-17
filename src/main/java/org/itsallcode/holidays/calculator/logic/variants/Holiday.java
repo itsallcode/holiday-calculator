@@ -22,6 +22,8 @@ import java.time.MonthDay;
 import java.time.Year;
 
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
+import org.itsallcode.holidays.calculator.logic.conditions.NegatedCondition;
+import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
 
 public abstract class Holiday {
 
@@ -43,6 +45,15 @@ public abstract class Holiday {
 		this.name = name;
 	}
 
+	public MonthDay getMonthDay() {
+		return null;
+	}
+
+// 	public abstract Holiday withConditionBuilder(ConditionBuilder builder);
+	public Holiday withConditionBuilder(ConditionBuilder builder) {
+		return withCondition(builder.withOptionalPivotDateFrom(this).build());
+	}
+
 	public Holiday withCondition(Condition condition) {
 		this.condition = condition;
 		return this;
@@ -56,13 +67,13 @@ public abstract class Holiday {
 	/**
 	 * Set fixed date as alternative with identical category and name.
 	 *
-	 * @param condition if this condition applies for a given year then alternative
-	 *                  holiday becomes effective
-	 * @param monthDay  alternative month and day
+	 * @param builder  if condition built by this builder applies for a given year
+	 *                 then alternative holiday becomes effective
+	 * @param monthDay alternative month and day
 	 * @return this holiday enhanced with condition and alternative holiday
 	 */
-	public Holiday withAlternative(Condition condition, MonthDay monthDay) {
-		return withCondition(condition)
+	public Holiday withAlternative(ConditionBuilder builder, MonthDay monthDay) {
+		return withCondition(builder.withOptionalPivotDateFrom(this).build())
 				.withAlternative(new FixedDateHoliday(category, name, monthDay));
 	}
 
@@ -79,8 +90,8 @@ public abstract class Holiday {
 		return name;
 	}
 
-	public Condition getCondition() {
-		return condition;
+	public void negateCondition() {
+		this.condition = new NegatedCondition(this.condition);
 	}
 
 	public boolean hasAlternative() {

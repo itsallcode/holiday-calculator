@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
+import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser;
 import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
@@ -58,7 +59,10 @@ class HolidayCalculationTest {
 	static final Holiday MIDSOMMARAFTON;
 
 	static {
-		final Condition dec25SatSun = new DayOfWeekCondition(MonthDay.of(12, 25), DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+		final Condition dec25SatSun = new ConditionBuilder()
+				.withPivotDate(MonthDay.of(12, 25))
+				.withDaysOfWeek(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+				.build();
 		BANK_HOLIDAY_DEC_27 = new FixedDateHoliday("holiday", "Bank Holiday 1", MonthDay.of(12, 27))
 				.withCondition(dec25SatSun);
 
@@ -66,15 +70,15 @@ class HolidayCalculationTest {
 		BANK_HOLIDAY_DEC_28 = new FixedDateHoliday("holiday", "Bank Holiday 2", MonthDay.of(12, 28))
 				.withCondition(dec26SatSun);
 
-		final Condition isSunday = new DayOfWeekCondition(DayOfWeek.SUNDAY);
+		final ConditionBuilder isSunday = new ConditionBuilder().withDaysOfWeek(DayOfWeek.SUNDAY);
 		KONINGSDAG = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
 				.withAlternative(isSunday, MonthDay.of(4, 26));
 
-		final Condition isAnyDayButSunday = new DayOfWeekCondition(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
-				DayOfWeek.WEDNESDAY,
+		final ConditionBuilder isAnyDayButSunday = new ConditionBuilder().withDaysOfWeek(
+				DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
 				DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
 		KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
-				.withAlternative(not(isAnyDayButSunday), MonthDay.of(4, 26));
+				.withAlternative(isAnyDayButSunday.negated(), MonthDay.of(4, 26));
 
 		BANK_HOLIDAYS_DECEMBER = new HolidaySet(Arrays.asList(BANK_HOLIDAY_DEC_27, BANK_HOLIDAY_DEC_28));
 
@@ -186,7 +190,7 @@ class HolidayCalculationTest {
 			"2016, Y",
 			"2017, Y",
 	})
-	void negatedHolidays(int year, String holiday) {
+	void negatedDaysOfWeekHolidays(int year, String holiday) {
 		final YearMonth yearMonth = YearMonth.of(year, 12);
 
 		final List<Holiday> instances = NEGATED_DAYS_OF_WEEK_HOLIDAYS.instances(yearMonth.atDay(26));

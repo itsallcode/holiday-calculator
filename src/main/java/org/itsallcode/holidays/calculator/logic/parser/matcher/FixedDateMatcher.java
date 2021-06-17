@@ -20,8 +20,7 @@ package org.itsallcode.holidays.calculator.logic.parser.matcher;
 import java.time.MonthDay;
 import java.util.regex.Matcher;
 
-import org.itsallcode.holidays.calculator.logic.conditions.Condition;
-import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
+import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
 import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
@@ -31,7 +30,7 @@ class FixedDateMatcher extends HolidayMatcher {
 	}
 
 	@Override
-	Holiday createHoliday(Matcher matcher) {
+	FixedDateHoliday createHoliday(Matcher matcher) {
 		return new FixedDateHoliday(
 				matcher.group(Patterns.CATEGORY_GROUP),
 				matcher.group(Patterns.NAME_GROUP),
@@ -45,10 +44,12 @@ class FixedDateMatcher extends HolidayMatcher {
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
-			final Condition condition = new DayOfWeekCondition(
-					monthDay(matcher.group(Patterns.MONTH_GROUP_2), matcher.group(Patterns.DAY_GROUP_2)),
-					daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)));
-			return createOriginalHoliday(matcher).withCondition(condition);
+
+			final ConditionBuilder builder = new ConditionBuilder()
+					.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)))
+					.withPivotDate(monthDay(
+							matcher.group(Patterns.MONTH_GROUP_2), matcher.group(Patterns.DAY_GROUP_2)));
+			return createOriginalHoliday(matcher).withCondition(builder.build());
 		}
 	}
 
@@ -59,12 +60,11 @@ class FixedDateMatcher extends HolidayMatcher {
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
-			final Condition condition = new DayOfWeekCondition(
-					daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)));
+			final ConditionBuilder builder = new ConditionBuilder()
+					.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)));
 			final MonthDay alternative = monthDay(matcher.group(Patterns.MONTH_GROUP_2),
 					matcher.group(Patterns.DAY_GROUP_2));
-			return createOriginalHoliday(matcher)
-					.withAlternative(condition, alternative);
+			return createOriginalHoliday(matcher).withAlternative(builder, alternative);
 		}
 	}
 }
