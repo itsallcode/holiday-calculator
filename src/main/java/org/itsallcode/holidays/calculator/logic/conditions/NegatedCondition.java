@@ -24,7 +24,6 @@ public class NegatedCondition extends Condition {
 	private final Condition other;
 
 	public NegatedCondition(Condition other) {
-		super();
 		this.other = other;
 	}
 
