@@ -60,7 +60,6 @@ public class Patterns {
 	private static final Token DAY = new Token(DAY_GROUP, DAY_REGEX);
 	private static final Token DAY_OR_DEFAULT = new Token(DAY_GROUP, DAY.pattern + "|" + LAST_DAY);
 	private static final Token OFFSET = new Token(OFFSET_GROUP, "[+-]?\\d\\d?");
-//	private static final Token ADDITIONAL_OFFSET = new Token(ADDITIONAL_OFFSET_GROUP, OFFSET_REGEXP);
 	private static final Token POSITIVE_OFFSET = new Token(OFFSET_GROUP, OFFSET_REGEXP);
 	private static final Token POSITIVE_OFFSET_2 = new Token(OFFSET_GROUP_2, OFFSET_REGEXP);
 	private static final Token DIRECTION = new Token(DIRECTION_GROUP, DIRECTION_REGEXP);
