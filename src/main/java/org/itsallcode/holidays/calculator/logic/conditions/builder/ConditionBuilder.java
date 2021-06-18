@@ -27,21 +27,13 @@ import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
 public class ConditionBuilder {
 
-	public static class UnspecifiedPivotDateException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-
-		public UnspecifiedPivotDateException(String message) {
-			super(message);
-		}
-	}
-
 	private boolean negated = false;
 	private DayOfWeek[] daysOfWeek;
 	private MonthDay pivotDate;
 
 	public Condition build() {
 		if (pivotDate == null) {
-			throw new UnspecifiedPivotDateException("Cannot build DayOfWeekCondition with unspecified pivot date.");
+			throw new IllegalStateException("Cannot build DayOfWeekCondition with unspecified pivot date.");
 		}
 		final DayOfWeekCondition condition = new DayOfWeekCondition(pivotDate, daysOfWeek);
 		if (negated) {
