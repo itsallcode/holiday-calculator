@@ -45,7 +45,6 @@ class HolidayCalculationTest {
 
 	static final AbbreviationParser<DayOfWeek> DAY_OF_WEEK_PARSER = new AbbreviationParser<>(DayOfWeek.class);
 
-//	static final Holiday BANK_HOLIDAY_DEC_27_OLD;
 	static final Holiday BANK_HOLIDAY_DEC_27;
 	static final Holiday BANK_HOLIDAY_DEC_28;
 
