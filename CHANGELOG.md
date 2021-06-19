@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#10](https://github.com/itsallcode/holiday-calculator/issues/10) Support holidays with conditions and alternative dates.
 - [#23](https://github.com/itsallcode/holiday-calculator/issues/23) Support negated list of days of week for holidays with alternative dates.
 - [#9](https://github.com/itsallcode/holiday-calculator/issues/9) Support floating holidays with additional offset in days.
+- [#6](https://github.com/itsallcode/holiday-calculator/issues/6) Added holiday-definition files for various countries.
 
 ## [0.1.0] - 2021-06-05
 
