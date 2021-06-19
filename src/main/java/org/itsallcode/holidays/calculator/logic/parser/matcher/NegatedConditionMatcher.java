@@ -15,18 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic;
+package org.itsallcode.holidays.calculator.logic.parser.matcher;
 
-import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class EasterBasedHoliday extends PivotDateBasedHoliday {
+import org.itsallcode.holidays.calculator.logic.variants.ConditionalHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
-	public EasterBasedHoliday(String category, String name, int offsetInDays) {
-		super("Easter", category, name, offsetInDays);
+class NegatedConditionMatcher extends HolidayMatcher {
+
+	NegatedConditionMatcher(HolidayMatcher originalMatcher, Pattern pattern) {
+		super(originalMatcher, pattern);
 	}
 
 	@Override
-	public LocalDate of(int year) {
-		return Easter.gauss(year).plusDays(offsetInDays);
+	Holiday createHoliday(Matcher matcher) {
+		return new ConditionalHoliday( //
+				createConditionBuilder(matcher).negated(),
+				createOriginalHoliday(matcher));
 	}
 }

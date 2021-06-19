@@ -15,47 +15,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic;
+package org.itsallcode.holidays.calculator.logic.variants;
 
-import java.time.LocalDate;
+import org.itsallcode.holidays.calculator.logic.Formatter;
 
-import javax.annotation.processing.Generated;
+public abstract class PivotDateBasedHoliday extends Holiday {
 
-public class FixedDateHoliday extends Holiday {
-	private final int month;
-	private final int day;
+	protected final String pivotDateName;
+	protected final int offsetInDays;
 
-	public FixedDateHoliday(String category, String name, int month, int day) {
+	protected PivotDateBasedHoliday(String pivotDateName, String category, String name, int offsetInDays) {
 		super(category, name);
-		this.month = month;
-		this.day = day;
-		ensureValidDate(month, day);
-	}
-
-	@Override
-	public LocalDate of(int year) {
-		return LocalDate.of(year, month, day);
+		this.offsetInDays = offsetInDays;
+		this.pivotDateName = pivotDateName;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s(%s %s: %02d-%02d)", this.getClass().getSimpleName(),
-				getCategory(), getName(), month, day);
+		return String.format("%s(%s %s: %s %s)",
+				this.getClass().getSimpleName(),
+				getCategory(),
+				getName(),
+				Formatter.offset(offsetInDays),
+				pivotDateName);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + day;
-		result = prime * result + month;
+		result = prime * result + offsetInDays;
+		result = prime * result + ((pivotDateName == null) ? 0 : pivotDateName.hashCode());
 		return result;
 	}
 
-	// https://git.eclipse.org/r/plugins/gitiles/jdt/eclipse.jdt.ui/+/refs/heads/master/org.eclipse.jdt.core.manipulation/core%20extension/org/eclipse/jdt/internal/corext/codemanipulation/GenerateHashCodeEqualsOperation.java
-
 	@Override
-	@Generated("org.eclipse.jdt.internal.corext.codemanipulation.GenerateHashCodeEqualsOperation")
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -66,11 +60,17 @@ public class FixedDateHoliday extends Holiday {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final FixedDateHoliday other = (FixedDateHoliday) obj;
-		if (day != other.day) {
+		final PivotDateBasedHoliday other = (PivotDateBasedHoliday) obj;
+		if (offsetInDays != other.offsetInDays) {
 			return false;
 		}
-		return (month == other.month);
+		if (pivotDateName == null) {
+			if (other.pivotDateName != null) {
+				return false;
+			}
+		} else if (!pivotDateName.equals(other.pivotDateName)) {
+			return false;
+		}
+		return true;
 	}
-
 }

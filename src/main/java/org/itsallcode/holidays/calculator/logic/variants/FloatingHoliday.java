@@ -15,15 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic;
+package org.itsallcode.holidays.calculator.logic.variants;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.time.temporal.TemporalAdjusters;
 
-import org.itsallcode.holidays.calculator.logic.parser.HolidayParser;
+import org.itsallcode.holidays.calculator.logic.Formatter;
 
 public class FloatingHoliday extends Holiday {
+
 	public enum Direction {
 		BEFORE, AFTER;
 
@@ -32,112 +34,110 @@ public class FloatingHoliday extends Holiday {
 		}
 	}
 
-	public static final int LAST_DAY_OF_THE_MONTH = -1;
+	public enum Day {
+		AS_SPECIFIED,
+		FIRST,
+		LAST;
+	}
 
 	private final int offset;
 	private final DayOfWeek dayOfWeek;
 	private final Direction direction;
-	private final int month;
-	private final int day;
+	private final MonthDay monthDay;
+	private final Day dayInterpretation;
 
 	/**
 	 * Holiday called &lt;name&gt; on the &lt;offset&gt; &lt;dayOfWeek&gt;
-	 * after/before &lt;month&gt; &lt;day&gt;.
+	 * after/before first or last day of &lt;month&gt;.
+	 *
+	 * @param category          category
+	 * @param name              name
+	 * @param offset            offset
+	 * @param dayOfWeek         day of week
+	 * @param direction         direction
+	 * @param month             number of month
+	 * @param dayInterpretation FIRST, LAST or AS_SPECIFIED
+	 */
+	public FloatingHoliday(String category, String name, int offset, DayOfWeek dayOfWeek, Direction direction,
+			int month, Day dayInterpretation) {
+		this(category, name, offset, dayOfWeek, direction, MonthDay.of(month, 1), dayInterpretation);
+	}
+
+	/**
+	 * Holiday called &lt;name&gt; on the &lt;offset&gt; &lt;dayOfWeek&gt;
+	 * after/before pivot date &lt;monthDay&gt;.
 	 *
 	 * @param category  category
 	 * @param name      name
 	 * @param offset    offset
 	 * @param dayOfWeek day of week
 	 * @param direction direction
-	 * @param month     Month
-	 * @param day       Number of pivot day in given month or using constant
-	 *                  LAST_LAY_OF_MONTH.
+	 * @param monthDay  pivot date
 	 */
-	public FloatingHoliday(String category, String name, int offset,
-			DayOfWeek dayOfWeek, Direction direction, int month, int day) {
+	public FloatingHoliday(String category, String name, int offset, DayOfWeek dayOfWeek, Direction direction,
+			MonthDay monthDay) {
+		this(category, name, offset, dayOfWeek, direction, monthDay, Day.AS_SPECIFIED);
+	}
+
+	private FloatingHoliday(String category, String name, int offset, DayOfWeek dayOfWeek, Direction direction,
+			MonthDay monthDay, Day dayInterpretation) {
 		super(category, name);
+
 		if (offset < 0) {
 			throw new IllegalArgumentException("Argument offset must be >= 0, but was " + offset);
 		}
 		this.offset = offset;
 		this.dayOfWeek = dayOfWeek;
-		if (day < 1 && day != LAST_DAY_OF_THE_MONTH) {
-			throw new IllegalArgumentException(
-					"Argument day must be > 0 or equal to LAST_DAY_OF_THE_MONTH, but was " + day);
-		}
 		this.direction = direction;
-		this.day = day;
-		this.month = month;
-		if (this.day > 0) {
-			ensureValidDate(month, this.day);
-		}
+		this.dayInterpretation = dayInterpretation;
+		this.monthDay = monthDay;
 	}
 
 	@Override
 	public LocalDate of(int year) {
 		final LocalDate pivotDay = pivotDay(year).with(TemporalAdjusters.previousOrSame(dayOfWeek));
 		final int delta = (direction == Direction.AFTER ? offset - 1 : 1 - offset);
-		return pivotDay.plusDays(7L * delta);
+		return pivotDay.plusDays(7L * delta + offsetInDays);
 	}
 
 	private LocalDate pivotDay(int year) {
 		if (direction == Direction.AFTER) {
-			return LocalDate.of(year, month, day).plusDays(6);
+			return monthDay.atYear(year).plusDays(6);
 		}
 
-		if (day == LAST_DAY_OF_THE_MONTH) {
-			return LocalDate.of(year, month, 1).with(TemporalAdjusters.lastDayOfMonth());
+		if (dayInterpretation == Day.LAST) {
+			return monthDay.atYear(year).with(TemporalAdjusters.lastDayOfMonth());
 		}
 
-		return LocalDate.of(year, month, day);
+		return monthDay.atYear(year);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s(%s %s: %d%s %s %s %02d-%s)",
-				this.getClass().getSimpleName(), getCategory(), getName(),
-				offset, ordinal(offset), capitalize(dayOfWeek),
-				direction.toString().toLowerCase(), month, dayAsString(this.day));
+		return String.format("%s(%s %s: %s%s %s %s %s)",
+				this.getClass().getSimpleName(),
+				getCategory(),
+				getName(),
+				Formatter.offsetWithoutZero(offsetInDays),
+				Formatter.ordinal(offset),
+				Formatter.formatLong(dayOfWeek),
+				direction.toString().toLowerCase(),
+				Formatter.format(monthDay, dayInterpretation));
 	}
 
-	private String ordinal(int offset) {
-		switch (offset) {
-		case 1:
-			return "st";
-		case 2:
-			return "nd";
-		case 3:
-			return "rd";
-		default:
-			return "th";
-		}
-	}
-
-	private String capitalize(DayOfWeek dayOfWeek) {
-		if (dayOfWeek == null) {
-			return "";
-		}
-
-		final String str = dayOfWeek.toString();
-		return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
-	}
-
-	private String dayAsString(int day) {
-		if (day == LAST_DAY_OF_THE_MONTH) {
-			return HolidayParser.LAST_DAY;
-		}
-
-		return String.format("%02d", day);
+	@Override
+	public MonthDay getMonthDay() {
+		return this.monthDay;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + day;
+		result = prime * result + ((dayInterpretation == null) ? 0 : dayInterpretation.hashCode());
 		result = prime * result + ((dayOfWeek == null) ? 0 : dayOfWeek.hashCode());
 		result = prime * result + ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + month;
+		result = prime * result + ((monthDay == null) ? 0 : monthDay.hashCode());
 		result = prime * result + offset;
 		return result;
 	}
@@ -154,7 +154,7 @@ public class FloatingHoliday extends Holiday {
 			return false;
 		}
 		final FloatingHoliday other = (FloatingHoliday) obj;
-		if (day != other.day) {
+		if (dayInterpretation != other.dayInterpretation) {
 			return false;
 		}
 		if (dayOfWeek != other.dayOfWeek) {
@@ -163,9 +163,14 @@ public class FloatingHoliday extends Holiday {
 		if (direction != other.direction) {
 			return false;
 		}
-		if (month != other.month) {
+		if (monthDay == null) {
+			if (other.monthDay != null) {
+				return false;
+			}
+		} else if (!monthDay.equals(other.monthDay)) {
 			return false;
 		}
 		return (offset == other.offset);
 	}
+
 }
