@@ -14,8 +14,9 @@ Holiday-calculator supports the following formula flavors:
 - a floating date defined by a pivot date, specified as month and day and an
   offset restricted to a particular day of the week, e.g. fourth Sunday before
   Christmas, i.e. December 24th
-- a date defined relatively to Easter Sunday with a positive or negative
-  offset of days
+- a date defined relatively to Easter Sunday with a positive or negative offset of days
+- a fixed date with a condition to make the holiday effective
+- a fixed date with an alternative date as replacement under the given condition
 
 ## Changelog
 
@@ -30,7 +31,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'org.itsallcode:holiday-calculator:0.2.0'
+    compile 'org.itsallcode:holiday-calculator:0.2.1'
 }
 ```
 
@@ -40,7 +41,7 @@ dependencies {
 <dependency>
     <groupId>org.itsallcode</groupId>
     <artifactId>holiday-calculator</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
@@ -50,10 +51,12 @@ In order to calculate holidays you must create a holiday definition.
 Holiday-calculator supports 4 different flavors of holiday definitions.
 For each flavor there is a dedicated class in package `org.itsallcode.holidays.calculator.logic`.
 
-1. class `FixedDateHoliday`: Fixed date holiday definition
-2. class `FloatingHoliday`: Floating holiday definition
-3. class `EasterBasedHoliday`: Easter-based holiday definition
-4. class `OrthodoxEasterBasedHoliday`: Orthodox-Easter-based holiday definition
+1. `FixedDateHoliday` defines a holiday with a fixed date.
+2. `FloatingHoliday` defines a holiday with a floating date.
+3. `EasterBasedHoliday` defines an Easter-based holiday.
+4. `OrthodoxEasterBasedHoliday` defines an Orthodox-Easter-based holiday
+5. `ConditionalHoliday` defines a conditional holiday, effective under the given condition
+5. `HolidayWithAlternative` defines a holiday with an alternative date, effective under the given condition
 
 Section [Configuration file](README.md#flavors) describes the details and parameters for each flavor.
 
@@ -66,8 +69,9 @@ import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.OrthodoxEasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.ConditionalHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.HolidayWithAlternative;
 import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
-import static org.itsallcode.holidays.calculator.logic.conditions.Condition.not;
 
 class MyClass {
 
@@ -82,15 +86,15 @@ class MyClass {
         Holiday h4 = new OrthodoxEasterBasedHoliday(
             "holiday", "Orthodox Good Friday", -2);
 
-        Condition dec25FriSat = new DayOfWeekCondition(
-            MonthDay.of(12, 25), DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
-        Holiday h5 = new FixedDateHoliday(
-            "holiday", "Boxing day is extra day off", MonthDay.of(12, 26))
-            .withCondition(not(dec25FriSat)));
+        ConditionBuilder dec25SatSun = new ConditionBuilder()
+            .withDaysOfWeek(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+            .withPivotDate(MonthDay.of(12, 25));
+        Holiday h5_default = new FixedDateHoliday("holiday", "Bank Holiday 1", MonthDay.of(12, 27));
+        Holiday h5 = new ConditionalHoliday(dec25SatSun, h5_default);
         
-        Condition isSunday = new DayOfWeekCondition(DayOfWeek.SUNDAY);
-        Holiday h6 = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27))
-				.withAlternative(isSunday, MonthDay.of(4, 26));
+        Holiday h6_default = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27));
+            ConditionBuilder isSunday = new ConditionBuilder().withDaysOfWeek(DayOfWeek.SUNDAY);
+            Holiday h6 = new HolidayWithAlternative(defaultKoningsdag, isSunday, MonthDay.of(4, 26));
 
         Holiday h7 = new FloatingHoliday("holiday", "Midsommarafton",
             1, DayOfWeek.SATURDAY, Direction.BEFORE, MonthDay.of(6, 26))
@@ -101,11 +105,11 @@ class MyClass {
 
 Holiday `h5` is a conditional holiday with a negated condition, see [below](README.md#conditional-holidays).
 Holiday `h6` is a holiday with an alternative date, see [below](README.md#alternative-holidays).
-Holiday `h6` is a floating holiday with an additional offset in days, see [below](README.md#floating-holidays).
+Holiday `h7` is a floating holiday with an additional offset in days, see [below](README.md#floating-holidays).
 
 #### Parsing a configuration File
 
-Besides creating instances of the subclasses of Holiday you can also use a configuration file to define your personal selection of holidays. Class `HolidaysFileParser` then parses the file and returns a list of holidays:
+Besides creating instances of the subclasses of `Holiday` you can also use a configuration file to define your personal selection of holidays. Class `HolidaysFileParser` then parses the file and returns a list of holidays:
 
 ```
 import org.itsallcode.holidays.calculator.logic.parser.HolidaysFileParser
@@ -117,60 +121,50 @@ class MyClass {
 }
 ```
 
-For the four example holidays instantiated above, the content of the file could look like
+For the seven example holidays instantiated above, the content of the file could look like
 
 ```
 # my holidays
 
 holiday fixed  12 24 Christmas Eve
-holiday if    DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday
 holiday float      3 SUN after 6 1 Father's Day
 holiday easter    -2 Good Friday
 holiday orthodox-easter -2 Orthodox Good Friday
+holiday if    DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday
+holiday either fixed 4 27 or if SUN then fixed 4 26 Koningsdag
+holiday float     1 day before 1 Sat before JUN 26 Midsommarafton
 ```
 
 Section [Configuration file](README.md#flavors) describes the syntax in detail.
 
 #### Evaluating a specific holiday for a specific year
 
-In order to evaluate a holiday for the current or any other year and hence get an instance of this holiday, you can just call method `Holiday.of()`, supplying the year as argument:
+In order to evaluate a holiday for the current or any other year and hence get an instance of this
+holiday with a concrete date, you can just call method `Holiday.of()`, supplying the year as argument:
 
 ```
-Holiday gf = new EasterBasedHoliday("holiday", "Good Friday", -2);
+Holiday goodFriday = new EasterBasedHoliday("holiday", "Good Friday", -2);
 LocalDate gf_2021 = goodFriday.of(2021); // 2021 April 4th
 ```
 
+### Configuration file
 
-### Configuration
-
-User can set up his or her individual personal list of favorite holidays using
-the supported formula flavors.
-
-#### Configuration file
-
-(This section needs to be moved to the WR plugin description)
-
-Holiday-calculator expects the configuration file named `holidays.txt` to be
-located in data directory next to file `projects.json`.
-
-See WR configuration about how to configure the location of the data
-directory.
+User can set up his or her individual personal list of favorite holidays using the supported formula flavors.
+Holiday-calculator already provides configuration files for a growing list of countries in folder [holidays](holidays).
 
 #### <a name="flavors"></a>Content of configuration file
 
-The configuration file is organized in lines. Each line can contain one of 5
-types of content:
+The configuration file is organized in lines. Each line can contain one of 7 types of content:
 
 1. Empty
-2. Fixed date holiday definition
-3. Floating holiday definition
-4. Easter-based holiday definition
-5. Orthodox-Easter-based holiday definition
-6. Conditional Fixed date holiday definition
-7. Alternative date holiday definition
+2. Definition of a holiday with a fixed date
+3. Definition of a holiday with a floating date
+4. Definition of an Easter-based holiday 
+5. Definition of an Orthodox-Easter-based holiday
+6. Definition of a conditional holiday
+7. Definition of a holiday with an alternative date
 
-All other lines are rated as illegal and ignored by holiday-calculator,
-logging an error message.
+All other lines are rated as illegal and ignored by holiday-calculator, logging an error message.
 
 Whitespace is allowed in most places without changing the nature of the
 line. Hence, a line containing nothing but tabs and spaces is still rated to
@@ -180,11 +174,11 @@ be an empty line.
 
 Each line can contain an optional comment starting with hash mark `#`.
 Holiday-calculator will ignore the rest of the line after and including the
-hash mark character.
+hash mark.
 
 ##### Holiday definitions
 
-All holiday definitions start with a *category*.  The category is an arbitrary
+The definition of any holiday starts with a *category*.  The category is an arbitrary
 string of non-whitespace characters. The application evaluating your holidays
 might support different categories of holidays, e.g. birthdays, anniversaries,
 etc. and may display them in different colors. As a default we propose to use
@@ -196,11 +190,15 @@ is always a string containing the name of the holiday.
 
 General rules
 - All strings except the name of the holiday are case-insensitive.
-- In all definitions including a month the month may be specified using its
-  English name, a unique abbreviation of the name or the number of a month
+- In all definitions including a month the month must be specified by
+    - either using its English name January, February, March, April, May, June, July, August, September, October, November, December
+    - or a unique abbreviation of the name 
+    - or the number of a month
   with 1 for January and 12 for December.
 - Day of month is an integer from 1 to 31.
-- Day of week is one of the English names or a unique abbreviation of it.
+- Day of week is 
+    - either one of the English names Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+    - or a unique abbreviation of it
 
 In the following cases holiday-calculator will log an error message and ignore
 the holiday definition:
@@ -208,18 +206,14 @@ the holiday definition:
   "fixed", "float", "easter"
 - if the holiday definition contains illegal numbers, such as month 0 or 13,
   day 32, or day 30 for February
-- if the day of week does not match the abbreviation of any of the English
-  names Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+- if the day of week does not match the abbreviation of any of the English names 
 - if the day of week is abbreviated ambiguously, e.g. "T" or "S"
-- if the name of a month does not match the abbreviation of any of the English
-  names January, February, March, April, May, June, July, August, September,
-  October, November.
+- if the name of a month does not match the abbreviation of any of the English names 
 - if the name of a month is abbreviated ambiguously, e.g. "Ma" or "Ju"
 
 ##### Fixed date holiday definition
 
 A fixed date holiday definition has the tag "fixed", followed by the month and day of month.
-Month may be a number from 1 to 12 or the (abbreviated) English name like "December".
 
 Syntax: `holiday fixed <month> <day> <name>`
 
@@ -230,7 +224,7 @@ Samples:
 ##### <a name="floating-holidays"></a>Floating holiday definition
 
 A floating holiday definition has the tag "float", followed by the offset, the
-day of week, the direction "before" or "after", the numbers of month and day
+day of week, the direction "before" or "after", the month and day
 of month.  Month and day of month specify a *pivot date*.
 
 If the day of week of the pivot date is identical to the specified one then
@@ -243,12 +237,14 @@ Syntax: `holiday float <offset> <direction> <day of week> <month> <day> <name>`
 
 Samples:
 - `holiday float 1 W after 1 1 First Wednesday on or after New Year`
-- `holiday float 2 MON before 12 last-day Second Monday before New Year's eve, December the 31st`
+- `holiday float 2 MON before DEC last-day Second Monday before New Year's eve, December the 31st`
 - `holiday float 4 SUNDAY before 12 24 First Advent`
 
 ##### Floating holiday with additional offset in days
 
-Optionally a floating holiday definition can contain an additional offset in days. This is especially required for Swedish holiday "Midsommarafton", which is 1 day before midsummer day, which in turn is the first Saturday be June, 26th.
+Optionally a floating holiday definition can contain an additional offset in days. 
+This is especially required for Swedish holiday "Midsommarafton", which is 1 day before midsummer day, 
+which in turn is the first Saturday on or before June, 26th.
 
 Syntax: `holiday float <offset2> day[s] <direction2> <offset> <direction> <day of week> <month> <day> <name>`
 
@@ -289,15 +285,15 @@ Examples are the bank holidays in the UK.
 Holiday-calculator calls such holidays *conditional holidays*.
 
 A conditional holiday definition has the tag "if", followed by
-- pivot month: (abbreviated) name or number 1-12
-- pivot day: 1-31
+- pivot month 
+- pivot day of month
 - "is"
 - "not" (optional)
-- comma-separated list of (abbreviated) pivot days of week, e.g. "Wed,Fri", not containing any whitespace.
+- comma-separated list of pivot days of week, e.g. "Wed,Fri", not containing any whitespace.
 - "then"
 - "fixed"
-- month: (abbreviated) name or number 1-12
-- day of month: number
+- month 
+- day of month
 - name
 
 The conditional holiday is only effective, if the pivot-date of the conditions falls on one of the specified days of week.
@@ -315,16 +311,16 @@ Some countries have holidays that are moved to another date in case a specific c
 An example is the "Koningsdag" in the Netherlands which occurs on April, 27th but is moved to April, 26 in case April, 27th is a Sunday.
 
 A holiday with an alternative has the tag "either", followed by
-- month: (abbreviated) name or number 1-12
-- day: 1-31
+- month
+- day
 - "or"
 - "if"
 - "not" (optional)
-- comma-separated list of (abbreviated) pivot days of week, e.g. "Wed,Fri", not containing any whitespace.
+- comma-separated list of pivot days of week, e.g. "Wed,Fri", not containing any whitespace.
 - "then"
 - "fixed"
-- alternative month: (abbreviated) name or number 1-12
-- alternative day of month: number
+- alternative month
+- alternative day of month
 - name
 
 Syntax: `holiday either <month> <day> of if [not] <days of week> then fixed <alternative month> <alternative day> <name>`
