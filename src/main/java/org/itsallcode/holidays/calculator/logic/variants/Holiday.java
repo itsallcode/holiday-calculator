@@ -15,17 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic;
+package org.itsallcode.holidays.calculator.logic.variants;
 
 import java.time.LocalDate;
+import java.time.MonthDay;
+import java.time.Year;
 
 public abstract class Holiday {
-	private static final int PIVOT_YEAR = 2000;
 
 	public abstract LocalDate of(int year);
 
 	private final String category;
 	private final String name;
+	protected int offsetInDays = 0;
 
 	/**
 	 * @param category Arbitrary category that may be evaluated by the application
@@ -37,6 +39,15 @@ public abstract class Holiday {
 		this.name = name;
 	}
 
+	public MonthDay getMonthDay() {
+		return null;
+	}
+
+	public Holiday withOffsetInDays(int offsetInDays) {
+		this.offsetInDays = offsetInDays;
+		return this;
+	}
+
 	public String getCategory() {
 		return category;
 	}
@@ -45,15 +56,26 @@ public abstract class Holiday {
 		return name;
 	}
 
+	public LocalDate of(Year year) {
+		return of(year.getValue());
+	}
+
+	@Override
+	public String toString() {
+		return toString("");
+	}
+
 	/**
-	 * Ensure date can be valid, at least in a leap year
-	 *
-	 * @param month Month
-	 * @param day   Day
-	 * @return local date if valid
+	 * @param pivot pivot holiday, for which the current holiday is an alternative
+	 * @return string representation of current holiday as alternative to pivot
+	 *         holiday
 	 */
-	protected LocalDate ensureValidDate(int month, int day) {
-		return LocalDate.of(PIVOT_YEAR, month, day);
+	protected String toString(Holiday pivot) {
+		return "";
+	}
+
+	protected String toString(String condition) {
+		return "";
 	}
 
 	@Override
@@ -62,6 +84,7 @@ public abstract class Holiday {
 		int result = 1;
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + offsetInDays;
 		return result;
 	}
 
@@ -91,7 +114,7 @@ public abstract class Holiday {
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
-		return true;
+		return (offsetInDays == other.offsetInDays);
 	}
 
 }

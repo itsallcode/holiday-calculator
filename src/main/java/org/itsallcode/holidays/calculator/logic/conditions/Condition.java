@@ -15,24 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic.parser;
+package org.itsallcode.holidays.calculator.logic.conditions;
 
-import org.itsallcode.holidays.calculator.logic.parser.matcher.HolidayMatcher;
-import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import java.time.MonthDay;
+import java.time.Year;
 
-public class HolidayParser {
+public abstract class Condition {
 
-	private final HolidayMatcher[] matchers = HolidayMatcher.matchers();
+	public static final Condition APPLIES_ALWAYS = new ConstantCondition(true);
 
-	public Holiday parse(String line) {
-		final String trimmed = line.trim();
-		for (final HolidayMatcher m : matchers) {
-			final Holiday holiday = m.createHoliday(trimmed);
-			if (holiday != null) {
-				return holiday;
-			}
-		}
-
-		return null;
+	public static final Condition not(Condition other) {
+		return new NegatedCondition(other);
 	}
+
+	public abstract boolean applies(Year year);
+
+	public abstract String toString(String prefix, boolean negated);
+
+	public Condition() {
+	}
+
+	public Condition withPivotDate(MonthDay pivot) {
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return toString("");
+	}
+
+	public String toString(String prefix) {
+		return toString(prefix, false);
+	}
+
 }

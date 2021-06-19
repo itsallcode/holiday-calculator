@@ -23,12 +23,17 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.itsallcode.holidays.calculator.logic.FloatingHoliday.Direction;
 import org.itsallcode.holidays.calculator.logic.parser.HolidaysFileParser;
+import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
 import org.junit.jupiter.api.Test;
 
 class HolidaySetTest {
@@ -55,7 +60,7 @@ class HolidaySetTest {
 		final List<Holiday> actual = parser
 				.parse(new ByteArrayInputStream(" birthday fixed 7 31 My Birthday # comment \n".getBytes()));
 		assertThat(parser.getErrors().size()).isZero();
-		assertThat(actual).containsExactly(new FixedDateHoliday("birthday", "My Birthday", 7, 31));
+		assertThat(actual).containsExactly(new FixedDateHoliday("birthday", "My Birthday", MonthDay.of(7, 31)));
 	}
 
 	@Test
@@ -117,17 +122,17 @@ class HolidaySetTest {
 
 	private Holiday[] expectedBavarianHolidays() {
 		return new Holiday[] {
-				new FixedDateHoliday("holiday", "Neujahr", 1, 1),
-				new FixedDateHoliday("holiday", "Heilige Drei Könige", 1, 6),
-				new FixedDateHoliday("holiday", "1. Mai", 5, 1),
-				new FixedDateHoliday("holiday", "Tag der Deutschen Einheit", 10, 3),
+				new FixedDateHoliday("holiday", "Neujahr", MonthDay.of(1, 1)),
+				new FixedDateHoliday("holiday", "Heilige Drei Könige", MonthDay.of(1, 6)),
+				new FixedDateHoliday("holiday", "1. Mai", MonthDay.of(5, 1)),
+				new FixedDateHoliday("holiday", "Tag der Deutschen Einheit", MonthDay.of(10, 3)),
 
-				new FloatingHoliday("holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24),
-				new FloatingHoliday("holiday", "2. Advent", 3, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24),
-				new FloatingHoliday("holiday", "3. Advent", 2, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24),
-				new FloatingHoliday("holiday", "4. Advent", 1, DayOfWeek.SUNDAY, Direction.BEFORE, 12, 24),
-				new FixedDateHoliday("holiday", "1. Weihnachtstag", 12, 25),
-				new FixedDateHoliday("holiday", "2. Weihnachtstag", 12, 26),
+				new FloatingHoliday("holiday", "1. Advent", 4, DayOfWeek.SUNDAY, Direction.BEFORE, MonthDay.of(12, 24)),
+				new FloatingHoliday("holiday", "2. Advent", 3, DayOfWeek.SUNDAY, Direction.BEFORE, MonthDay.of(12, 24)),
+				new FloatingHoliday("holiday", "3. Advent", 2, DayOfWeek.SUNDAY, Direction.BEFORE, MonthDay.of(12, 24)),
+				new FloatingHoliday("holiday", "4. Advent", 1, DayOfWeek.SUNDAY, Direction.BEFORE, MonthDay.of(12, 24)),
+				new FixedDateHoliday("holiday", "1. Weihnachtstag", MonthDay.of(12, 25)),
+				new FixedDateHoliday("holiday", "2. Weihnachtstag", MonthDay.of(12, 26)),
 
 				new EasterBasedHoliday("holiday", "Rosenmontag", -48),
 				new EasterBasedHoliday("holiday", "Karfreitag", -2),
@@ -137,8 +142,9 @@ class HolidaySetTest {
 				new EasterBasedHoliday("holiday", "Pfingstsonntag", +49),
 				new EasterBasedHoliday("holiday", "Pfingstmontag", +50),
 				new EasterBasedHoliday("holiday", "Fronleichnam", +60),
-				new FixedDateHoliday("holiday", "Mariä Himmelfahrt", 8, 15),
-				new FixedDateHoliday("holiday", "Allerheiligen", 11, 1),
-				new FloatingHoliday("holiday", "Totensonntag", 1, DayOfWeek.SUNDAY, Direction.AFTER, 11, 20) };
+				new FixedDateHoliday("holiday", "Mariä Himmelfahrt", MonthDay.of(8, 15)),
+				new FixedDateHoliday("holiday", "Allerheiligen", MonthDay.of(11, 1)),
+				new FloatingHoliday(
+						"holiday", "Totensonntag", 1, DayOfWeek.SUNDAY, Direction.AFTER, MonthDay.of(11, 20)) };
 	}
 }

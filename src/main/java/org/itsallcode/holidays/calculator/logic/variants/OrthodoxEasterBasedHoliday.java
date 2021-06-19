@@ -15,24 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.itsallcode.holidays.calculator.logic.parser;
+package org.itsallcode.holidays.calculator.logic.variants;
 
-import org.itsallcode.holidays.calculator.logic.parser.matcher.HolidayMatcher;
-import org.itsallcode.holidays.calculator.logic.variants.Holiday;
+import java.time.LocalDate;
 
-public class HolidayParser {
+import org.itsallcode.holidays.calculator.logic.Easter;
 
-	private final HolidayMatcher[] matchers = HolidayMatcher.matchers();
+public class OrthodoxEasterBasedHoliday extends PivotDateBasedHoliday {
 
-	public Holiday parse(String line) {
-		final String trimmed = line.trim();
-		for (final HolidayMatcher m : matchers) {
-			final Holiday holiday = m.createHoliday(trimmed);
-			if (holiday != null) {
-				return holiday;
-			}
-		}
-
-		return null;
+	public OrthodoxEasterBasedHoliday(String category, String name, int offsetInDays) {
+		super("Orthodox Easter", category, name, offsetInDays);
 	}
+
+	@Override
+	public LocalDate of(int year) {
+		return Easter.orthodox(year).plusDays(offsetInDays);
+	}
+
 }
