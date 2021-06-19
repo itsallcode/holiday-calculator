@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'org.itsallcode'
-version = '0.1.1'
+version = '0.2.0'
 
 java {
     toolchain {
@@ -38,9 +38,9 @@ test {
 
 ext {
     junitVersion = '5.7.2'
-	log4jVersion = '2.14.1'
+    log4jVersion = '2.14.1'
     mockitoVersion = '3.10.0'
-	lockbackVersion = '1.2.3'
+    lockbackVersion = '1.2.3'
 }
 
 dependencies {
@@ -48,22 +48,21 @@ dependencies {
 
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation 'org.assertj:assertj-core:3.19.0'
-	testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
-	testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-	testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
 
-	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-	// testRuntimeOnly "org.apache.logging.log4j:log4j-core:$log4jVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     testRuntimeOnly "ch.qos.logback:logback-classic:$lockbackVersion"
 }
 
 license {
     header = file('gradle/license-header.txt')
-	ext.project = 'holiday-calculator'
-	ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    ext.project = 'holiday-calculator'
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
     ext.name = 'itsallcode'
     ext.email = 'github@kuhnke.net'
-	include '**/*.java'
+    include '**/*.java'
 }
 
 jacocoTestReport {
