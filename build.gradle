@@ -44,7 +44,7 @@ ext {
 }
 
 dependencies {
-    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-api:1.7.31'
 
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation 'org.assertj:assertj-core:3.19.0'
