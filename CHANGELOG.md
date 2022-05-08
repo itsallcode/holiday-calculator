@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.1] - unreleased
 
 - [#30](https://github.com/itsallcode/holiday-calculator/issues/30) Updated and enhanced [README.md](README.md).
+- [#53](https://github.com/itsallcode/holiday-calculator/pull/53) Upgrade dependencies.
 
 ## [0.2.0] - 2021-06-19
 
