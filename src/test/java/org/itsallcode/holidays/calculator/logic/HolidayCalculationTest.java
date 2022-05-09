@@ -1,6 +1,6 @@
 /**
  * holiday-calculator
- * Copyright (C) 2021 itsallcode <github@kuhnke.net>
+ * Copyright (C) 2022 itsallcode <github@kuhnke.net>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

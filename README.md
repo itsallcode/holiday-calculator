@@ -337,6 +337,13 @@ Samples:
 ```bash
 $ ./gradlew licenseFormat
 ```
+
+### Check if dependencies are up-to-date
+
+```bash
+$ ./gradlew dependencyUpdates
+```
+
 ### Building
 
 Install to local maven repository:
