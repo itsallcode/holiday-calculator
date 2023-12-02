@@ -4,17 +4,17 @@ plugins {
     id 'maven-publish'
     id 'jacoco'
     id 'com.github.hierynomus.license' version '0.16.1'
-    id 'org.sonarqube' version '3.3'
+    id 'org.sonarqube' version '4.4.1.3373'
     id 'io.codearte.nexus-staging' version '0.30.0'
-    id "com.github.ben-manes.versions" version '0.42.0'
+    id "com.github.ben-manes.versions" version '0.50.0'
 }
 
 group 'org.itsallcode'
-version = '0.2.1'
+version = '0.2.2'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(17)
     }
     withJavadocJar()
     withSourcesJar()
@@ -38,16 +38,16 @@ test {
 }
 
 ext {
-    junitVersion = '5.8.2'
-    mockitoVersion = '4.5.1'
-    lockbackVersion = '1.2.11'
+    junitVersion = '5.10.1'
+    mockitoVersion = '5.8.0'
+    lockbackVersion = '1.4.14'
 }
 
 dependencies {
-    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'org.slf4j:slf4j-api:2.0.9'
 
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation 'org.assertj:assertj-core:3.22.0'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
@@ -59,7 +59,7 @@ dependencies {
 license {
     header = file('gradle/license-header.txt')
     ext.project = 'holiday-calculator'
-    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    ext.year = 2022
     ext.name = 'itsallcode'
     ext.email = 'github@kuhnke.net'
     include '**/*.java'
@@ -69,6 +69,13 @@ jacocoTestReport {
     reports {
         xml.required = true
     }
+}
+
+sonar {
+  properties {
+    property("sonar.organization", "itsallcode")
+    property("sonar.host.url", "https://sonarcloud.io")
+  }
 }
 
 rootProject.tasks["sonarqube"].dependsOn(tasks["jacocoTestReport"])

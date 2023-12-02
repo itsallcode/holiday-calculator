@@ -4,3 +4,5 @@
 /.project
 /bin/
 /.settings/org.eclipse.buildship.core.prefs
+/.settings/org.eclipse.core.resources.prefs
+/.settings/org.sonarlint.eclipse.core.prefs
