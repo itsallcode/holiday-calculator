@@ -9,5 +9,9 @@
     "java.codeGeneration.useBlocks": true,
     "java.saveActions.organizeImports": true,
     "java.sources.organizeImports.starThreshold": 3,
-    "java.sources.organizeImports.staticStarThreshold": 3
+    "java.sources.organizeImports.staticStarThreshold": 3,
+    "sonarlint.connectedMode.project": {
+        "connectionId": "itsallcode",
+        "projectKey": "org.itsallcode:holiday-calculator"
+    }
 }
