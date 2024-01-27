@@ -7,12 +7,18 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  matrix-build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [17, 21]
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-java-${{ matrix.java }}
       cancel-in-progress: true
+    name: "Build with Java ${{ matrix.java }}"
+    env:
+      DEFAULT_JAVA: 11
 
     steps:
     - uses: actions/checkout@v4
@@ -21,21 +27,23 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: 17
+        java-version: |
+          17
+          21
         cache: 'gradle'
     - uses: gradle/wrapper-validation-action@v1
     - name: Cache SonarQube packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
-    - name: Build with Gradle
+    - name: Build with Java ${{ matrix.java }}
       run: |
-        ./gradlew build --warning-mode=summary
+        ./gradlew build --warning-mode=summary -PjavaVersion=${{ matrix.java }}
     - name: Sonar analysis
-      if: ${{ env.SONAR_TOKEN != null }}
-      run: ./gradlew sonar -Dsonar.login=$SONAR_TOKEN --warning-mode=summary
+      if: ${{ env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
+      run: ./gradlew sonar -Dsonar.token=$SONAR_TOKEN --warning-mode=summary
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -45,3 +53,9 @@ jobs:
       with:
         report_paths: 'build/test-results/*/TEST-*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    needs: matrix-build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build successful"

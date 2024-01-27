@@ -366,11 +366,17 @@ Install to local maven repository:
     ```
 
 2. Increment version number in `build.gradle` and `README.md`, update [CHANGELOG.md](CHANGELOG.md), commit and push.
-3. Run the following command:
+3. Optional: run the following command to do a dry-run:
 
-    ```bash
-    $ ./gradlew clean build publish closeAndReleaseRepository --info
+    ```sh
+    ./gradlew clean check build publishToSonatype closeSonatypeStagingRepository --info
     ```
 
-4. Create a new [release](https://github.com/itsallcode/holiday-calculator/releases) on GitHub.
-5. After some time the release will be available at [Maven Central](https://repo1.maven.org/maven2/org/itsallcode/holiday-calculator/).
+4. Run the following command to publish to Maven Central:
+
+    ```sh
+    ./gradlew clean check build publishToSonatype closeAndReleaseSonatypeStagingRepository --info
+    ```
+
+5. Create a new [release](https://github.com/itsallcode/holiday-calculator/releases) on GitHub.
+6. After some time the release will be available at [Maven Central](https://repo1.maven.org/maven2/org/itsallcode/holiday-calculator/).
