@@ -18,7 +18,7 @@ jobs:
       cancel-in-progress: true
     name: "Build with Java ${{ matrix.java }}"
     env:
-      DEFAULT_JAVA: 11
+      DEFAULT_JAVA: 17
 
     steps:
     - uses: actions/checkout@v4
