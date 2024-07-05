@@ -12,6 +12,8 @@ jobs:
     strategy:
       matrix:
         java: [17, 21]
+    env:
+      DEFAULT_JAVA: 17
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-java-${{ matrix.java }}
       cancel-in-progress: true
