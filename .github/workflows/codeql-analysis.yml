@@ -12,11 +12,12 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     strategy:
       fail-fast: false
-      matrix:
-        language: ['java']
 
     steps:
     - name: Checkout repository
@@ -30,15 +31,15 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: 11
+        java-version: 17
         cache: 'gradle'
 
-    - uses: gradle/wrapper-validation-action@v2
+    - uses: gradle/actions/wrapper-validation@v3
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: ${{ matrix.language }}
+        languages: java
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v3
