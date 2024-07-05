@@ -7,12 +7,16 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  matrix-build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [17, 21]
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-java-${{ matrix.java }}
       cancel-in-progress: true
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v4
@@ -21,9 +25,9 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: 17
+        java-version: ${{ matrix.java }}
         cache: 'gradle'
-    - uses: gradle/wrapper-validation-action@v2
+    - uses: gradle/actions/wrapper-validation@v3
     - name: Cache SonarQube packages
       uses: actions/cache@v4
       with:
@@ -31,17 +35,16 @@ jobs:
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
     - name: Build with Gradle
-      run: |
-        ./gradlew build --warning-mode=summary
+      run: ./gradlew build --warning-mode=all -PjavaVersion=${{ matrix.java }}
     - name: Sonar analysis
-      if: ${{ env.SONAR_TOKEN != null }}
-      run: ./gradlew sonar -Dsonar.login=$SONAR_TOKEN --warning-mode=summary
+      if: ${{ env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
+      run: ./gradlew sonar -Dsonar.login=$SONAR_TOKEN --warning-mode=all
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    - name: Publish Test Report
-      uses: scacap/action-surefire-report@v1
-      if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
-      with:
-        report_paths: 'build/test-results/*/TEST-*.xml'
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    needs: matrix-build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build successful"

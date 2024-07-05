@@ -334,21 +334,21 @@ Samples:
 
 ### Generate / update license header
 
-```bash
-$ ./gradlew licenseFormat
+```sh
+./gradlew licenseFormat
 ```
 
 ### Check if dependencies are up-to-date
 
-```bash
-$ ./gradlew dependencyUpdates
+```sh
+./gradlew dependencyUpdates
 ```
 
 ### Building
 
 Install to local maven repository:
 
-```bash
+```sh
 ./gradlew clean publishToMavenLocal
 ```
 
@@ -368,8 +368,8 @@ Install to local maven repository:
 2. Increment version number in `build.gradle` and `README.md`, update [CHANGELOG.md](CHANGELOG.md), commit and push.
 3. Run the following command:
 
-    ```bash
-    $ ./gradlew clean build publish closeAndReleaseRepository --info
+    ```sh
+    ./gradlew clean build publish closeAndReleaseRepository --info
     ```
 
 4. Create a new [release](https://github.com/itsallcode/holiday-calculator/releases) on GitHub.

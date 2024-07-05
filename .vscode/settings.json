@@ -2,9 +2,9 @@
     "editor.formatOnSave": true,
     "java.configuration.updateBuildConfiguration": "automatic",
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true,
-        "source.generate.finalModifiers": true,
-        "source.fixAll": true
+        "source.organizeImports": "explicit",
+        "source.generate.finalModifiers": "explicit",
+        "source.fixAll": "explicit"
     },
     "java.codeGeneration.useBlocks": true,
     "java.saveActions.organizeImports": true,
