@@ -5,7 +5,7 @@ plugins {
     id 'jacoco'
     id 'com.github.hierynomus.license' version '0.16.1'
     id 'org.sonarqube' version '5.1.0.4882'
-    id 'io.codearte.nexus-staging' version '0.30.0'
+    id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
     id "com.github.ben-manes.versions" version '0.51.0'
 }
 
@@ -25,6 +25,7 @@ java {
 }
 
 javadoc {
+    failOnError = true
     options.addBooleanOption('html5', true)
 }
 
@@ -92,14 +93,6 @@ sonar {
 
 rootProject.tasks["sonarqube"].dependsOn(tasks["jacocoTestReport"])
 
-def getOptionalProperty(String name) {
-    if(project.hasProperty(name)) {
-        return project.property(name)
-    }
-    logger.info("Project property '${name}' not available. Please it to ~/.gradle/gradle.properties")
-    return null
-}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -130,31 +123,23 @@ publishing {
             }
         }
     }
-
-    repositories {
-        maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            allowInsecureProtocol = false
-            credentials(PasswordCredentials) {
-                username = getOptionalProperty("ossrhUsername")
-                password = getOptionalProperty("ossrhPassword")
-            }
-        }
-    }
 }
 
 signing {
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
 }
 
-nexusStaging {
+nexusPublishing {
     packageGroup = project.group
-    username = getOptionalProperty("ossrhUsername")
-    password = getOptionalProperty("ossrhPassword")
+    repositories {
+        sonatype {
+            stagingProfileId = "546ea6ce74787e"
+        }
+    }
 }
-
 
 def isNonStable = { String version ->
   def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
