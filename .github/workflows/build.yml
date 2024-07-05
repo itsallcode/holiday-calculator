@@ -40,7 +40,7 @@ jobs:
       run: ./gradlew build --warning-mode=all -PjavaVersion=${{ matrix.java }}
     - name: Sonar analysis
       if: ${{ env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
-      run: ./gradlew sonar -Dsonar.token=$SONAR_TOKEN --warning-mode=all
+      run: ./gradlew sonar -Dsonar.token=$SONAR_TOKEN --info --warning-mode=all
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
