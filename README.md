@@ -24,6 +24,8 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 ## Usage
 
+Include holiday-calculator as a dependency into your project:
+
 ### Gradle
 
 ```groovy
@@ -48,15 +50,15 @@ dependencies {
 ### Calculating holidays
 
 In order to calculate holidays you must create a holiday definition.
-Holiday-calculator supports 4 different flavors of holiday definitions.
-For each flavor there is a dedicated class in package `org.itsallcode.holidays.calculator.logic`.
+Holiday-calculator supports six different flavors of holiday definitions.
+For each flavor there is a dedicated class in package `org.itsallcode.holidays.calculator.logic`:
 
 1. `FixedDateHoliday` defines a holiday with a fixed date.
 2. `FloatingHoliday` defines a holiday with a floating date.
 3. `EasterBasedHoliday` defines an Easter-based holiday.
 4. `OrthodoxEasterBasedHoliday` defines an Orthodox-Easter-based holiday
 5. `ConditionalHoliday` defines a conditional holiday, effective under the given condition
-5. `HolidayWithAlternative` defines a holiday with an alternative date, effective under the given condition
+6. `HolidayWithAlternative` defines a holiday with an alternative date, effective under the given condition
 
 Section [Configuration file](README.md#flavors) describes the details and parameters for each flavor.
 
@@ -64,7 +66,7 @@ Section [Configuration file](README.md#flavors) describes the details and parame
 
 The following code sample instantiates one holiday for each of these flavors:
 
-```
+```java
 import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
 import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
@@ -103,15 +105,15 @@ class MyClass {
 }
 ```
 
-Holiday `h5` is a conditional holiday with a negated condition, see [below](README.md#conditional-holidays).
-Holiday `h6` is a holiday with an alternative date, see [below](README.md#alternative-holidays).
-Holiday `h7` is a floating holiday with an additional offset in days, see [below](README.md#floating-holidays).
+- Holiday `h5` is a conditional holiday with a negated condition, see [below](README.md#conditional-holidays).
+- Holiday `h6` is a holiday with an alternative date, see [below](README.md#alternative-holidays).
+- Holiday `h7` is a floating holiday with an additional offset in days, see [below](README.md#floating-holidays).
 
 #### Parsing a configuration File
 
 Besides creating instances of the subclasses of `Holiday` you can also use a configuration file to define your personal selection of holidays. Class `HolidaysFileParser` then parses the file and returns a list of holidays:
 
-```
+```java
 import org.itsallcode.holidays.calculator.logic.parser.HolidaysFileParser
 
 class MyClass {
@@ -121,7 +123,7 @@ class MyClass {
 }
 ```
 
-For the seven example holidays instantiated above, the content of the file could look like
+For the seven example holidays instantiated above, the content of the file could look like this:
 
 ```
 # my holidays
@@ -142,7 +144,7 @@ Section [Configuration file](README.md#flavors) describes the syntax in detail.
 In order to evaluate a holiday for the current or any other year and hence get an instance of this
 holiday with a concrete date, you can just call method `Holiday.of()`, supplying the year as argument:
 
-```
+```java
 Holiday goodFriday = new EasterBasedHoliday("holiday", "Good Friday", -2);
 LocalDate gf_2021 = goodFriday.of(2021); // 2021 April 4th
 ```
@@ -150,7 +152,7 @@ LocalDate gf_2021 = goodFriday.of(2021); // 2021 April 4th
 ### Configuration file
 
 User can set up his or her individual personal list of favorite holidays using the supported formula flavors.
-Holiday-calculator already provides configuration files for a growing list of countries in folder [holidays](holidays).
+Holiday-calculator already provides configuration files for a growing list of countries in folder [holidays](./holidays/).
 
 #### <a name="flavors"></a>Content of configuration file
 
@@ -178,7 +180,7 @@ hash mark.
 
 ##### Holiday definitions
 
-The definition of any holiday starts with a *category*.  The category is an arbitrary
+The definition of any holiday starts with a *category*. The category is an arbitrary
 string of non-whitespace characters. The application evaluating your holidays
 might support different categories of holidays, e.g. birthdays, anniversaries,
 etc. and may display them in different colors. As a default we propose to use
@@ -225,7 +227,7 @@ Samples:
 
 A floating holiday definition has the tag "float", followed by the offset, the
 day of week, the direction "before" or "after", the month and day
-of month.  Month and day of month specify a *pivot date*.
+of month. Month and day of month specify a *pivot date*.
 
 If the day of week of the pivot date is identical to the specified one then
 the offset starts to count on the pivot date, otherwise on the next instance
