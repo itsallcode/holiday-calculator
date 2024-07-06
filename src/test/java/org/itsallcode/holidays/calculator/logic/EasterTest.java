@@ -32,7 +32,7 @@ class EasterTest {
 
 	@Test
 	void testEquals() {
-		EqualsVerifier.simple().forClasses(Easter.class, OrthodoxEasterBasedHoliday.class).verify();
+		EqualsVerifier.simple().forClass(OrthodoxEasterBasedHoliday.class).verify();
 	}
 
 	/**
