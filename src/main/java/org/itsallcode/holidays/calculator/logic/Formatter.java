@@ -68,12 +68,12 @@ public class Formatter {
 	/**
 	 * Format the given month and (optional) day in a colloquial way using a special
 	 * interpretation for the first or last day of the month. The day component of
-	 * parameter {@link monthDay} may be optional in some cases.
+	 * parameter {@code monthDay} may be optional in some cases.
 	 *
 	 * @param monthDay          date to be formatted
-	 * @param dayInterpretation if {@link LAST} then replace specific number of the
-	 *                          day of the month by "last-day". for {@link FIRST}
-	 *                          the day may be omitted in argument {@link monthDay}
+	 * @param dayInterpretation if {@link #LAST} then replace specific number of the
+	 *                          day of the month by "last-day". for {@link #FIRST}
+	 *                          the day may be omitted in argument {@code monthDay}
 	 * @return string representing the specified date in a colloquial way.
 	 */
 	public static String format(MonthDay monthDay, Day dayInterpretation) {

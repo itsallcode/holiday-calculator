@@ -77,6 +77,8 @@ public class Token {
 	}
 
 	/**
+	 * Get the regular expression for the current token
+	 *
 	 * @return regular expression for parsing this token
 	 */
 	public String getRegex() {

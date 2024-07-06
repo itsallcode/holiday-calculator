@@ -119,6 +119,8 @@ public abstract class HolidayMatcher {
 	}
 
 	/**
+	 * Get the number of the month matched by this matcher.
+	 *
 	 * @param arg (abbreviated) name of month or number as String
 	 * @return number of month as integer
 	 */

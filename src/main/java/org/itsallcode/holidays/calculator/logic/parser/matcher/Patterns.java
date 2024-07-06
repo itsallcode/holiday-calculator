@@ -28,6 +28,10 @@ import org.itsallcode.holidays.calculator.logic.parser.Token;
  */
 public class Patterns {
 
+	private Patterns() {
+		// prevent instantiation
+	}
+
 	// names of groups in regular expressions in order to extract matched parts
 	// easily
 	static final String CATEGORY_GROUP = "category";

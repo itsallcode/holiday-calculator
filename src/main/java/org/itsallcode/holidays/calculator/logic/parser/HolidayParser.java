@@ -28,6 +28,12 @@ public class HolidayParser {
 	private final HolidayMatcher[] matchers = HolidayMatcher.matchers();
 
 	/**
+	 * Create a new instance
+	 */
+	public HolidayParser() {
+	}
+
+	/**
 	 * Parse a single holiday from a string containing the holiday's specification.
 	 *
 	 * @param line containing the holday's specification.

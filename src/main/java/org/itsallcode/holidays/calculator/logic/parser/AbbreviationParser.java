@@ -19,6 +19,11 @@ package org.itsallcode.holidays.calculator.logic.parser;
 
 import java.util.HashMap;
 
+/**
+ * This class enables to parse enum values from potentially abbreviated strings.
+ *
+ * @param <T> Enum class containing the values to be parsed from the string.
+ */
 public class AbbreviationParser<T extends Enum<T>> {
 
 	/**
@@ -29,6 +34,11 @@ public class AbbreviationParser<T extends Enum<T>> {
 	public static class AmbigueAbbreviationException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Create a new instance of this exception.
+		 *
+		 * @param message message of the exception
+		 */
 		public AmbigueAbbreviationException(String message) {
 			super(message);
 		}
@@ -41,6 +51,11 @@ public class AbbreviationParser<T extends Enum<T>> {
 	public static class InvalidAbbreviationException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Create a new instance of this exception.
+		 *
+		 * @param message message of the exception
+		 */
 		public InvalidAbbreviationException(String message) {
 			super(message);
 		}

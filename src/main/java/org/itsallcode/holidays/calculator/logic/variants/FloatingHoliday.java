@@ -40,6 +40,12 @@ public class FloatingHoliday extends Holiday {
 		/** the floating day is before the pivot date */
 		AFTER;
 
+		/**
+		 * Parse the direction from the specified string.
+		 *
+		 * @param s string to parse the direction from
+		 * @return direction parsed from the string
+		 */
 		public static Direction parse(String s) {
 			return valueOf(s.toUpperCase());
 		}

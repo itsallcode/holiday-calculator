@@ -52,7 +52,7 @@ public class HolidaySet {
 	/**
 	 * Create a new set of holidays from list of holiday definitions.
 	 *
-	 * @param definitions
+	 * @param definitions list of holidays to include into the holiday set
 	 */
 	public HolidaySet(final Collection<Holiday> definitions) {
 		this.definitions.addAll(definitions);

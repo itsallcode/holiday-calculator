@@ -41,6 +41,12 @@ public class ConditionBuilder {
 	private MonthDay pivotDate;
 
 	/**
+	 * Create a new instance.
+	 */
+	public ConditionBuilder() {
+	}
+
+	/**
 	 * Build a condition from the current builder.
 	 *
 	 * @return the built condition
