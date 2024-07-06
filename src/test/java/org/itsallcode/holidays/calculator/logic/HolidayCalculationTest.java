@@ -56,6 +56,11 @@ class HolidayCalculationTest {
 	static final HolidaySet NEGATED_DAYS_OF_WEEK_HOLIDAYS;
 
 	static final Holiday MIDSOMMARAFTON;
+	static final Holiday INDEPENDENCE_DAY_SUN;
+
+	static private ConditionBuilder isSunday() {
+		return new ConditionBuilder().withDaysOfWeek(DayOfWeek.SUNDAY);
+	}
 
 	static {
 		final ConditionBuilder dec25SatSun = new ConditionBuilder()
@@ -71,8 +76,7 @@ class HolidayCalculationTest {
 		BANK_HOLIDAY_DEC_28 = new ConditionalHoliday(dec26SatSun, bankHolidayDec28);
 
 		final Holiday defaultKoningsdag = new FixedDateHoliday("holiday", "Koningsdag", MonthDay.of(4, 27));
-		final ConditionBuilder isSunday = new ConditionBuilder().withDaysOfWeek(DayOfWeek.SUNDAY);
-		KONINGSDAG = new HolidayWithAlternative(defaultKoningsdag, isSunday, MonthDay.of(4, 26));
+		KONINGSDAG = new HolidayWithAlternative(defaultKoningsdag, isSunday(), MonthDay.of(4, 26));
 
 		final ConditionBuilder isAnyDayButSunday = new ConditionBuilder().withDaysOfWeek(
 				DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
@@ -95,6 +99,9 @@ class HolidayCalculationTest {
 
 		MIDSOMMARAFTON = new FloatingHoliday("holiday", "Midsommarafton",
 				1, DayOfWeek.SATURDAY, Direction.BEFORE, MonthDay.of(6, 26)).withOffsetInDays(-1);
+
+		final Holiday independenceDay = new FixedDateHoliday("holiday", "Independence Day", MonthDay.of(7, 4));
+		INDEPENDENCE_DAY_SUN = new HolidayWithAlternative(independenceDay, isSunday(), MonthDay.of(7, 5));
 	}
 
 	@Test
@@ -181,6 +188,8 @@ class HolidayCalculationTest {
 
 		assertThat(KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK.of(2014)).isEqualTo(LocalDate.of(2014, 4, 26));
 		assertThat(KONINGSDAG_WITH_NEGATED_DAYS_OF_WEEK.of(2021)).isEqualTo(LocalDate.of(2021, 4, 27));
+
+		assertThat(INDEPENDENCE_DAY_SUN.of(2027)).isEqualTo(LocalDate.of(2027, 7, 5));
 	}
 
 	@ParameterizedTest(name = "{0} negated conditional holiday Dec-26: {1}")

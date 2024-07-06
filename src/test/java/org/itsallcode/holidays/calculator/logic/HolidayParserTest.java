@@ -232,10 +232,16 @@ class HolidayParserTest {
 	}
 
 	@Test
-	void alternativeDateHoliday() {
+	void alternativeDateHoliday1() {
 		final Holiday actual = holidayParser.parse(
 				"holiday either 4 27 or if SUN then fixed 4 26 Koningsdag");
 		assertThat(actual).isEqualTo(HolidayCalculationTest.KONINGSDAG);
+	}
+
+	@Test
+	void alternativeDateHoliday2() {
+		final Holiday actual = holidayParser.parse("holiday either JUL 4 or if Sun then fixed JUL 5 Independence Day");
+		assertThat(actual).isEqualTo(HolidayCalculationTest.INDEPENDENCE_DAY_SUN);
 	}
 
 	@Test
