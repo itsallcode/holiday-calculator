@@ -19,6 +19,7 @@ package org.itsallcode.holidays.calculator.logic.variants;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
+import java.util.Objects;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
@@ -69,7 +70,7 @@ public class FixedDateHoliday extends Holiday {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((monthDay == null) ? 0 : monthDay.hashCode());
+		result = prime * result + Objects.hash(monthDay);
 		return result;
 	}
 
@@ -85,12 +86,7 @@ public class FixedDateHoliday extends Holiday {
 			return false;
 		}
 		final FixedDateHoliday other = (FixedDateHoliday) obj;
-		if (monthDay == null) {
-			if (other.monthDay != null) {
-				return false;
-			}
-		}
-		return (monthDay.equals(other.monthDay));
+		return Objects.equals(monthDay, other.monthDay);
 	}
 
 }

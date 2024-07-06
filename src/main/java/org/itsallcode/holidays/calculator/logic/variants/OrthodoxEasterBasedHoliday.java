@@ -32,4 +32,23 @@ public class OrthodoxEasterBasedHoliday extends PivotDateBasedHoliday {
 		return Easter.orthodox(year).plusDays(offsetInDays);
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		return true;
+	}
+
 }

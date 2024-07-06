@@ -21,6 +21,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Objects;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
@@ -134,11 +135,7 @@ public class FloatingHoliday extends Holiday {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((dayInterpretation == null) ? 0 : dayInterpretation.hashCode());
-		result = prime * result + ((dayOfWeek == null) ? 0 : dayOfWeek.hashCode());
-		result = prime * result + ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + ((monthDay == null) ? 0 : monthDay.hashCode());
-		result = prime * result + offset;
+		result = prime * result + Objects.hash(dayInterpretation, dayOfWeek, direction, monthDay, offset);
 		return result;
 	}
 
@@ -154,23 +151,8 @@ public class FloatingHoliday extends Holiday {
 			return false;
 		}
 		final FloatingHoliday other = (FloatingHoliday) obj;
-		if (dayInterpretation != other.dayInterpretation) {
-			return false;
-		}
-		if (dayOfWeek != other.dayOfWeek) {
-			return false;
-		}
-		if (direction != other.direction) {
-			return false;
-		}
-		if (monthDay == null) {
-			if (other.monthDay != null) {
-				return false;
-			}
-		} else if (!monthDay.equals(other.monthDay)) {
-			return false;
-		}
-		return (offset == other.offset);
+		return dayInterpretation == other.dayInterpretation && dayOfWeek == other.dayOfWeek
+				&& direction == other.direction && Objects.equals(monthDay, other.monthDay) && offset == other.offset;
 	}
 
 }

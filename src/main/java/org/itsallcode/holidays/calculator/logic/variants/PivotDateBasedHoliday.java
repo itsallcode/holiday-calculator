@@ -17,6 +17,8 @@
  */
 package org.itsallcode.holidays.calculator.logic.variants;
 
+import java.util.Objects;
+
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
 public abstract class PivotDateBasedHoliday extends Holiday {
@@ -44,8 +46,7 @@ public abstract class PivotDateBasedHoliday extends Holiday {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + offsetInDays;
-		result = prime * result + ((pivotDateName == null) ? 0 : pivotDateName.hashCode());
+		result = prime * result + Objects.hash(offsetInDays, pivotDateName);
 		return result;
 	}
 
@@ -61,16 +62,6 @@ public abstract class PivotDateBasedHoliday extends Holiday {
 			return false;
 		}
 		final PivotDateBasedHoliday other = (PivotDateBasedHoliday) obj;
-		if (offsetInDays != other.offsetInDays) {
-			return false;
-		}
-		if (pivotDateName == null) {
-			if (other.pivotDateName != null) {
-				return false;
-			}
-		} else if (!pivotDateName.equals(other.pivotDateName)) {
-			return false;
-		}
-		return true;
+		return offsetInDays == other.offsetInDays && Objects.equals(pivotDateName, other.pivotDateName);
 	}
 }

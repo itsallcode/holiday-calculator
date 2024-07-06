@@ -24,6 +24,7 @@ import java.time.MonthDay;
 import java.time.Year;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
@@ -78,11 +79,7 @@ public class DayOfWeekCondition extends Condition {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((daysOfWeek == null) ? 0 : daysOfWeek.hashCode());
-		result = prime * result + ((pivot == null) ? 0 : pivot.hashCode());
-		return result;
+		return Objects.hash(daysOfWeek, pivot);
 	}
 
 	@Override
@@ -97,18 +94,6 @@ public class DayOfWeekCondition extends Condition {
 			return false;
 		}
 		final DayOfWeekCondition other = (DayOfWeekCondition) obj;
-		if (daysOfWeek == null) {
-			if (other.daysOfWeek != null) {
-				return false;
-			}
-		} else if (!daysOfWeek.equals(other.daysOfWeek)) {
-			return false;
-		}
-		if (pivot == null) {
-			if (other.pivot != null) {
-				return false;
-			}
-		}
-		return (pivot.equals(other.pivot));
+		return Objects.equals(daysOfWeek, other.daysOfWeek) && Objects.equals(pivot, other.pivot);
 	}
 }

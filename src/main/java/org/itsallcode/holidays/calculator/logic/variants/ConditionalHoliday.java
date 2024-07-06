@@ -19,6 +19,7 @@ package org.itsallcode.holidays.calculator.logic.variants;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.Objects;
 
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
@@ -47,4 +48,26 @@ public class ConditionalHoliday extends Holiday {
 		return other.toString(condition.toString(" only "));
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(condition, other);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final ConditionalHoliday other = (ConditionalHoliday) obj;
+		return Objects.equals(condition, other.condition) && Objects.equals(this.other, other.other);
+	}
 }

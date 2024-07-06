@@ -18,6 +18,7 @@
 package org.itsallcode.holidays.calculator.logic.conditions;
 
 import java.time.Year;
+import java.util.Objects;
 
 public class ConstantCondition extends Condition {
 
@@ -43,10 +44,7 @@ public class ConstantCondition extends Condition {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + (value ? 1231 : 1237);
-		return result;
+		return Objects.hash(value);
 	}
 
 	@Override
@@ -54,14 +52,14 @@ public class ConstantCondition extends Condition {
 		if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
+		if (obj == null) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		final ConstantCondition other = (ConstantCondition) obj;
-		return (value == other.value);
+		return value == other.value;
 	}
 
 }

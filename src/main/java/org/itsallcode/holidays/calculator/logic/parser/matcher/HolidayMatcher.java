@@ -110,6 +110,6 @@ public abstract class HolidayMatcher {
 		return new ConditionBuilder()
 				.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)))
 				.withPivotDate(monthDay(
-						matcher.group(Patterns.MONTH_GROUP_2), matcher.group(Patterns.DAY_GROUP_2)));
+						matcher.group(Patterns.MONTH_GROUP), matcher.group(Patterns.DAY_GROUP)));
 	}
 }

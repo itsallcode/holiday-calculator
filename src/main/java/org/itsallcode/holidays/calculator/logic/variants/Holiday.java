@@ -20,6 +20,7 @@ package org.itsallcode.holidays.calculator.logic.variants;
 import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.Year;
+import java.util.Objects;
 
 public abstract class Holiday {
 
@@ -80,12 +81,7 @@ public abstract class Holiday {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((category == null) ? 0 : category.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + offsetInDays;
-		return result;
+		return Objects.hash(category, name, offsetInDays);
 	}
 
 	@Override
@@ -100,21 +96,8 @@ public abstract class Holiday {
 			return false;
 		}
 		final Holiday other = (Holiday) obj;
-		if (category == null) {
-			if (other.category != null) {
-				return false;
-			}
-		} else if (!category.equals(other.category)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
-			return false;
-		}
-		return (offsetInDays == other.offsetInDays);
+		return Objects.equals(category, other.category) && Objects.equals(name, other.name)
+				&& offsetInDays == other.offsetInDays;
 	}
 
 }

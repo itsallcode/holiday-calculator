@@ -31,4 +31,23 @@ public class EasterBasedHoliday extends PivotDateBasedHoliday {
 	public LocalDate of(int year) {
 		return Easter.gauss(year).plusDays(offsetInDays);
 	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		return true;
+	}
 }
