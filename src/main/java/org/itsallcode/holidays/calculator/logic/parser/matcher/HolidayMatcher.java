@@ -133,15 +133,16 @@ public abstract class HolidayMatcher {
 	}
 
 	/**
-	 * Parse a {@link MonthDay} instance from strings representing the month and the
-	 * day.
+	 * Parse a {@link MonthDay} instance from specified matching groups.
 	 *
-	 * @param month number or mnemonic of a month as a string
-	 * @param day   day number of the day in the given month as a string
+	 * @param matcher    matcher to retrieve the groups from
+	 * @param monthGroup name of the regex group for retrieving the month from
+	 * @param dayGroup   name of the regex group for retrieving the day of month
+	 *                   from
 	 * @return {@link MonthDay} instance
 	 */
-	protected MonthDay monthDay(String month, String day) {
-		return MonthDay.of(monthNumber(month), Integer.parseInt(day));
+	protected MonthDay monthDay(Matcher matcher, String monthGroup, String dayGroup) {
+		return MonthDay.of(monthNumber(matcher.group(monthGroup)), Integer.parseInt(matcher.group(dayGroup)));
 	}
 
 	/**
@@ -173,16 +174,14 @@ public abstract class HolidayMatcher {
 
 	/**
 	 * Create a builder for a condition that is {@code true} on the specified days
-	 * of the week or the specified pivot date.
+	 * of the week
 	 *
 	 * @param matcher regular expression matcher for retrieving the specification
 	 *                for the condition
 	 * @return condition builder
 	 */
-	public ConditionBuilder createConditionBuilder(Matcher matcher) {
+	protected ConditionBuilder createConditionBuilder(Matcher matcher) {
 		return new ConditionBuilder()
-				.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)))
-				.withPivotDate(monthDay(
-						matcher.group(Patterns.MONTH_GROUP), matcher.group(Patterns.DAY_GROUP)));
+				.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)));
 	}
 }
