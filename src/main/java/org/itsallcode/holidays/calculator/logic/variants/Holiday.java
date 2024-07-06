@@ -44,6 +44,8 @@ public abstract class Holiday {
 	protected int offsetInDays = 0;
 
 	/**
+	 * Create a new instance of this holiday.
+	 *
 	 * @param category Arbitrary category that may be evaluated by the application
 	 *                 processing the holiday.
 	 * @param name     Name of holiday.
@@ -86,7 +88,6 @@ public abstract class Holiday {
 	}
 
 	/**
-	 *
 	 * Get the name of this holiday.
 	 *
 	 * @return name of the holiday
@@ -94,10 +95,6 @@ public abstract class Holiday {
 	public String getName() {
 		return name;
 	}
-
-//	public LocalDate of(Year year) {
-//		return of(year.getValue());
-//	}
 
 	@Override
 	public String toString() {
