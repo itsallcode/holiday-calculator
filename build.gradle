@@ -12,6 +12,9 @@ plugins {
 group 'org.itsallcode'
 version = '0.2.1'
 
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 def getJavaVersion = {
   return project.hasProperty('javaVersion') ? project.getProperty('javaVersion') : 17
 }
