@@ -21,10 +21,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
+import org.itsallcode.holidays.calculator.logic.variants.OrthodoxEasterBasedHoliday;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+
 class EasterTest {
+
+	@Test
+	void testEquals() {
+		EqualsVerifier.simple().forClasses(Easter.class, OrthodoxEasterBasedHoliday.class).verify();
+	}
 
 	/**
 	 * sources:
@@ -110,5 +119,4 @@ class EasterTest {
 		assertThat(Easter.gauss(year)).isEqualTo(expectedGaussEaster);
 		assertThat(Easter.orthodox(year)).isEqualTo(expectedOrthodoxEaster);
 	}
-
 }

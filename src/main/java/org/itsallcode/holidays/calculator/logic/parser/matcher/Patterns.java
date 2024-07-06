@@ -26,11 +26,7 @@ import org.itsallcode.holidays.calculator.logic.parser.Token;
 /**
  * Shared patterns for creating regular expressions.
  */
-public class Patterns {
-
-	private Patterns() {
-		// prevent instantiation
-	}
+final public class Patterns {
 
 	// names of groups in regular expressions in order to extract matched parts
 	// easily
@@ -108,5 +104,9 @@ public class Patterns {
 	static final Pattern EASTER_BASED_HOLIDAY = buildRegexp(CATEGORY, "easter", OFFSET, HOLIDAY_NAME);
 	static final Pattern ORTHODOX_EASTER_BASED_HOLIDAY = buildRegexp( //
 			CATEGORY, "orthodox-easter", OFFSET, HOLIDAY_NAME);
+
+	private Patterns() {
+		// prevent instantiation
+	}
 
 }

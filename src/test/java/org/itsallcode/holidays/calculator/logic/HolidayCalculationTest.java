@@ -58,7 +58,7 @@ class HolidayCalculationTest {
 	static final Holiday MIDSOMMARAFTON;
 	static final Holiday INDEPENDENCE_DAY_SUN;
 
-	static private ConditionBuilder isSunday() {
+	private static ConditionBuilder isSunday() {
 		return new ConditionBuilder().withDaysOfWeek(DayOfWeek.SUNDAY);
 	}
 

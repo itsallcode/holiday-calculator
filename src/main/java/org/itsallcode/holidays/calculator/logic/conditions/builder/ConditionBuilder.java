@@ -44,6 +44,7 @@ public class ConditionBuilder {
 	 * Create a new instance.
 	 */
 	public ConditionBuilder() {
+		// intentionally empty
 	}
 
 	/**

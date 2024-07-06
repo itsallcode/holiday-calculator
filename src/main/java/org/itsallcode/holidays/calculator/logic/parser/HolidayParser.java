@@ -31,6 +31,7 @@ public class HolidayParser {
 	 * Create a new instance
 	 */
 	public HolidayParser() {
+		// intentionally empty
 	}
 
 	/**
