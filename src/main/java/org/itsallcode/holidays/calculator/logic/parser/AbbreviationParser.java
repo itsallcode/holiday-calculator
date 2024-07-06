@@ -21,6 +21,11 @@ import java.util.HashMap;
 
 public class AbbreviationParser<T extends Enum<T>> {
 
+	/**
+	 * Excepting indicating an ambiguous abbreviation for a the name of a month or
+	 * day of the week, e.g. "T" for the day of the week that could either mean
+	 * "Tuesday" or "Thursday".
+	 */
 	public static class AmbigueAbbreviationException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
@@ -29,6 +34,10 @@ public class AbbreviationParser<T extends Enum<T>> {
 		}
 	}
 
+	/**
+	 * Excepting indicating an illegal abbreviation for a the name of a month or day
+	 * of the week. E.g. "D" for a day of the week.
+	 */
 	public static class InvalidAbbreviationException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
@@ -40,10 +49,21 @@ public class AbbreviationParser<T extends Enum<T>> {
 	private final Class<T> clazz;
 	private final HashMap<String, T> cache = new HashMap<>();
 
+	/**
+	 * Create a new instance for the specified class.
+	 *
+	 * @param clazz class to create the abbreviation parser for
+	 */
 	public AbbreviationParser(Class<T> clazz) {
 		this.clazz = clazz;
 	}
 
+	/**
+	 * Return an enum for the specified prefix (e.g. abbreviation).
+	 *
+	 * @param prefix prefix to search a unique enum value for
+	 * @return enum value for the specified prefix
+	 */
 	public T getEnumFor(final String prefix) {
 		if (cache.containsKey(prefix)) {
 			return cache.get(prefix);
@@ -72,5 +92,4 @@ public class AbbreviationParser<T extends Enum<T>> {
 		cache.put(prefix, result);
 		return result;
 	}
-
 }

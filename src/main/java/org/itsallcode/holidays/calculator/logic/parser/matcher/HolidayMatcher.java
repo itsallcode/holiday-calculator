@@ -30,8 +30,16 @@ import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuil
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
+/**
+ * Abstract class for matchers for holiday specifications.
+ */
 public abstract class HolidayMatcher {
 
+	/**
+	 * Return a list of all available holiday specification matchers.
+	 *
+	 * @return list of available matchers
+	 */
 	public static HolidayMatcher[] matchers() {
 		return new HolidayMatcher[] {
 				new NegatedConditionMatcher(new FixedDateMatcher(),
@@ -58,19 +66,50 @@ public abstract class HolidayMatcher {
 
 	private final HolidayMatcher originalMatcher;
 
+	/**
+	 * Create a new instance of a generic holiday matcher based on the provided
+	 * pattern.
+	 *
+	 * @param pattern pattern for detecting the current matcher to be used for
+	 *                parsing the holiday from the specification.
+	 */
 	protected HolidayMatcher(Pattern pattern) {
 		this(null, pattern);
 	}
 
+	/**
+	 * Create a new instance of a generic holiday matcher based on the provided
+	 * matcher for the original date of the holiday and a pattern for additional
+	 * modifications, e.g. conditions, alternative dates, or time deltas from the
+	 * original date.
+	 *
+	 * @param originalMatcher matcher for the original holiday specification
+	 * @param pattern         pattern for detecting the current matcher to be used
+	 *                        for parsing the holiday from the specification.
+	 */
 	protected HolidayMatcher(HolidayMatcher originalMatcher, Pattern pattern) {
 		this.originalMatcher = originalMatcher;
 		this.pattern = pattern;
 	}
 
+	/**
+	 * Return the original holiday specified, e.g. if the condition is
+	 * {@code false}.
+	 *
+	 * @param matcher regular expression matcher for retrieving the specification of
+	 *                the original holiday
+	 * @return the original holiday
+	 */
 	protected Holiday createOriginalHoliday(Matcher matcher) {
 		return originalMatcher.createHoliday(matcher);
 	}
 
+	/**
+	 * Create a new holiday based on the specification in the current line of input.
+	 *
+	 * @param line textual specification for the holiday
+	 * @return holiday parsed from the specification
+	 */
 	public Holiday createHoliday(String line) {
 		final Matcher matcher = pattern.matcher(line);
 		if (!matcher.matches()) {
@@ -91,14 +130,38 @@ public abstract class HolidayMatcher {
 		}
 	}
 
+	/**
+	 * Parse a {@link MonthDay} instance from strings representing the month and the
+	 * day.
+	 *
+	 * @param month number or mnemonic of a month as a string
+	 * @param day   day number of the day in the given month as a string
+	 * @return {@link MonthDay} instance
+	 */
 	protected MonthDay monthDay(String month, String day) {
 		return MonthDay.of(monthNumber(month), Integer.parseInt(day));
 	}
 
+	/**
+	 * Parse the day of the week from a string.
+	 *
+	 * @param prefix potentially abbreviated name of the week day, i.e. all of the
+	 *               following variants are possible: "Sa", "Sat", "Satur",
+	 *               "Saturday". "T" is illegal, as it is ambiguous and could be
+	 *               either "Tuesday" or "Thursday".
+	 * @return {@link DayOfWeek} instance
+	 */
 	protected DayOfWeek dayOfWeek(String prefix) {
 		return dayOfWeekParser.getEnumFor(prefix);
 	}
 
+	/**
+	 * Parse days of the week from a string containing comma-separated potentially
+	 * abbreviated names.
+	 *
+	 * @param commaSeparatedList string to parse the days of week from
+	 * @return list of instances of {@link DayOfWeek}
+	 */
 	protected DayOfWeek[] daysOfWeek(String commaSeparatedList) {
 		return Arrays.asList(commaSeparatedList.split(","))
 				.stream().map(this::dayOfWeek)
@@ -106,6 +169,14 @@ public abstract class HolidayMatcher {
 				.toArray(new DayOfWeek[0]);
 	}
 
+	/**
+	 * Create a builder for a condition that is {@code true} on the specified days
+	 * of the week or the specified pivot date.
+	 *
+	 * @param matcher regular expression matcher for retrieving the specification
+	 *                for the condition
+	 * @return condition builder
+	 */
 	public ConditionBuilder createConditionBuilder(Matcher matcher) {
 		return new ConditionBuilder()
 				.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)))

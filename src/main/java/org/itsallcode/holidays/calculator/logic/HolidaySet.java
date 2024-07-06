@@ -49,11 +49,18 @@ public class HolidaySet {
 	private final Set<Integer> years = new HashSet<>();
 	private final HashMap<LocalDate, List<Holiday>> holidayInstances = new HashMap<>();
 
+	/**
+	 * Create a new set of holidays from list of holiday definitions.
+	 *
+	 * @param definitions
+	 */
 	public HolidaySet(final Collection<Holiday> definitions) {
 		this.definitions.addAll(definitions);
 	}
 
 	/**
+	 * Return List of holidays occurring on the given date.
+	 *
 	 * @param date date
 	 * @return List of holidays occurring on the given date. If there is no holiday
 	 *         on given date, then list is empty.

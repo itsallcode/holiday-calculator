@@ -29,13 +29,21 @@ import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Parser for a file containing holiday definitions.
+ */
 public class HolidaysFileParser {
 
+	/**
+	 * Represents an error that has occurred during parsing the holidays.
+	 */
 	public static class Error {
+		/** number of the line causing the error. */
 		public final int lineNumber;
+		/** Content of the line causing the error. */
 		public final String content;
 
-		public Error(int lineNumber, String content) {
+		Error(int lineNumber, String content) {
 			this.lineNumber = lineNumber;
 			this.content = content;
 		}
@@ -49,6 +57,8 @@ public class HolidaysFileParser {
 	private final String identifier;
 
 	/**
+	 * Construct a new instance of a holiday file parser.
+	 *
 	 * @param inputSourceIdentifier Just a string in order to identify the stream in
 	 *                              potential error messages. Could be name or path
 	 *                              of the file represented by the stream.
@@ -57,6 +67,13 @@ public class HolidaysFileParser {
 		this.identifier = inputSourceIdentifier;
 	}
 
+	/**
+	 * Parse holidays from the specified input stream.
+	 *
+	 * @param stream input stream to parse the holidays from.
+	 * @return list of holidays
+	 * @throws IOException in case of unexpected failures
+	 */
 	public List<Holiday> parse(InputStream stream) throws IOException {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		final List<Holiday> result = new ArrayList<>();
@@ -85,6 +102,11 @@ public class HolidaysFileParser {
 		return string.replaceFirst(COMMENT_CHAR + ".*$", "").trim();
 	}
 
+	/**
+	 * Get the list of errors that occurred during parsing the holidays.
+	 *
+	 * @return list of errors
+	 */
 	public List<Error> getErrors() {
 		return errors;
 	}

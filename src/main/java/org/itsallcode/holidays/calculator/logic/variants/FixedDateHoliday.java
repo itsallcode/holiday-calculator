@@ -23,15 +23,32 @@ import java.util.Objects;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
+/**
+ * Class representing holidays that occur on a fixed date each year, e.g.
+ * December the 24th.
+ */
 public class FixedDateHoliday extends Holiday {
 
 	private final MonthDay monthDay;
 
+	/**
+	 * Create a new instance of a fixed date holiday.
+	 *
+	 * @param category category of the holiday
+	 * @param name     name of the holiday
+	 * @param monthDay month and day of the fixed-date holiday
+	 */
 	public FixedDateHoliday(String category, String name, MonthDay monthDay) {
 		super(category, name);
 		this.monthDay = monthDay;
 	}
 
+	/**
+	 * Create a new instance of a fixed date holiday based on another holiday.
+	 *
+	 * @param other    other holiday to base the current onto
+	 * @param monthDay month and day of the current holiday
+	 */
 	public FixedDateHoliday(Holiday other, MonthDay monthDay) {
 		super(other.getCategory(), other.getName());
 		this.monthDay = monthDay;

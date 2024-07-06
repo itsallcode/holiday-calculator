@@ -21,11 +21,30 @@ import java.util.Objects;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
+/**
+ * Each instance of this class represents a holiday based on a pivot date and
+ * deviating from the pivot date by a fixed number of days.
+ */
 public abstract class PivotDateBasedHoliday extends Holiday {
 
+	/** Name of the pivot date */
 	protected final String pivotDateName;
+	/**
+	 * Offset in days between the pivot date and the holiday. A positive offset
+	 * indicated the holiday being after the pivot date.
+	 */
 	protected final int offsetInDays;
 
+	/**
+	 * Constructors for a new instance of {@link PivotDateBasedHoliday}.
+	 *
+	 * @param pivotDateName Name of the pivot date
+	 * @param category      Category of the holiday, e.g. "birthday"
+	 * @param name          Name of the holiday
+	 * @param offsetInDays  Offset in days between the pivot date and the holiday. A
+	 *                      positive offset indicates the holiday being after the
+	 *                      pivot date.
+	 */
 	protected PivotDateBasedHoliday(String pivotDateName, String category, String name, int offsetInDays) {
 		super(category, name);
 		this.offsetInDays = offsetInDays;

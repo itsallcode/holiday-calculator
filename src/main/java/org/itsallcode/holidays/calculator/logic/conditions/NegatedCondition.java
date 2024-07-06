@@ -20,10 +20,24 @@ package org.itsallcode.holidays.calculator.logic.conditions;
 import java.time.Year;
 import java.util.Objects;
 
+/**
+ * Negated variant of the initial condition.
+ *
+ * Whenever the initial condition is {@code true} the negated condition will
+ * {@code false} and vice-versa.
+ */
 public class NegatedCondition extends Condition {
 
 	private final Condition other;
 
+	/**
+	 * Create a condition negating the initial condition in parameter {@code other}.
+	 *
+	 * Whenever the initial condition is {@code true} the negated condition will
+	 * {@code false} and vice-versa.
+	 *
+	 * @param other condition to be negated.
+	 */
 	public NegatedCondition(Condition other) {
 		this.other = other;
 	}

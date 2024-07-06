@@ -24,6 +24,9 @@ import java.util.Locale;
 
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
 
+/**
+ * Formatter for dates in a colloquial way.
+ */
 public class Formatter {
 
 	private static final DateTimeFormatter DAY_OF_WEEK_FORMATTER_SHORT = DateTimeFormatter.ofPattern("EEE", Locale.US);
@@ -31,18 +34,48 @@ public class Formatter {
 	private static final DateTimeFormatter MONTH_DAY_FORMATTER = DateTimeFormatter.ofPattern("MMM d", Locale.US);
 	private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("MMM", Locale.US);
 
+	/**
+	 * Format the given day of week in a condensed colloquial way.
+	 *
+	 * @param dayOfWeek day of the week
+	 * @return string representing the specified date in a colloquial way.
+	 */
 	public static String format(DayOfWeek dayOfWeek) {
 		return DAY_OF_WEEK_FORMATTER_SHORT.format(dayOfWeek);
 	}
 
+	/**
+	 * Format the given day of week in a verbose colloquial way.
+	 *
+	 * @param dayOfWeek day of the week
+	 * @return string representing the specified date in a colloquial way.
+	 */
 	public static String formatLong(DayOfWeek dayOfWeek) {
 		return DAY_OF_WEEK_FORMATTER_LONG.format(dayOfWeek);
 	}
 
+	/**
+	 * Format the given month and day in a colloquial way.
+	 *
+	 * @param monthDay date to be formatted
+	 * @return string representing the specified date in a colloquial way.
+	 *
+	 */
 	public static String format(MonthDay monthDay) {
 		return MONTH_DAY_FORMATTER.format(monthDay).toUpperCase();
 	}
 
+	/**
+	 * Format the given month and (optional) day in a colloquial way using a special
+	 * interpretation for the first or last day of the month. The day component of
+	 * parameter {@link monthDay} may be optional in some cases.
+	 *
+	 * @param monthDay          date to be formatted
+	 * @param dayInterpretation if {@link LAST} then replace specific number of the
+	 *                          day of the month by "last-day". for {@link FIRST}
+	 *                          the day may be omitted in argument {@link monthDay}
+	 * @return string representing the specified date in a colloquial way.
+	 */
 	public static String format(MonthDay monthDay, Day dayInterpretation) {
 		switch (dayInterpretation) {
 		case LAST:
@@ -54,6 +87,15 @@ public class Formatter {
 		}
 	}
 
+	/**
+	 * Return string specifying the offset in days in human readable form. If
+	 * {@code offset == 0} return an empty string.
+	 *
+	 * @param offset offset in days
+	 * @return string specifying the offset in human readable form. negative values
+	 *         are rendered using the term "before", positive values will be
+	 *         indicated by the string "after".
+	 */
 	public static String offset(int offset) {
 		return String.format("%d day%s %s",
 				Math.abs(offset),
@@ -61,10 +103,24 @@ public class Formatter {
 				(offset < 0 ? "before" : "after"));
 	}
 
+	/**
+	 * Return string specifying the offset in days in human readable form. If
+	 * {@code offset == 0} return an empty string.
+	 *
+	 * @param offset offset in days
+	 * @return string specifying the offset in human readable form
+	 */
 	public static String offsetWithoutZero(int offset) {
 		return (offset == 0 ? "" : offset(offset) + " ");
 	}
 
+	/**
+	 * Return a string representing the ordinal variant of the given integer
+	 * {@code offset}. E.g. 1 becomes "first, 2 becomes "2nd", etc.
+	 *
+	 * @param offset integer value to get the ordinal form for
+	 * @return ordinal form for the provided {@code offset}.
+	 */
 	public static String ordinal(int offset) {
 		final String[] suffix = { "", "st", "nd", "rd" };
 		return String.format("%d%s", offset,
@@ -72,6 +128,6 @@ public class Formatter {
 	}
 
 	private Formatter() {
+		// prevent instantiation
 	}
-
 }

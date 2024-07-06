@@ -30,6 +30,8 @@ import java.util.Set;
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
 /**
+ * This class represents a condition based on the day of week.
+ *
  * Example
  *
  * <pre>
@@ -41,10 +43,24 @@ public class DayOfWeekCondition extends Condition {
 	private MonthDay pivot;
 	private final Set<DayOfWeek> daysOfWeek = new HashSet<>();
 
+	/**
+	 * Create a new condition that is {@code true} on the specified days of the
+	 * week.
+	 *
+	 * @param daysOfWeek days of the week on which the current condition shall be
+	 *                   {@code true}.
+	 */
 	public DayOfWeekCondition(DayOfWeek... daysOfWeek) {
 		this(null, daysOfWeek);
 	}
 
+	/**
+	 * Create a new condition that is {@code true} if the specified pivot date is on
+	 * one of the specified days of the week.
+	 *
+	 * @param pivot      pivot date
+	 * @param daysOfWeek days of the week
+	 */
 	public DayOfWeekCondition(MonthDay pivot, DayOfWeek... daysOfWeek) {
 		this.pivot = pivot;
 		this.daysOfWeek.addAll(Arrays.asList(daysOfWeek));

@@ -23,6 +23,9 @@ import java.util.regex.Pattern;
 
 import org.itsallcode.holidays.calculator.logic.parser.Token;
 
+/**
+ * Shared patterns for creating regular expressions.
+ */
 public class Patterns {
 
 	// names of groups in regular expressions in order to extract matched parts
@@ -42,6 +45,7 @@ public class Patterns {
 	static final String DAY_GROUP_2 = "day2";
 	static final String PIVOT_DAYS_OF_WEEK_GROUP = "daysOfWeek";
 
+	/** Optional spaces inside a regular expression */
 	public static final String SPACE_REGEXP = "\\s+";
 
 	static final String LAST_DAY = "last-day";
@@ -92,7 +96,6 @@ public class Patterns {
 
 	static final Pattern FLOATING_HOLIDAY = buildRegexp( //
 			CATEGORY, "float", POSITIVE_OFFSET, DAY_OF_WEEK, DIRECTION, MONTH, DAY_OR_DEFAULT, HOLIDAY_NAME);
-
 
 	static final Pattern FLOATING_HOLIDAY_WITH_OFFSET_IN_DAYS = buildRegexp( //
 			CATEGORY, "float", POSITIVE_OFFSET_2, "days?", DIRECTION_2, POSITIVE_OFFSET, DAY_OF_WEEK, DIRECTION, MONTH,

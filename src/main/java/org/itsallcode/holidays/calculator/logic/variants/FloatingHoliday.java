@@ -25,19 +25,38 @@ import java.util.Objects;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
+/**
+ * Class for floating holidays, e.g. first Monday in March.
+ */
 public class FloatingHoliday extends Holiday {
 
+	/**
+	 * Indicates the direction of an offset for the floating holiday from a specific
+	 * pivot date.
+	 */
 	public enum Direction {
-		BEFORE, AFTER;
+		/** the floating day is after the pivot date */
+		BEFORE,
+		/** the floating day is before the pivot date */
+		AFTER;
 
 		public static Direction parse(String s) {
 			return valueOf(s.toUpperCase());
 		}
 	}
 
+	/**
+	 * Enables to refer to specific days in a month using colloquial phrases like
+	 * "first" or "last day of the month".
+	 */
 	public enum Day {
+		/**
+		 * format the number of the day of month as specified, i.e. in a numeric way.
+		 */
 		AS_SPECIFIED,
+		/** use the first day of the month */
 		FIRST,
+		/** replace the number of the day of the month by "last-day" */
 		LAST;
 	}
 

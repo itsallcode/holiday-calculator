@@ -25,12 +25,26 @@ import java.util.Objects;
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
 
+/**
+ * Represents a holiday with a default date and an alternative date that applies
+ * if the specified condition is {@code true} for a particular year.
+ */
 public class HolidayWithAlternative extends Holiday {
 
 	private final Holiday defaultHoliday;
 	private final Condition condition;
 	private final Holiday alternative;
 
+	/**
+	 * Create a new instance of an alternative holiday.
+	 *
+	 * @param defaultHoliday   Default holiday if {@code condition} is {@code false}
+	 *                         for a particular year.
+	 * @param conditionBuilder Builder for the condition in a given year.
+	 * @param alternateDate    Alternative date that applies if the specified
+	 *                         {@code condition} is {@code true} for a particular
+	 *                         year.
+	 */
 	public HolidayWithAlternative(Holiday defaultHoliday, ConditionBuilder conditionBuilder, MonthDay alternateDate) {
 		super(defaultHoliday.getCategory(), defaultHoliday.getName());
 		this.defaultHoliday = defaultHoliday;

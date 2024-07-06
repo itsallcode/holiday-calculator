@@ -24,11 +24,23 @@ import java.util.Objects;
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
 import org.itsallcode.holidays.calculator.logic.conditions.builder.ConditionBuilder;
 
+/**
+ * This class represents a conditional holiday that only applies if the
+ * specified condition is met or that might occur on an alternative date in case
+ * the condition is met.
+ */
 public class ConditionalHoliday extends Holiday {
 
 	private final Condition condition;
 	private final Holiday other;
 
+	/**
+	 * Create a new instance of the conditional holiday.
+	 *
+	 * @param conditionBuilder builder for the condition
+	 * @param holiday          the original holiday to create the condition holiday
+	 *                         upon
+	 */
 	public ConditionalHoliday(ConditionBuilder conditionBuilder, Holiday holiday) {
 		super(holiday.getCategory(), holiday.getName());
 		this.condition = conditionBuilder.build();

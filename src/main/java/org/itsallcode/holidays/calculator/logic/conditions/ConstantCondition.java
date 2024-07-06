@@ -20,10 +20,19 @@ package org.itsallcode.holidays.calculator.logic.conditions;
 import java.time.Year;
 import java.util.Objects;
 
+/**
+ * This class represents a constant condition that is always {@code true}
+ * or{@code false}.
+ */
 public class ConstantCondition extends Condition {
 
 	private final boolean value;
 
+	/**
+	 * Create a new constant condition
+	 *
+	 * @param value value for the constant condition
+	 */
 	public ConstantCondition(boolean value) {
 		this.value = value;
 	}
@@ -33,6 +42,11 @@ public class ConstantCondition extends Condition {
 		return value;
 	}
 
+	/**
+	 * Get the value of the constant condition.
+	 *
+	 * @return the value of the constant condition.
+	 */
 	public boolean isValue() {
 		return value;
 	}
