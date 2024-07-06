@@ -34,7 +34,7 @@ public class Token {
 	 * or a {@link Token}.
 	 *
 	 * All elements in the final regular expression are separated by optional
-	 * spaces, see {@link Patterns.SPACE_REGEXP}.
+	 * spaces, see {@link Patterns#SPACE_REGEXP}.
 	 *
 	 * Each token is represented as a named-group in the returned pattern. This way
 	 * you can retrieve the match data of a particular token by specifying the

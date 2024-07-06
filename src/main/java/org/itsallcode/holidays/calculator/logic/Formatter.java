@@ -71,9 +71,10 @@ public class Formatter {
 	 * parameter {@code monthDay} may be optional in some cases.
 	 *
 	 * @param monthDay          date to be formatted
-	 * @param dayInterpretation if {@link #LAST} then replace specific number of the
-	 *                          day of the month by "last-day". for {@link #FIRST}
-	 *                          the day may be omitted in argument {@code monthDay}
+	 * @param dayInterpretation if {@link Day#LAST} then replace specific number of
+	 *                          the day of the month by "last-day". for
+	 *                          {@link Day#FIRST} the day may be omitted in argument
+	 *                          {@code monthDay}
 	 * @return string representing the specified date in a colloquial way.
 	 */
 	public static String format(MonthDay monthDay, Day dayInterpretation) {
