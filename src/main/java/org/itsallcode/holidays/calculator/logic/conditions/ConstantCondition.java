@@ -1,20 +1,3 @@
-/**
- * holiday-calculator
- * Copyright (C) 2022 itsallcode <github@kuhnke.net>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.itsallcode.holidays.calculator.logic.conditions;
 
 import java.time.Year;
@@ -33,12 +16,12 @@ public class ConstantCondition extends Condition {
 	 *
 	 * @param value value for the constant condition
 	 */
-	public ConstantCondition(boolean value) {
+	public ConstantCondition(final boolean value) {
 		this.value = value;
 	}
 
 	@Override
-	public boolean applies(Year year) {
+	public boolean applies(final Year year) {
 		return value;
 	}
 
@@ -52,7 +35,7 @@ public class ConstantCondition extends Condition {
 	}
 
 	@Override
-	public String toString(String prefix, boolean negated) {
+	public String toString(final String prefix, final boolean negated) {
 		return ((negated ? !value : value) ? "" : "never");
 	}
 
@@ -62,7 +45,7 @@ public class ConstantCondition extends Condition {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}

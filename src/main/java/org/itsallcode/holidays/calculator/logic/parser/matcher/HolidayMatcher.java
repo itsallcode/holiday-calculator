@@ -1,27 +1,8 @@
-/**
- * holiday-calculator
- * Copyright (C) 2022 itsallcode <github@kuhnke.net>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.itsallcode.holidays.calculator.logic.parser.matcher;
 
 import static java.util.stream.Collectors.toList;
 
-import java.time.DayOfWeek;
-import java.time.Month;
-import java.time.MonthDay;
+import java.time.*;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,7 +54,7 @@ public abstract class HolidayMatcher {
 	 * @param pattern pattern for detecting the current matcher to be used for
 	 *                parsing the holiday from the specification.
 	 */
-	protected HolidayMatcher(Pattern pattern) {
+	protected HolidayMatcher(final Pattern pattern) {
 		this(null, pattern);
 	}
 
@@ -87,7 +68,7 @@ public abstract class HolidayMatcher {
 	 * @param pattern         pattern for detecting the current matcher to be used
 	 *                        for parsing the holiday from the specification.
 	 */
-	protected HolidayMatcher(HolidayMatcher originalMatcher, Pattern pattern) {
+	protected HolidayMatcher(final HolidayMatcher originalMatcher, final Pattern pattern) {
 		this.originalMatcher = originalMatcher;
 		this.pattern = pattern;
 	}
@@ -100,7 +81,7 @@ public abstract class HolidayMatcher {
 	 *                the original holiday
 	 * @return the original holiday
 	 */
-	protected Holiday createOriginalHoliday(Matcher matcher) {
+	protected Holiday createOriginalHoliday(final Matcher matcher) {
 		return originalMatcher.createHoliday(matcher);
 	}
 
@@ -110,7 +91,7 @@ public abstract class HolidayMatcher {
 	 * @param line textual specification for the holiday
 	 * @return holiday parsed from the specification
 	 */
-	public Holiday createHoliday(String line) {
+	public Holiday createHoliday(final String line) {
 		final Matcher matcher = pattern.matcher(line);
 		if (!matcher.matches()) {
 			return null;
@@ -124,7 +105,7 @@ public abstract class HolidayMatcher {
 	 * @param arg (abbreviated) name of month or number as String
 	 * @return number of month as integer
 	 */
-	protected int monthNumber(String arg) {
+	protected int monthNumber(final String arg) {
 		if (MONTH_NAME_PATTERN.matcher(arg).matches()) {
 			return monthNameParser.getEnumFor(arg).getValue();
 		} else {
@@ -141,7 +122,7 @@ public abstract class HolidayMatcher {
 	 *                   from
 	 * @return {@link MonthDay} instance
 	 */
-	protected MonthDay monthDay(Matcher matcher, String monthGroup, String dayGroup) {
+	protected MonthDay monthDay(final Matcher matcher, final String monthGroup, final String dayGroup) {
 		return MonthDay.of(monthNumber(matcher.group(monthGroup)), Integer.parseInt(matcher.group(dayGroup)));
 	}
 
@@ -154,7 +135,7 @@ public abstract class HolidayMatcher {
 	 *               either "Tuesday" or "Thursday".
 	 * @return {@link DayOfWeek} instance
 	 */
-	protected DayOfWeek dayOfWeek(String prefix) {
+	protected DayOfWeek dayOfWeek(final String prefix) {
 		return dayOfWeekParser.getEnumFor(prefix);
 	}
 
@@ -165,7 +146,7 @@ public abstract class HolidayMatcher {
 	 * @param commaSeparatedList string to parse the days of week from
 	 * @return list of instances of {@link DayOfWeek}
 	 */
-	protected DayOfWeek[] daysOfWeek(String commaSeparatedList) {
+	protected DayOfWeek[] daysOfWeek(final String commaSeparatedList) {
 		return Arrays.asList(commaSeparatedList.split(","))
 				.stream().map(this::dayOfWeek)
 				.collect(toList())
@@ -180,7 +161,7 @@ public abstract class HolidayMatcher {
 	 *                for the condition
 	 * @return condition builder
 	 */
-	protected ConditionBuilder createConditionBuilder(Matcher matcher) {
+	protected ConditionBuilder createConditionBuilder(final Matcher matcher) {
 		return new ConditionBuilder()
 				.withDaysOfWeek(daysOfWeek(matcher.group(Patterns.PIVOT_DAYS_OF_WEEK_GROUP)));
 	}

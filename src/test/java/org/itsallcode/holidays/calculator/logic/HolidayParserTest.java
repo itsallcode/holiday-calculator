@@ -1,20 +1,3 @@
-/**
- * holiday-calculator
- * Copyright (C) 2022 itsallcode <github@kuhnke.net>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.itsallcode.holidays.calculator.logic;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,13 +10,9 @@ import java.time.MonthDay;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser.AmbigueAbbreviationException;
 import org.itsallcode.holidays.calculator.logic.parser.AbbreviationParser.InvalidAbbreviationException;
 import org.itsallcode.holidays.calculator.logic.parser.HolidayParser;
-import org.itsallcode.holidays.calculator.logic.variants.EasterBasedHoliday;
-import org.itsallcode.holidays.calculator.logic.variants.FixedDateHoliday;
-import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday;
+import org.itsallcode.holidays.calculator.logic.variants.*;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Day;
 import org.itsallcode.holidays.calculator.logic.variants.FloatingHoliday.Direction;
-import org.itsallcode.holidays.calculator.logic.variants.Holiday;
-import org.itsallcode.holidays.calculator.logic.variants.OrthodoxEasterBasedHoliday;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -221,14 +200,14 @@ class HolidayParserTest {
 	void conditionalHoliday() {
 		assertThat(holidayParser.parse(
 				"holiday if DEC 25 is Sat,Sun then fixed DEC 27 Bank Holiday 1"))
-						.isEqualTo(HolidayCalculationTest.BANK_HOLIDAY_DEC_27);
+				.isEqualTo(HolidayCalculationTest.BANK_HOLIDAY_DEC_27);
 	}
 
 	@Test
 	void conditionalHolidayWithNegatedDaysOfWeek() {
 		assertThat(holidayParser.parse(
 				"holiday if DEC 25 is not Fri,Sat then fixed DEC 26 Boxing day is extra day off"))
-						.isEqualTo(HolidayCalculationTest.CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK);
+				.isEqualTo(HolidayCalculationTest.CONDITIONAL_HOLIDAY_WITH_NEGATED_DAYS_OF_WEEK);
 	}
 
 	@Test
