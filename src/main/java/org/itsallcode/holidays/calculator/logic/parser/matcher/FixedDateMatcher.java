@@ -37,7 +37,7 @@ class FixedDateMatcher extends HolidayMatcher {
 		return new FixedDateHoliday(
 				matcher.group(Patterns.CATEGORY_GROUP),
 				matcher.group(Patterns.NAME_GROUP),
-				monthDay(matcher.group(Patterns.MONTH_GROUP), matcher.group(Patterns.DAY_GROUP)));
+				monthDay(matcher, Patterns.MONTH_GROUP, Patterns.DAY_GROUP));
 	}
 
 	static class Conditional extends HolidayMatcher {
@@ -47,8 +47,10 @@ class FixedDateMatcher extends HolidayMatcher {
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
+			final ConditionBuilder conditionBuilder = createConditionBuilder(matcher) //
+					.withPivotDate(monthDay(matcher, Patterns.MONTH_GROUP_2, Patterns.DAY_GROUP_2));
 			return new ConditionalHoliday( //
-					createConditionBuilder(matcher),
+					conditionBuilder,
 					createOriginalHoliday(matcher));
 		}
 	}
@@ -63,10 +65,9 @@ class FixedDateMatcher extends HolidayMatcher {
 
 		@Override
 		Holiday createHoliday(Matcher matcher) {
-			final MonthDay alternateDate = monthDay( //
-					matcher.group(Patterns.MONTH_GROUP_2),
-					matcher.group(Patterns.DAY_GROUP_2));
-			final ConditionBuilder conditionBuilder = createConditionBuilder(matcher);
+			final MonthDay originalDate = monthDay(matcher, Patterns.MONTH_GROUP, Patterns.DAY_GROUP);
+			final ConditionBuilder conditionBuilder = createConditionBuilder(matcher).withPivotDate(originalDate);
+			final MonthDay alternateDate = monthDay(matcher, Patterns.MONTH_GROUP_2, Patterns.DAY_GROUP_2);
 			return new HolidayWithAlternative( //
 					createOriginalHoliday(matcher),
 					(negated ? conditionBuilder.negated() : conditionBuilder),

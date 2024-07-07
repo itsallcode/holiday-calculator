@@ -24,11 +24,14 @@ import java.time.MonthDay;
 import java.time.Year;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
 /**
+ * This class represents a condition based on the day of week.
+ *
  * Example
  *
  * <pre>
@@ -40,10 +43,24 @@ public class DayOfWeekCondition extends Condition {
 	private MonthDay pivot;
 	private final Set<DayOfWeek> daysOfWeek = new HashSet<>();
 
+	/**
+	 * Create a new condition that is {@code true} on the specified days of the
+	 * week.
+	 *
+	 * @param daysOfWeek days of the week on which the current condition shall be
+	 *                   {@code true}.
+	 */
 	public DayOfWeekCondition(DayOfWeek... daysOfWeek) {
 		this(null, daysOfWeek);
 	}
 
+	/**
+	 * Create a new condition that is {@code true} if the specified pivot date is on
+	 * one of the specified days of the week.
+	 *
+	 * @param pivot      pivot date
+	 * @param daysOfWeek days of the week
+	 */
 	public DayOfWeekCondition(MonthDay pivot, DayOfWeek... daysOfWeek) {
 		this.pivot = pivot;
 		this.daysOfWeek.addAll(Arrays.asList(daysOfWeek));
@@ -78,11 +95,7 @@ public class DayOfWeekCondition extends Condition {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((daysOfWeek == null) ? 0 : daysOfWeek.hashCode());
-		result = prime * result + ((pivot == null) ? 0 : pivot.hashCode());
-		return result;
+		return Objects.hash(daysOfWeek, pivot);
 	}
 
 	@Override
@@ -97,18 +110,6 @@ public class DayOfWeekCondition extends Condition {
 			return false;
 		}
 		final DayOfWeekCondition other = (DayOfWeekCondition) obj;
-		if (daysOfWeek == null) {
-			if (other.daysOfWeek != null) {
-				return false;
-			}
-		} else if (!daysOfWeek.equals(other.daysOfWeek)) {
-			return false;
-		}
-		if (pivot == null) {
-			if (other.pivot != null) {
-				return false;
-			}
-		}
-		return (pivot.equals(other.pivot));
+		return Objects.equals(daysOfWeek, other.daysOfWeek) && Objects.equals(pivot, other.pivot);
 	}
 }

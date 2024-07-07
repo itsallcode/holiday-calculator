@@ -18,11 +18,21 @@
 package org.itsallcode.holidays.calculator.logic.conditions;
 
 import java.time.Year;
+import java.util.Objects;
 
+/**
+ * This class represents a constant condition that is always {@code true}
+ * or{@code false}.
+ */
 public class ConstantCondition extends Condition {
 
 	private final boolean value;
 
+	/**
+	 * Create a new constant condition
+	 *
+	 * @param value value for the constant condition
+	 */
 	public ConstantCondition(boolean value) {
 		this.value = value;
 	}
@@ -32,6 +42,11 @@ public class ConstantCondition extends Condition {
 		return value;
 	}
 
+	/**
+	 * Get the value of the constant condition.
+	 *
+	 * @return the value of the constant condition.
+	 */
 	public boolean isValue() {
 		return value;
 	}
@@ -43,10 +58,7 @@ public class ConstantCondition extends Condition {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + (value ? 1231 : 1237);
-		return result;
+		return Objects.hash(value);
 	}
 
 	@Override
@@ -54,14 +66,14 @@ public class ConstantCondition extends Condition {
 		if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
+		if (obj == null) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		final ConstantCondition other = (ConstantCondition) obj;
-		return (value == other.value);
+		return value == other.value;
 	}
 
 }

@@ -21,22 +21,48 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Objects;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
+/**
+ * Class for floating holidays, e.g. first Monday in March.
+ */
 public class FloatingHoliday extends Holiday {
 
+	/**
+	 * Indicates the direction of an offset for the floating holiday from a specific
+	 * pivot date.
+	 */
 	public enum Direction {
-		BEFORE, AFTER;
+		/** The floating day is after the pivot date. */
+		BEFORE,
+		/** The floating day is before the pivot date. */
+		AFTER;
 
+		/**
+		 * Parse the direction from the specified string.
+		 *
+		 * @param s string to parse the direction from
+		 * @return direction parsed from the string
+		 */
 		public static Direction parse(String s) {
 			return valueOf(s.toUpperCase());
 		}
 	}
 
+	/**
+	 * Enables to refer to specific days in a month using colloquial phrases like
+	 * "first" or "last day of the month".
+	 */
 	public enum Day {
+		/**
+		 * Format the number of the day of month as specified, i.e. in a numeric way.
+		 */
 		AS_SPECIFIED,
+		/** Use the first day of the month */
 		FIRST,
+		/** Replace the number of the day of the month by "last-day" */
 		LAST;
 	}
 
@@ -134,11 +160,7 @@ public class FloatingHoliday extends Holiday {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((dayInterpretation == null) ? 0 : dayInterpretation.hashCode());
-		result = prime * result + ((dayOfWeek == null) ? 0 : dayOfWeek.hashCode());
-		result = prime * result + ((direction == null) ? 0 : direction.hashCode());
-		result = prime * result + ((monthDay == null) ? 0 : monthDay.hashCode());
-		result = prime * result + offset;
+		result = prime * result + Objects.hash(dayInterpretation, dayOfWeek, direction, monthDay, offset);
 		return result;
 	}
 
@@ -154,23 +176,8 @@ public class FloatingHoliday extends Holiday {
 			return false;
 		}
 		final FloatingHoliday other = (FloatingHoliday) obj;
-		if (dayInterpretation != other.dayInterpretation) {
-			return false;
-		}
-		if (dayOfWeek != other.dayOfWeek) {
-			return false;
-		}
-		if (direction != other.direction) {
-			return false;
-		}
-		if (monthDay == null) {
-			if (other.monthDay != null) {
-				return false;
-			}
-		} else if (!monthDay.equals(other.monthDay)) {
-			return false;
-		}
-		return (offset == other.offset);
+		return dayInterpretation == other.dayInterpretation && dayOfWeek == other.dayOfWeek
+				&& direction == other.direction && Objects.equals(monthDay, other.monthDay) && offset == other.offset;
 	}
 
 }

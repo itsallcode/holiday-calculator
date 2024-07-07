@@ -12,6 +12,9 @@ plugins {
 group 'org.itsallcode'
 version = '0.2.1'
 
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 def getJavaVersion = {
   return project.hasProperty('javaVersion') ? project.getProperty('javaVersion') : 17
 }
@@ -27,6 +30,7 @@ java {
 javadoc {
     failOnError = true
     options.addBooleanOption('html5', true)
+    options.addStringOption('Xwerror', '-quiet')
 }
 
 tasks.withType(JavaCompile) {
@@ -79,9 +83,14 @@ license {
 }
 
 jacocoTestReport {
+    dependsOn test
     reports {
         xml.required = true
     }
+}
+
+test {
+    finalizedBy jacocoTestReport
 }
 
 sonar {
@@ -91,7 +100,7 @@ sonar {
   }
 }
 
-rootProject.tasks["sonarqube"].dependsOn(tasks["jacocoTestReport"])
+project.tasks["sonar"].dependsOn jacocoTestReport
 
 publishing {
     publications {

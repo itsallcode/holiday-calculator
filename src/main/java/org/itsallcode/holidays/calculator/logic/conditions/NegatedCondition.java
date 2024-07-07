@@ -18,11 +18,26 @@
 package org.itsallcode.holidays.calculator.logic.conditions;
 
 import java.time.Year;
+import java.util.Objects;
 
+/**
+ * Negated variant of the initial condition.
+ *
+ * Whenever the initial condition is {@code true} the negated condition will be
+ * {@code false} and vice-versa.
+ */
 public class NegatedCondition extends Condition {
 
 	private final Condition other;
 
+	/**
+	 * Create a condition negating the initial condition in parameter {@code other}.
+	 *
+	 * Whenever the initial condition is {@code true} the negated condition will be
+	 * {@code false} and vice-versa.
+	 *
+	 * @param other condition to be negated.
+	 */
 	public NegatedCondition(Condition other) {
 		this.other = other;
 	}
@@ -44,10 +59,7 @@ public class NegatedCondition extends Condition {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((other == null) ? 0 : other.hashCode());
-		return result;
+		return Objects.hash(other);
 	}
 
 	@Override
@@ -62,12 +74,7 @@ public class NegatedCondition extends Condition {
 			return false;
 		}
 		final NegatedCondition other = (NegatedCondition) obj;
-		if (this.other == null) {
-			if (other.other != null) {
-				return false;
-			}
-		}
-		return (this.other.equals(other.other));
+		return Objects.equals(this.other, other.other);
 	}
 
 }
