@@ -38,7 +38,7 @@ public class HolidaysFileParser {
 	 * Represents an error that has occurred during parsing the holidays.
 	 */
 	public static class Error {
-		/** number of the line causing the error. */
+		/** Number of the line causing the error. */
 		public final int lineNumber;
 		/** Content of the line causing the error. */
 		public final String content;

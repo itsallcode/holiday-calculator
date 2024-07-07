@@ -93,7 +93,7 @@ public class Formatter {
 	 * {@code offset == 0} return an empty string.
 	 *
 	 * @param offset offset in days
-	 * @return string specifying the offset in human readable form. negative values
+	 * @return string specifying the offset in human readable form. Negative values
 	 *         are rendered using the term "before", positive values will be
 	 *         indicated by the string "after".
 	 */
@@ -117,7 +117,7 @@ public class Formatter {
 
 	/**
 	 * Return a string representing the ordinal variant of the given integer
-	 * {@code offset}. E.g. 1 becomes "first, 2 becomes "2nd", etc.
+	 * {@code offset}. E.g. 1 becomes "1st", 2 becomes "2nd", etc.
 	 *
 	 * @param offset integer value to get the ordinal form for
 	 * @return ordinal form for the provided {@code offset}.

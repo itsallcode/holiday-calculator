@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * Negated variant of the initial condition.
  *
- * Whenever the initial condition is {@code true} the negated condition will
+ * Whenever the initial condition is {@code true} the negated condition will be
  * {@code false} and vice-versa.
  */
 public class NegatedCondition extends Condition {
@@ -33,7 +33,7 @@ public class NegatedCondition extends Condition {
 	/**
 	 * Create a condition negating the initial condition in parameter {@code other}.
 	 *
-	 * Whenever the initial condition is {@code true} the negated condition will
+	 * Whenever the initial condition is {@code true} the negated condition will be
 	 * {@code false} and vice-versa.
 	 *
 	 * @param other condition to be negated.

@@ -35,9 +35,9 @@ public class FloatingHoliday extends Holiday {
 	 * pivot date.
 	 */
 	public enum Direction {
-		/** the floating day is after the pivot date */
+		/** The floating day is after the pivot date. */
 		BEFORE,
-		/** the floating day is before the pivot date */
+		/** The floating day is before the pivot date. */
 		AFTER;
 
 		/**
@@ -57,12 +57,12 @@ public class FloatingHoliday extends Holiday {
 	 */
 	public enum Day {
 		/**
-		 * format the number of the day of month as specified, i.e. in a numeric way.
+		 * Format the number of the day of month as specified, i.e. in a numeric way.
 		 */
 		AS_SPECIFIED,
-		/** use the first day of the month */
+		/** Use the first day of the month */
 		FIRST,
-		/** replace the number of the day of the month by "last-day" */
+		/** Replace the number of the day of the month by "last-day" */
 		LAST;
 	}
 

@@ -59,14 +59,14 @@ public class Token {
 		return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
 	}
 
-	/** name of the token's regex group */
+	/** Name of the token's regex group */
 	public final String groupName;
-	/** regex pattern to match the token */
+	/** Regex pattern to match the token */
 	public final String pattern;
 
 	/**
-	 * Each token is represented as a named-group in the return regular expression.
-	 * This way you can the token's match data by specifying its group-name.
+	 * Each token is represented as a named-group in the returned regular expression.
+	 * This way you can get the token's match data by specifying its group-name.
 	 *
 	 * @param groupName name of the token's regex group
 	 * @param pattern   regex pattern to match the token

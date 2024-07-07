@@ -107,7 +107,7 @@ public class ConditionBuilder {
 	}
 
 	/**
-	 * Add a specification to the builder to negate the condition the is specified
+	 * Add a specification to the builder to negate the condition that is specified
 	 * otherwise.
 	 *
 	 * @return self for fluent programming

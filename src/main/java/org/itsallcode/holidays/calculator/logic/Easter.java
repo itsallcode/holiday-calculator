@@ -20,7 +20,7 @@ package org.itsallcode.holidays.calculator.logic;
 import java.time.LocalDate;
 
 /**
- * This class provides calculation methods for the data of the Easter feast and
+ * This class provides calculation methods for the date of the Easter feast and
  * the Orthodox Easter feast.
  */
 public class Easter {
