@@ -15,26 +15,6 @@ import org.itsallcode.holidays.calculator.logic.variants.Holiday;
  */
 public abstract class HolidayMatcher {
 
-	/**
-	 * Return a list of all available holiday specification matchers.
-	 *
-	 * @return list of available matchers
-	 */
-	public static HolidayMatcher[] matchers() {
-		return new HolidayMatcher[] {
-				new NegatedConditionMatcher(new FixedDateMatcher(),
-						Patterns.FIXED_HOLIDAY_CONDITIONAL_NEGATED),
-				new FixedDateMatcher.Conditional(),
-				new FixedDateMatcher(),
-				new FixedDateMatcher.Alternative(Patterns.ALTERNATIVE_DATE_HOLIDAY_NEGATED_DAY_OF_WEEK),
-				new FixedDateMatcher.Alternative(Patterns.ALTERNATIVE_DATE_HOLIDAY),
-				new FloatingDateMatcher.OffsetMatcher(),
-				new FloatingDateMatcher(),
-				new EasterBasedMatcher(),
-				new OrthodoxEasterBasedMatcher()
-		};
-	}
-
 	abstract Holiday createHoliday(Matcher matcher);
 
 	private static final Pattern MONTH_NAME_PATTERN = Pattern.compile(
@@ -70,6 +50,26 @@ public abstract class HolidayMatcher {
 	protected HolidayMatcher(final HolidayMatcher originalMatcher, final Pattern pattern) {
 		this.originalMatcher = originalMatcher;
 		this.pattern = pattern;
+	}
+
+	/**
+	 * Return a list of all available holiday specification matchers.
+	 *
+	 * @return list of available matchers
+	 */
+	public static HolidayMatcher[] matchers() {
+		return new HolidayMatcher[] {
+				new NegatedConditionMatcher(new FixedDateMatcher(),
+						Patterns.FIXED_HOLIDAY_CONDITIONAL_NEGATED),
+				new FixedDateMatcher.Conditional(),
+				new FixedDateMatcher(),
+				new FixedDateMatcher.Alternative(Patterns.ALTERNATIVE_DATE_HOLIDAY_NEGATED_DAY_OF_WEEK),
+				new FixedDateMatcher.Alternative(Patterns.ALTERNATIVE_DATE_HOLIDAY),
+				new FloatingDateMatcher.OffsetMatcher(),
+				new FloatingDateMatcher(),
+				new EasterBasedMatcher(),
+				new OrthodoxEasterBasedMatcher()
+		};
 	}
 
 	/**
