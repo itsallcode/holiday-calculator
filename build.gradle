@@ -83,9 +83,14 @@ license {
 }
 
 jacocoTestReport {
+    dependsOn test
     reports {
         xml.required = true
     }
+}
+
+test {
+    finalizedBy jacocoTestReport
 }
 
 sonar {
@@ -95,7 +100,7 @@ sonar {
   }
 }
 
-rootProject.tasks["sonarqube"].dependsOn(tasks["jacocoTestReport"])
+project.tasks["sonar"].dependsOn jacocoTestReport
 
 publishing {
     publications {
