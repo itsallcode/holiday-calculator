@@ -25,9 +25,6 @@ jobs:
       with:
         fetch-depth: 2
 
-    - run: git checkout HEAD^2
-      if: ${{ github.event_name == 'pull_request' }}
-
     - uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
