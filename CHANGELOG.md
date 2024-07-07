@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.1] - unreleased
+## [0.2.2] - unreleased
+
+## [0.2.1] - 2024-07-07
 
 - [#30](https://github.com/itsallcode/holiday-calculator/issues/30) Updated and enhanced [README.md](README.md).
 - [#53](https://github.com/itsallcode/holiday-calculator/pull/53) Upgrade dependencies.
