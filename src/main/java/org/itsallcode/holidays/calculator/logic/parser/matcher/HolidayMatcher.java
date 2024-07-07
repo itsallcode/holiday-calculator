@@ -15,8 +15,6 @@ import org.itsallcode.holidays.calculator.logic.variants.Holiday;
  */
 public abstract class HolidayMatcher {
 
-	abstract Holiday createHoliday(Matcher matcher);
-
 	private static final Pattern MONTH_NAME_PATTERN = Pattern.compile(
 			Patterns.NAME_REGEXP, Pattern.CASE_INSENSITIVE);
 
@@ -71,6 +69,8 @@ public abstract class HolidayMatcher {
 				new OrthodoxEasterBasedMatcher()
 		};
 	}
+
+	abstract Holiday createHoliday(Matcher matcher);
 
 	/**
 	 * Return the original holiday specified, e.g. if the condition is
