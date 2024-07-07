@@ -17,9 +17,7 @@
  */
 package org.itsallcode.holidays.calculator.logic.variants;
 
-import java.time.LocalDate;
-import java.time.MonthDay;
-import java.time.Year;
+import java.time.*;
 import java.util.Objects;
 
 import org.itsallcode.holidays.calculator.logic.conditions.Condition;
@@ -70,9 +68,9 @@ public class HolidayWithAlternative extends Holiday {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int PRIME = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(alternative, condition, defaultHoliday);
+		result = PRIME * result + Objects.hash(alternative, condition, defaultHoliday);
 		return result;
 	}
 

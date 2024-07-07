@@ -36,12 +36,12 @@ public class OrthodoxEasterBasedHoliday extends PivotDateBasedHoliday {
 	 *                     holiday. A positive offset indicates the holiday being
 	 *                     after the Orthodox Easter feast.
 	 */
-	public OrthodoxEasterBasedHoliday(String category, String name, int offsetInDays) {
+	public OrthodoxEasterBasedHoliday(final String category, final String name, final int offsetInDays) {
 		super("Orthodox Easter", category, name, offsetInDays);
 	}
 
 	@Override
-	public LocalDate of(int year) {
+	public LocalDate of(final int year) {
 		return Easter.orthodox(year).plusDays(offsetInDays);
 	}
 
@@ -51,17 +51,13 @@ public class OrthodoxEasterBasedHoliday extends PivotDateBasedHoliday {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		return true;
+		return getClass() == obj.getClass();
 	}
-
 }

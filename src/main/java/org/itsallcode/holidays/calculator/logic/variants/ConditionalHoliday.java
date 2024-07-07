@@ -41,14 +41,14 @@ public class ConditionalHoliday extends Holiday {
 	 * @param holiday          the original holiday to create the condition holiday
 	 *                         upon
 	 */
-	public ConditionalHoliday(ConditionBuilder conditionBuilder, Holiday holiday) {
+	public ConditionalHoliday(final ConditionBuilder conditionBuilder, final Holiday holiday) {
 		super(holiday.getCategory(), holiday.getName());
 		this.condition = conditionBuilder.build();
 		this.other = holiday;
 	}
 
 	@Override
-	public LocalDate of(int year) {
+	public LocalDate of(final int year) {
 		if (!condition.applies(Year.of(year))) {
 			return null;
 		}
@@ -62,14 +62,14 @@ public class ConditionalHoliday extends Holiday {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int PRIME = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(condition, other);
+		result = PRIME * result + Objects.hash(condition, other);
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -79,7 +79,7 @@ public class ConditionalHoliday extends Holiday {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final ConditionalHoliday other = (ConditionalHoliday) obj;
-		return Objects.equals(condition, other.condition) && Objects.equals(this.other, other.other);
+		final ConditionalHoliday otherHoliday = (ConditionalHoliday) obj;
+		return Objects.equals(condition, otherHoliday.condition) && Objects.equals(this.other, otherHoliday.other);
 	}
 }

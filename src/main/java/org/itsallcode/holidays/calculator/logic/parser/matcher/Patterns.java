@@ -26,7 +26,7 @@ import org.itsallcode.holidays.calculator.logic.parser.Token;
 /**
  * Shared patterns for creating regular expressions.
  */
-final public class Patterns {
+public final class Patterns {
 
 	// names of groups in regular expressions in order to extract matched parts
 	// easily
@@ -35,7 +35,6 @@ final public class Patterns {
 	static final String DAY_GROUP = "day";
 	static final String OFFSET_GROUP = "offset";
 	static final String OFFSET_GROUP_2 = "offset2";
-//	static final String ADDITIONAL_OFFSET_GROUP = "additionalOffset";
 	static final String DIRECTION_GROUP = "direction";
 	static final String DIRECTION_GROUP_2 = "direction2";
 	static final String DAY_OF_WEEK_GROUP = "dayOfWeek";
@@ -54,7 +53,6 @@ final public class Patterns {
 	private static final String NAMES_REGEXP = "[a-z,]+";
 	private static final String MONTH_REGEX = NAME_REGEXP + "|0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12";
 	private static final String DAY_REGEX = "0?1|0?2|0?3|0?4|0?5|0?6|0?7|0?8|0?9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31";
-//	private static final String OFFSET_REGEXP = "[+-]?\\d\\d?";
 	private static final String OFFSET_REGEXP = "\\d\\d?";
 	private static final String DIRECTION_REGEXP = "before|after";
 
@@ -108,5 +106,4 @@ final public class Patterns {
 	private Patterns() {
 		// prevent instantiation
 	}
-
 }
