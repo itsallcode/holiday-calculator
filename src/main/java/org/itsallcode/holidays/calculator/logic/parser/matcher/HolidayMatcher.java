@@ -1,9 +1,8 @@
 package org.itsallcode.holidays.calculator.logic.parser.matcher;
 
-import static java.util.stream.Collectors.toList;
-
 import java.time.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -146,11 +145,10 @@ public abstract class HolidayMatcher {
 	 * @param commaSeparatedList string to parse the days of week from
 	 * @return list of instances of {@link DayOfWeek}
 	 */
-	protected DayOfWeek[] daysOfWeek(final String commaSeparatedList) {
+	protected List<DayOfWeek> daysOfWeek(final String commaSeparatedList) {
 		return Arrays.asList(commaSeparatedList.split(","))
 				.stream().map(this::dayOfWeek)
-				.collect(toList())
-				.toArray(new DayOfWeek[0]);
+				.toList();
 	}
 
 	/**

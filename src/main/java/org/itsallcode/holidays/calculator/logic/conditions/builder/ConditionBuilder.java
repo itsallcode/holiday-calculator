@@ -2,6 +2,7 @@ package org.itsallcode.holidays.calculator.logic.conditions.builder;
 
 import java.time.DayOfWeek;
 import java.time.MonthDay;
+import java.util.List;
 
 import org.itsallcode.holidays.calculator.logic.conditions.*;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
@@ -54,8 +55,8 @@ public class ConditionBuilder {
 	 * @param daysOfWeek days of the week.
 	 * @return self for fluent programming
 	 */
-	public ConditionBuilder withDaysOfWeek(final DayOfWeek... daysOfWeek) {
-		this.daysOfWeek = daysOfWeek;
+	public ConditionBuilder withDaysOfWeek(final List<DayOfWeek> daysOfWeek) {
+		this.daysOfWeek = daysOfWeek.toArray(DayOfWeek[]::new);
 		return this;
 	}
 
@@ -97,5 +98,4 @@ public class ConditionBuilder {
 		this.negated = !this.negated;
 		return this;
 	}
-
 }
