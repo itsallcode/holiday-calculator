@@ -33,7 +33,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'org.itsallcode:holiday-calculator:0.2.0'
+    compile 'org.itsallcode:holiday-calculator:0.2.1'
 }
 ```
 
@@ -43,7 +43,7 @@ dependencies {
 <dependency>
     <groupId>org.itsallcode</groupId>
     <artifactId>holiday-calculator</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
