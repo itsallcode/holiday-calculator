@@ -1,28 +1,10 @@
-/**
- * holiday-calculator
- * Copyright (C) 2022 itsallcode <github@kuhnke.net>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.itsallcode.holidays.calculator.logic.conditions.builder;
 
 import java.time.DayOfWeek;
 import java.time.MonthDay;
+import java.util.List;
 
-import org.itsallcode.holidays.calculator.logic.conditions.Condition;
-import org.itsallcode.holidays.calculator.logic.conditions.DayOfWeekCondition;
-import org.itsallcode.holidays.calculator.logic.conditions.NegatedCondition;
+import org.itsallcode.holidays.calculator.logic.conditions.*;
 import org.itsallcode.holidays.calculator.logic.variants.Holiday;
 
 /**
@@ -73,8 +55,8 @@ public class ConditionBuilder {
 	 * @param daysOfWeek days of the week.
 	 * @return self for fluent programming
 	 */
-	public ConditionBuilder withDaysOfWeek(DayOfWeek... daysOfWeek) {
-		this.daysOfWeek = daysOfWeek;
+	public ConditionBuilder withDaysOfWeek(final List<DayOfWeek> daysOfWeek) {
+		this.daysOfWeek = daysOfWeek.toArray(DayOfWeek[]::new);
 		return this;
 	}
 
@@ -86,7 +68,7 @@ public class ConditionBuilder {
 	 * @param monthDay month and day
 	 * @return self for fluent programming
 	 */
-	public ConditionBuilder withPivotDate(MonthDay monthDay) {
+	public ConditionBuilder withPivotDate(final MonthDay monthDay) {
 		this.pivotDate = monthDay;
 		return this;
 	}
@@ -99,7 +81,7 @@ public class ConditionBuilder {
 	 * @param holiday holiday to use as optional pivot date
 	 * @return self for fluent programming
 	 */
-	public ConditionBuilder withOptionalPivotDateFrom(Holiday holiday) {
+	public ConditionBuilder withOptionalPivotDateFrom(final Holiday holiday) {
 		if (pivotDate == null) {
 			this.pivotDate = holiday.getMonthDay();
 		}
@@ -116,5 +98,4 @@ public class ConditionBuilder {
 		this.negated = !this.negated;
 		return this;
 	}
-
 }

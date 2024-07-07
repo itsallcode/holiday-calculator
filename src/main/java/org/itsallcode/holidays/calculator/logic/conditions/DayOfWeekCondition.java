@@ -1,31 +1,9 @@
-/**
- * holiday-calculator
- * Copyright (C) 2022 itsallcode <github@kuhnke.net>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package org.itsallcode.holidays.calculator.logic.conditions;
 
 import static java.util.stream.Collectors.joining;
 
-import java.time.DayOfWeek;
-import java.time.MonthDay;
-import java.time.Year;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.time.*;
+import java.util.*;
 
 import org.itsallcode.holidays.calculator.logic.Formatter;
 
@@ -50,7 +28,7 @@ public class DayOfWeekCondition extends Condition {
 	 * @param daysOfWeek days of the week on which the current condition shall be
 	 *                   {@code true}.
 	 */
-	public DayOfWeekCondition(DayOfWeek... daysOfWeek) {
+	public DayOfWeekCondition(final DayOfWeek... daysOfWeek) {
 		this(null, daysOfWeek);
 	}
 
@@ -61,18 +39,18 @@ public class DayOfWeekCondition extends Condition {
 	 * @param pivot      pivot date
 	 * @param daysOfWeek days of the week
 	 */
-	public DayOfWeekCondition(MonthDay pivot, DayOfWeek... daysOfWeek) {
+	public DayOfWeekCondition(final MonthDay pivot, final DayOfWeek... daysOfWeek) {
 		this.pivot = pivot;
 		this.daysOfWeek.addAll(Arrays.asList(daysOfWeek));
 	}
 
 	@Override
-	public boolean applies(Year year) {
+	public boolean applies(final Year year) {
 		return daysOfWeek.contains(year.atMonthDay(pivot).getDayOfWeek());
 	}
 
 	@Override
-	public Condition withPivotDate(MonthDay pivot) {
+	public Condition withPivotDate(final MonthDay pivot) {
 		if (this.pivot == null) {
 			this.pivot = pivot;
 		}
@@ -80,7 +58,7 @@ public class DayOfWeekCondition extends Condition {
 	}
 
 	@Override
-	public String toString(String prefix, boolean negated) {
+	public String toString(final String prefix, final boolean negated) {
 		final String days = Arrays.asList(daysOfWeek.toArray(new DayOfWeek[0]))
 				.stream()
 				.sorted(DayOfWeek::compareTo)
@@ -99,7 +77,7 @@ public class DayOfWeekCondition extends Condition {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}

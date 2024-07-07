@@ -3,7 +3,6 @@ plugins {
     id 'signing'
     id 'maven-publish'
     id 'jacoco'
-    id 'com.github.hierynomus.license' version '0.16.1'
     id 'org.sonarqube' version '5.1.0.4882'
     id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
     id "com.github.ben-manes.versions" version '0.51.0'
@@ -71,15 +70,6 @@ testing {
             }
         }
     }
-}
-
-license {
-    header = file('gradle/license-header.txt')
-    ext.project = 'holiday-calculator'
-    ext.year = 2022
-    ext.name = 'itsallcode'
-    ext.email = 'github@kuhnke.net'
-    include '**/*.java'
 }
 
 jacocoTestReport {
