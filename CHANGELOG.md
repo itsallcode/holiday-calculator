@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.3] - 2026-05-03
 
-- []() Upgrade dependencies
+- [PR #76](https://github.com/itsallcode/holiday-calculator/pull/76) Upgrade dependencies
 
 ## [0.2.1] - 2024-07-07
 
